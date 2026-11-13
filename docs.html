@@ -1,931 +1,942 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoScore</title>
-  <meta name="description" content="EchoScore Website make by TKI3T." />
-
+  <title>EchoScore – Hệ thống Chấm điểm Phát âm Tiếng Anh & Cẩm nang Triển khai</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      /* Light Mode Palette */
-      --bg-page: #f1f5f9;
-      --bg-surface: #ffffff;
-      --bg-subtle: #f8fafc;
-      --bg-muted: #e2e8f0;
-      
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --text-subtle: #94a3b8;
-      
-      --border-color: #e2e8f0;
-      --border-focus: #6366f1;
-      
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --primary-light: #eef2ff;
-      
-      --success: #10b981;
-      --success-light: #ecfdf5;
-      --success-text: #065f46;
-      
-      --danger: #ef4444;
-      --danger-light: #fef2f2;
-      --danger-text: #991b1b;
-      
-      --warning: #f59e0b;
-      --warning-light: #fffbeb;
-      --warning-text: #92400e;
-      
-      --teal: #0d9488;
-      --purple: #7c3aed;
-      --blue: #2563eb;
-      
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --radius-full: 9999px;
-      
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      --shadow-card: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
-    }
-
-    /* Full-screen Single Page Container on PC */
-    body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg-page);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.08) 0px, transparent 50%);
-      background-attachment: fixed;
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 12px 16px;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Container */
-    .app-wrapper {
-      width: 100%;
-      max-width: 760px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    /* FADE IN / FADE OUT ANIMATIONS */
-    @keyframes fadeInUp {
-      0% { opacity: 0; transform: translateY(12px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes popIn {
-      0% { transform: scale(0.9); opacity: 0.7; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @keyframes pulseRecord {
-      from { transform: scale(1); }
-      to { transform: scale(1.02); }
-    }
-
-    .fade-item {
-      opacity: 0;
-      animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    .delay-0 { animation-delay: 0.03s; }
-    .delay-1 { animation-delay: 0.08s; }
-    .delay-2 { animation-delay: 0.14s; }
-    .delay-3 { animation-delay: 0.20s; }
-    .delay-4 { animation-delay: 0.26s; }
-    .delay-5 { animation-delay: 0.32s; }
-    .delay-6 { animation-delay: 0.38s; }
-    .delay-7 { animation-delay: 0.44s; }
-
-    /* In-App Browser Warning */
-    .inapp-warning {
-      display: none;
-      background-color: var(--warning-light);
-      color: var(--warning-text);
-      border: 1px solid #fde68a;
-      padding: 8px 12px;
-      border-radius: var(--radius-md);
-      font-size: 12px;
-      line-height: 1.4;
-      text-align: center;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .inapp-warning i {
-      margin-right: 5px;
-      color: var(--warning);
-    }
-
-    /* Main Card - Compact Single Page Layout */
-    .main-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
-      padding: 16px 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 11px;
-      position: relative;
-    }
-
-    /* Header Bar */
-    .header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 10px;
-      gap: 12px;
-    }
-
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      box-shadow: 0 3px 8px rgba(79, 70, 229, 0.2);
-      flex-shrink: 0;
-    }
-
-    .brand-text h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: -0.01em;
-      line-height: 1.2;
-    }
-
-    .brand-text p {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .btn-teacher-lock {
-      background-color: var(--bg-subtle);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 5px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .btn-teacher-lock:hover {
-      background-color: var(--bg-muted);
-      color: var(--text-main);
-    }
-
-    /* Teacher Panel */
-    .teacher-panel {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-      border: 1px solid transparent;
-      border-radius: var(--radius-md);
-      padding: 0 14px;
-      margin-bottom: 0;
-      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.25s ease,
-                  padding 0.25s ease,
-                  border-color 0.25s ease;
-    }
-
-    .teacher-panel.is-open {
-      max-height: 250px;
-      opacity: 1;
-      padding: 12px 14px;
-      border-color: #cbd5e1;
-    }
-
-    .panel-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    .panel-title i {
-      color: var(--primary);
-    }
-
-    .teacher-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .btn-random, .btn-file-label, .btn-sheet-link {
-      padding: 6px 12px;
-      border-radius: var(--radius-sm);
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      color: #ffffff;
-      border: none;
-      transition: all 0.2s ease;
-      text-decoration: none;
-    }
-
-    .btn-random { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
-    .btn-file-label { background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); }
-    .btn-sheet-link { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-
-    /* GAS URL Config Row */
-    .gas-config-row {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed #cbd5e1;
-    }
-
-    .gas-config-row label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .gas-input-group {
-      display: flex;
-      gap: 6px;
-    }
-
-    .gas-input-group input {
-      flex: 1;
-      padding: 5px 8px;
-      font-size: 11px;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      background: #ffffff;
-      color: var(--text-main);
-      outline: none;
-    }
-
-    .gas-input-group input:focus {
-      border-color: var(--primary);
-    }
-
-    .btn-save-gas {
-      padding: 5px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      background: var(--primary);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-save-gas:hover {
-      background: var(--primary-hover);
-    }
-
-    .bank-status {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-top: 6px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    /* Student Form Section - Compact */
-    .student-info-section {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .student-info-form {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      background: var(--bg-subtle);
-      padding: 8px 12px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .form-group label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .form-group label i {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    .required-star {
-      color: var(--danger);
-      font-weight: bold;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 6px 10px;
-      font-size: 12px;
-      font-family: inherit;
-      color: var(--text-main);
-      background: #ffffff;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      outline: none;
-      transition: all 0.2s ease;
-    }
-
-    .form-group input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
-    }
-
-    .form-group input::placeholder {
-      color: var(--text-subtle);
-    }
-
-    /* Legend Bar - Compact */
-    .legend-bar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-      flex-wrap: wrap;
-      padding: 2px 0;
-    }
-
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .legend-item i {
-      font-size: 12px;
-    }
-
-    .icon-pending { color: #94a3b8; }
-    .icon-correct { color: var(--success); }
-    .icon-wrong { color: var(--danger); }
-    .icon-missing { color: var(--warning); }
-
-    /* Target Sentence Card - Compact */
-    .sentence-card {
-      background: var(--bg-surface);
-      border: 2px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.015);
-      transition: border-color 0.2s ease;
-    }
-
-    .sentence-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .sentence-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 3px 9px;
-      background: var(--primary-light);
-      color: var(--primary);
-      font-size: 11px;
-      font-weight: 700;
-      border-radius: var(--radius-full);
-    }
-
-    .sentence-box {
-      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 21px;
-      font-weight: 600;
-      line-height: 1.5;
-      text-align: left;
-      word-break: break-word;
-      letter-spacing: 0.01em;
-      min-height: 44px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-
-    /* Word Units */
+    /* Custom Word Highlighting & Pulse Animations */
     .w-unit {
       display: inline-block;
-      margin: 2px 2px;
-      padding: 2px 7px;
-      border-radius: 5px;
+      margin: 3px 2px;
+      padding: 4px 10px;
+      border-radius: 8px;
       font-weight: 600;
-      transition: all 0.25s ease;
-    }
-
-    .w-unit.pending {
-      color: #334155;
-      background-color: rgba(226, 232, 240, 0.5);
-      border-bottom: 2px solid #cbd5e1;
-    }
-
-    .w-unit.correct {
-      color: #ffffff;
-      background-color: var(--success);
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
-      animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .w-unit.wrong {
-      color: #ffffff;
-      background-color: var(--danger);
-      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
-      animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .w-unit.missing {
-      color: #ffffff;
-      background-color: var(--warning);
-      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
-      animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    /* Control Panel - Compact */
-    .control-panel {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 8px 18px;
-      font-size: 13px;
-      font-weight: 700;
-      font-family: inherit;
-      border: none;
-      border-radius: var(--radius-sm);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      transition: all 0.2s ease;
       user-select: none;
     }
-
-    .btn:active:not(:disabled) {
-      transform: scale(0.97);
+    .w-unit:hover {
+      transform: translateY(-2px);
     }
-
-    .btn-audio {
-      background: var(--bg-subtle);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
+    .w-unit.pending {
+      color: #1e293b;
+      background-color: #f1f5f9;
+      border-bottom: 2px solid #cbd5e1;
     }
-
-    .btn-audio:hover:not(:disabled) {
-      background: var(--bg-muted);
-      border-color: #cbd5e1;
-    }
-
-    .btn-mic {
-      background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    .w-unit.correct {
       color: #ffffff;
-      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
-      min-width: 155px;
+      background-color: #10b981;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
     }
-
-    .btn-mic:hover:not(:disabled) {
-      opacity: 0.95;
-      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
-    }
-
-    .btn-mic.recording {
-      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-      box-shadow: 0 3px 12px rgba(239, 68, 68, 0.45);
-      animation: pulseRecord 1.2s infinite ease-in-out alternate;
-    }
-
-    .btn-next {
-      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+    .w-unit.wrong {
       color: #ffffff;
-      box-shadow: 0 3px 10px rgba(124, 58, 237, 0.25);
+      background-color: #ef4444;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
     }
-
-    .btn-next:hover:not(:disabled) {
-      opacity: 0.95;
+    .w-unit.missing {
+      color: #ffffff;
+      background-color: #f59e0b;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
     }
-
-    .btn:disabled {
-      background: var(--bg-muted);
-      border-color: var(--border-color);
-      color: var(--text-subtle);
-      box-shadow: none;
-      cursor: not-allowed;
-      opacity: 0.7;
+    @keyframes micPulse {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+      70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
-
-    /* Score Board Grid - Compact */
-    .score-board {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      background: var(--bg-subtle);
-      padding: 8px 12px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
+    .recording-pulse {
+      animation: micPulse 1.5s infinite;
     }
-
-    .score-card {
-      background: #ffffff;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 6px 8px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      box-shadow: var(--shadow-sm);
+    /* Custom scrollbar for code blocks */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
     }
-
-    .score-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
     }
-
-    .score-num {
-      font-family: 'Outfit', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      line-height: 1.1;
-      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 4px;
     }
-
-    .score-num.count { color: var(--purple); }
-    .score-num.complete { color: var(--success); }
-    .score-num.total { color: var(--primary); }
-
-    /* Live Feedback Message Box - Compact */
-    .feedback-msg {
-      background: #ffffff;
-      border: 1px solid var(--border-color);
-      border-left: 3px solid var(--primary);
-      border-radius: var(--radius-sm);
-      padding: 8px 12px;
-      font-size: 12px;
-      line-height: 1.4;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: var(--shadow-sm);
-      transition: opacity 0.2s ease, transform 0.2s ease, border-left-color 0.25s ease;
-    }
-
-    .feedback-msg i {
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    /* Mobile Responsive Adjustments */
-    @media (max-width: 640px) {
-      body {
-        padding: 12px 8px;
-        justify-content: flex-start;
-      }
-
-      .main-card {
-        padding: 16px 12px;
-        gap: 12px;
-      }
-
-      .header-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-      }
-
-      .student-info-form {
-        grid-template-columns: 1fr;
-        padding: 10px;
-      }
-
-      .sentence-box {
-        font-size: 18px;
-      }
-
-      .control-panel {
-        flex-direction: column;
-        width: 100%;
-      }
-
-      .control-panel .btn {
-        width: 100%;
-        padding: 10px 14px;
-      }
-
-      .score-board {
-        grid-template-columns: 1fr;
-        gap: 6px;
-      }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
     }
   </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-  <div class="app-wrapper">
-
-    <!-- In-App Browser Warning -->
-    <div class="inapp-warning fade-item delay-0" id="inAppWarning">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <strong>In-App Browser Detected.</strong> Please tap menu and choose <strong>"Open in Chrome / Safari"</strong> for mic access.
+  <!-- ===================================================================== -->
+  <!-- CẢNH BÁO TRÌNH DUYỆT TRONG ỨNG DỤNG (IN-APP BROWSER WARNING BANNER)   -->
+  <!-- ===================================================================== -->
+  <div id="inAppWarning" class="hidden bg-amber-100 border-b border-amber-300 text-amber-900 px-4 py-3 text-sm text-center shadow-sm">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>
+        <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1.5"></i>
+        <strong>Phát hiện trình duyệt trong ứng dụng (Zalo / LINE / Messenger):</strong>
+        Vui lòng nhấn nút <span class="px-1.5 py-0.5 bg-amber-200 rounded font-bold">⋮</span> hoặc <span class="px-1.5 py-0.5 bg-amber-200 rounded font-bold">Chia sẻ</span> ở góc trên bên phải và chọn <strong>"Mở bằng Chrome / Safari"</strong> để sử dụng Micro.
+      </div>
+      <button onclick="toggleInAppWarning(false)" class="text-xs font-semibold underline hover:text-amber-700 shrink-0">Đóng thông báo</button>
     </div>
-
-    <!-- Main Card Container (Staggered Fade-in) -->
-    <div class="main-card fade-item delay-1">
-      
-      <!-- Header Bar -->
-      <div class="header-bar fade-item delay-2">
-        <div class="brand-group">
-          <div class="brand-icon">
-            <i class="fa-solid fa-headphones-simple"></i>
-          </div>
-          <div class="brand-text">
-            <h1>AI English Pronunciation Lab</h1>
-            <p>Real-Time Speech Recognition & Cloud Progress Tracking</p>
-          </div>
-        </div>
-
-        <button class="btn-teacher-lock" id="btnTeacherLock">
-          <i class="fa-solid fa-lock"></i>
-          <span>Teacher Unlock</span>
-        </button>
-      </div>
-
-      <!-- Teacher Bank Settings Panel (Smooth slide & fade) -->
-      <div class="teacher-panel" id="teacherPanel">
-        <div class="panel-title">
-          <i class="fa-solid fa-sliders"></i>
-          <span>Question Bank & Settings (Teacher Access)</span>
-        </div>
-        <div class="teacher-actions">
-          <button class="btn-random" id="btnRandom5">
-            <i class="fa-solid fa-dice"></i>
-            <span>Load 5 Random Sentences</span>
-          </button>
-          
-          <label class="btn-file-label" for="fileInput">
-            <i class="fa-solid fa-file-arrow-up"></i>
-            <span>Upload text.txt Bank</span>
-          </label>
-          <input type="file" id="fileInput" accept=".txt" style="display: none;">
-
-          <a href="https://docs.google.com/spreadsheets/d/12bc3j6bjRtwhXh5JIha3fpVopdLxCKVDjRT-sJx-1AY/edit" target="_blank" class="btn-sheet-link">
-            <i class="fa-solid fa-table"></i>
-            <span>Open EchoScore-Sheet</span>
-          </a>
-        </div>
-
-        <!-- Google Apps Script URL Setting -->
-        <div class="gas-config-row">
-          <label for="gasUrlInput">
-            <i class="fa-solid fa-link"></i>
-            <span>Google Apps Script Web App Endpoint:</span>
-          </label>
-          <div class="gas-input-group">
-            <input type="url" id="gasUrlInput" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
-            <button type="button" id="btnSaveGasUrl" class="btn-save-gas">Save & Apply</button>
-          </div>
-        </div>
-
-        <div class="bank-status" id="bankStatus">
-          <i class="fa-solid fa-database"></i>
-          <span>Current Bank: Default Proverbs (6 sentences)</span>
-        </div>
-      </div>
-
-      <!-- 1. Student Profile Form Section -->
-      <div class="student-info-section fade-item delay-3">
-        <div class="section-label">
-          <i class="fa-solid fa-user-pen"></i>
-          <span>Student Profile</span>
-        </div>
-        <div class="student-info-form">
-          <div class="form-group">
-            <label for="studentClass">
-              <i class="fa-solid fa-chalkboard-user"></i>
-              <span>Class</span>
-              <span class="required-star">*</span>
-            </label>
-            <input type="text" id="studentClass" placeholder="e.g. Class 101" required>
-          </div>
-          <div class="form-group">
-            <label for="studentId">
-              <i class="fa-solid fa-id-card"></i>
-              <span>Student ID</span>
-              <span class="required-star">*</span>
-            </label>
-            <input type="text" id="studentId" placeholder="e.g. 1090123" required>
-          </div>
-          <div class="form-group">
-            <label for="studentName">
-              <i class="fa-solid fa-signature"></i>
-              <span>Full Name</span>
-              <span class="required-star">*</span>
-            </label>
-            <input type="text" id="studentName" placeholder="e.g. Alex Johnson" required>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2. Legend Explanation Bar -->
-      <div class="legend-bar fade-item delay-4">
-        <div class="legend-item">
-          <i class="fa-regular fa-circle icon-pending"></i>
-          <span>Unpracticed</span>
-        </div>
-        <div class="legend-item">
-          <i class="fa-solid fa-circle-check icon-correct"></i>
-          <span>Correct</span>
-        </div>
-        <div class="legend-item">
-          <i class="fa-solid fa-circle-xmark icon-wrong"></i>
-          <span>Incorrect</span>
-        </div>
-        <div class="legend-item">
-          <i class="fa-solid fa-circle-exclamation icon-missing"></i>
-          <span>Missing Word</span>
-        </div>
-      </div>
-
-      <!-- 3. Target Sentence Display Card -->
-      <div class="sentence-card fade-item delay-5">
-        <div class="sentence-header">
-          <div class="sentence-badge" id="sentenceIndexBadge">
-            <i class="fa-solid fa-bookmark"></i>
-            <span>Sentence Progress 1 / 6</span>
-          </div>
-        </div>
-        <div class="sentence-box" id="sentenceBox"></div>
-      </div>
-
-      <!-- 4. Interactive Control Buttons -->
-      <div class="control-panel fade-item delay-6">
-        <button class="btn btn-audio" id="btnAudio">
-          <i class="fa-solid fa-volume-high"></i>
-          <span>Listen Demo (US)</span>
-        </button>
-        <button class="btn btn-mic" id="btnMic">
-          <i class="fa-solid fa-microphone"></i>
-          <span>Start Speaking</span>
-        </button>
-        <button class="btn btn-next" id="btnNext">
-          <i class="fa-solid fa-forward-step"></i>
-          <span>Next Sentence</span>
-        </button>
-      </div>
-
-      <!-- 5. Score & Analytics Board -->
-      <div class="score-board fade-item delay-7">
-        <div class="score-card">
-          <div class="score-label">
-            <i class="fa-solid fa-rotate-right" style="color: var(--purple);"></i>
-            <span>Attempts</span>
-          </div>
-          <div class="score-num count" id="attemptCountDisplay">0 times</div>
-        </div>
-        <div class="score-card">
-          <div class="score-label">
-            <i class="fa-solid fa-chart-pie" style="color: var(--success);"></i>
-            <span>Completion</span>
-          </div>
-          <div class="score-num complete" id="completionScore">0%</div>
-        </div>
-        <div class="score-card">
-          <div class="score-label">
-            <i class="fa-solid fa-bullseye" style="color: var(--primary);"></i>
-            <span>Accuracy</span>
-          </div>
-          <div class="score-num total" id="accuracyScore">0%</div>
-        </div>
-      </div>
-
-      <!-- 6. Dynamic Live Feedback Message Banner -->
-      <div class="feedback-msg fade-item delay-7" id="feedbackMsg">
-        <i class="fa-solid fa-circle-info" style="color: var(--primary);"></i>
-        <span>Please fill in your student information above before starting the practice.</span>
-      </div>
-
-    </div>
-
   </div>
 
-  <script>
-    // Authorized Teacher Email
-    const AUTHORIZED_TEACHER_EMAIL = "audreyshih32@gm.chihlee.edu.tw";
+  <!-- ===================================================================== -->
+  <!-- THANH ĐIỀU HƯỚNG CHÍNH (TOP NAVBAR)                                   -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between py-3 gap-3">
+        <!-- Brand Logo -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+              <i class="fa-solid fa-microphone-lines text-lg"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span id="navBrandName" class="font-extrabold text-xl tracking-tight text-slate-900">EchoScore</span>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">Cloud v2.0</span>
+              </div>
+              <p class="text-xs text-slate-500">Web Speech API • GitHub Pages • Google Sheets</p>
+            </div>
+          </div>
 
-    // Detect In-App Browsers (LINE, Messenger, Teams, etc.)
+          <!-- Mobile Quick Download Button -->
+          <button onclick="downloadStandaloneHTML()" class="md:hidden px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold shadow-sm hover:bg-emerald-700 transition">
+            <i class="fa-solid fa-download mr-1"></i> Tải HTML
+          </button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-xl overflow-x-auto">
+          <button onclick="switchMainTab('app')" id="tabBtn-app" class="tab-nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-blue-600 shadow-sm whitespace-nowrap">
+            <i class="fa-solid fa-headset"></i>
+            <span>Phòng Luyện Phát Âm</span>
+          </button>
+          <button onclick="switchMainTab('sheet')" id="tabBtn-sheet" class="tab-nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
+            <i class="fa-solid fa-table"></i>
+            <span>Bảng Điểm Google Sheet</span>
+            <span id="sheetBadgeCount" class="px-1.5 py-0.2 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">3</span>
+          </button>
+          <button onclick="switchMainTab('guide')" id="tabBtn-guide" class="tab-nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
+            <i class="fa-solid fa-book-open"></i>
+            <span>Cẩm Nang Triển Khai A-Z</span>
+          </button>
+        </nav>
+
+        <!-- Desktop Action Buttons -->
+        <div class="hidden md:flex items-center gap-2">
+          <button onclick="openConfigModal()" class="px-3 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition flex items-center gap-1.5" title="Cấu hình GAS_URL & Email Giáo viên">
+            <i class="fa-solid fa-sliders text-blue-600"></i>
+            <span>Cấu hình API</span>
+          </button>
+          <button onclick="downloadStandaloneHTML()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-file-code"></i>
+            <span>Tải pronunciation.html</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- NỘI DUNG CHÍNH (MAIN WORKSPACE)                                       -->
+  <!-- ===================================================================== -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+    <!-- =================================================================== -->
+    <!-- TAB 1: PHÒNG LUYỆN PHÁT ÂM TRỰC TIẾP (LIVE PRONUNCIATION APP)       -->
+    <!-- =================================================================== -->
+    <section id="tabContent-app" class="space-y-6">
+      <!-- Top Quick Bar for Testing -->
+      <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-4 sm:p-5 text-white shadow-lg flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-medium">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Hệ thống tương tác thời gian thực
+          </div>
+          <h2 class="text-lg sm:text-xl font-bold">Trải nghiệm trực tiếp Giao diện Học sinh & Giáo viên</h2>
+          <p class="text-xs sm:text-sm text-slate-300">
+            Điền thông tin học sinh hoặc nhấn <strong>"Điền nhanh mẫu"</strong> để thử nghiệm đọc mẫu giọng Mỹ, chấm điểm từng từ và đồng bộ vào bảng 9 cột.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <button onclick="fillDemoStudent()" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-semibold backdrop-blur-sm transition flex items-center gap-1.5 border border-white/20">
+            <i class="fa-solid fa-bolt text-amber-300"></i>
+            <span>Điền nhanh HS mẫu</span>
+          </button>
+          <button onclick="toggleInAppWarning(true)" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-medium transition flex items-center gap-1.5 border border-white/15">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <span>Xem thử cảnh báo Zalo/LINE</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main App Card (Matches and upgrades the original instructor-card) -->
+      <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl shadow-slate-200/70 border border-slate-200/80 p-5 sm:p-8 relative overflow-hidden">
+        
+        <!-- Card Header -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-5 mb-6 border-b border-slate-100">
+          <div class="flex items-center gap-3 text-center sm:text-left">
+            <span class="text-2xl sm:text-3xl">🎙️</span>
+            <div>
+              <h1 id="appMainTitle" class="text-xl sm:text-2xl font-extrabold text-slate-900">
+                EchoScore – Luyện Phát âm Chuẩn Mỹ
+              </h1>
+              <p class="text-xs text-slate-500">Nhấn vào từng từ bất kỳ trong câu để nghe phát âm riêng của từ đó</p>
+            </div>
+          </div>
+
+          <button id="btnTeacherLock" onclick="handleTeacherLockClick()" class="px-3.5 py-1.5 rounded-full border border-slate-300 text-slate-600 hover:bg-slate-100 hover:text-slate-900 text-xs font-semibold transition flex items-center gap-1.5 shrink-0">
+            <i class="fa-solid fa-lock" id="teacherLockIcon"></i>
+            <span id="teacherLockText">Mở khóa Giáo viên</span>
+          </button>
+        </div>
+
+        <!-- Teacher Control Panel (Unlocked via Custom Modal) -->
+        <div id="teacherPanel" class="hidden bg-sky-50/90 border border-sky-200 rounded-2xl p-4 sm:p-5 mb-6 transition-all">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm font-bold text-slate-800 flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-sky-600"></i>
+              <span>Chuyển đổi & Tùy chỉnh Ngân hàng câu hỏi (Chức năng Giáo viên)</span>
+            </div>
+            <span class="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-md font-semibold">Đã mở khóa</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5 mb-3">
+            <button onclick="loadDefaultProverbs()" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition shadow-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-quote-left"></i>
+              <span>Bộ Châm ngôn Mặc định (6 câu)</span>
+            </button>
+            <button id="btnRandom5" onclick="loadRandomDailyEnglish()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold transition shadow-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-dice"></i>
+              <span>Tải ngẫu nhiên 5 câu giao tiếp</span>
+            </button>
+            <label for="fileInput" class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold transition shadow-sm cursor-pointer flex items-center gap-1.5">
+              <i class="fa-solid fa-folder-open"></i>
+              <span>Tải lên tệp text.txt tùy chỉnh</span>
+            </label>
+            <input type="file" id="fileInput" accept=".txt" class="hidden" onchange="handleCustomFileUpload(event)">
+          </div>
+
+          <!-- Quick Add Custom Sentence -->
+          <div class="flex flex-col sm:flex-row gap-2 pt-2 border-t border-sky-200/70">
+            <input type="text" id="customSentenceInput" placeholder="Hoặc nhập nhanh một câu tiếng Anh mới tại đây..." class="flex-grow px-3 py-1.5 text-xs rounded-lg border border-sky-300 focus:outline-none focus:border-blue-500 bg-white">
+            <button onclick="addSingleCustomSentence()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold shrink-0 transition">
+              + Thêm vào đề bài
+            </button>
+          </div>
+
+          <div id="bankStatus" class="text-xs text-slate-600 mt-2.5 font-medium">
+            Ngân hàng câu hiện tại: Ngân hàng châm ngôn mặc định (Tổng 6 câu)
+          </div>
+        </div>
+
+        <!-- 1. Khu vực điền thông tin học sinh -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-6">
+          <div>
+            <label for="studentClass" class="block text-xs font-bold text-slate-700 mb-1">
+              Lớp <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="studentClass" oninput="checkFormValidity()" placeholder="VD: Anh A1" class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition bg-white">
+          </div>
+          <div>
+            <label for="studentId" class="block text-xs font-bold text-slate-700 mb-1">
+              Mã số HS/SV <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="studentId" oninput="checkFormValidity()" placeholder="VD: 1090123" class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition bg-white">
+          </div>
+          <div>
+            <label for="studentName" class="block text-xs font-bold text-slate-700 mb-1">
+              Họ và tên <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="studentName" oninput="checkFormValidity()" placeholder="VD: Nguyễn Văn A" class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition bg-white">
+          </div>
+        </div>
+
+        <!-- 2. Khu vực chú thích màu sắc & Tiến độ câu -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 px-1">
+          <div class="flex flex-wrap items-center justify-center gap-3 text-xs font-medium text-slate-600">
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded bg-slate-300 inline-block"></span> Chưa luyện tập
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span> Phát âm đúng
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded bg-rose-500 inline-block"></span> Phát âm sai
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded bg-amber-500 inline-block"></span> Đọc thiếu từ
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            <span>Câu số:</span>
+            <span id="sentenceProgressBadge">1 / 6</span>
+          </div>
+        </div>
+
+        <!-- 3. Khu vực hiển thị câu mục tiêu -->
+        <div class="relative mb-6">
+          <div id="sentenceBox" class="text-2xl sm:text-3xl font-semibold leading-relaxed p-6 sm:p-8 bg-white rounded-2xl border-2 border-slate-200 shadow-inner min-h-[120px] flex flex-wrap items-center content-center">
+            <!-- Các từ sẽ được khởi tạo bằng JS -->
+          </div>
+        </div>
+
+        <!-- 4. Khu vực nút điều khiển -->
+        <div class="flex flex-wrap items-center justify-center gap-3 mb-6">
+          <button id="btnAudio" onclick="speakTargetSentence(0.85)" class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-bold transition flex items-center gap-2 shadow-sm active:scale-95">
+            <i class="fa-solid fa-volume-high text-blue-600"></i>
+            <span>Nghe đọc mẫu (Giọng Mỹ)</span>
+          </button>
+
+          <button id="btnMic" onclick="startSpeechRecognition()" disabled class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-bold transition flex items-center gap-2 shadow-md shadow-blue-500/20 active:scale-95">
+            <i class="fa-solid fa-microphone"></i>
+            <span id="btnMicText">Bắt đầu ghi âm luyện tập</span>
+          </button>
+
+          <button id="btnSimulate" onclick="simulateStudentSpeech()" class="px-4 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-sm font-bold transition flex items-center gap-2 active:scale-95" title="Dùng thử chấm điểm tự động nếu thiết bị không có Micro">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Giả lập đọc thử</span>
+          </button>
+
+          <button id="btnNext" onclick="nextSentence()" class="px-4 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold transition flex items-center gap-2 shadow-sm active:scale-95">
+            <span>Câu tiếp theo</span>
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+        </div>
+
+        <!-- 5. Bảng điểm và phản hồi -->
+        <div class="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-200">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm">
+              <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Số lần đã thử</div>
+              <div id="attemptCountDisplay" class="text-2xl sm:text-3xl font-extrabold text-purple-600 mt-1">0 lần</div>
+            </div>
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm">
+              <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Độ hoàn thành câu</div>
+              <div id="completionScore" class="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-1">0%</div>
+            </div>
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm">
+              <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Độ chính xác phát âm</div>
+              <div id="accuracyScore" class="text-2xl sm:text-3xl font-extrabold text-blue-600 mt-1">0%</div>
+            </div>
+          </div>
+
+          <div id="feedbackMsg" class="mt-4 pt-3.5 border-t border-dashed border-slate-300 text-center text-sm font-semibold text-slate-600 leading-relaxed">
+            Vui lòng điền thông tin học sinh ở phía trên (hoặc nhấn nút <strong>"Điền nhanh HS mẫu"</strong>) trước khi bắt đầu luyện tập.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 2: BẢNG ĐIỂM GOOGLE SHEETS MÔ PHỎNG (9 CỘT THỜI GIAN THỰC)      -->
+    <!-- =================================================================== -->
+    <section id="tabContent-sheet" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 sm:p-7">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 mb-5 border-b border-slate-100">
+          <div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-2 border border-emerald-200">
+              <i class="fa-solid fa-file-excel"></i>
+              EchoScore-Sheet (9.54-sheet)
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Bảng Dữ Liệu Đám Mây Google Sheets (9 Cột Chuẩn)</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+              Mỗi lần học sinh đọc tại tab <strong>Phòng Luyện Phát Âm</strong>, kết quả sẽ được ghi trực tiếp vào đây và gửi tới <code>GAS_URL</code>.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="copySheetHeaders()" class="px-3.5 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5">
+              <i class="fa-regular fa-copy"></i>
+              <span>Sao chép 9 Tiêu đề Cột (A1:I1)</span>
+            </button>
+            <button onclick="exportSheetCSV()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
+              <i class="fa-solid fa-file-csv"></i>
+              <span>Xuất tệp CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Spreadsheet UI Simulation -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-300 shadow-inner bg-white">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <!-- Excel/Sheet Column Letters -->
+              <tr class="bg-slate-200 text-slate-600 font-mono text-center text-xs border-b border-slate-300">
+                <th class="py-1.5 px-2 border-r border-slate-300 w-10">#</th>
+                <th class="py-1.5 px-3 border-r border-slate-300">A</th>
+                <th class="py-1.5 px-3 border-r border-slate-300">B</th>
+                <th class="py-1.5 px-3 border-r border-slate-300">C</th>
+                <th class="py-1.5 px-3 border-r border-slate-300">D</th>
+                <th class="py-1.5 px-3 border-r border-slate-300">E</th>
+                <th class="py-1.5 px-3 border-r border-slate-300">F</th>
+                <th class="py-1.5 px-3 border-r border-slate-300">G</th>
+                <th class="py-1.5 px-3 border-r border-slate-300">H</th>
+                <th class="py-1.5 px-3">I</th>
+              </tr>
+              <!-- Row 1 Headers -->
+              <tr class="bg-emerald-50/90 text-emerald-950 font-mono font-bold border-b-2 border-emerald-300">
+                <td class="py-2.5 px-2 text-center bg-slate-200 text-slate-600 border-r border-slate-300">1</td>
+                <td class="py-2.5 px-3 border-r border-emerald-200">timestamp</td>
+                <td class="py-2.5 px-3 border-r border-emerald-200">className</td>
+                <td class="py-2.5 px-3 border-r border-emerald-200">studentId</td>
+                <td class="py-2.5 px-3 border-r border-emerald-200">studentName</td>
+                <td class="py-2.5 px-3 border-r border-emerald-200 text-center">attemptCount</td>
+                <td class="py-2.5 px-3 border-r border-emerald-200">targetSentence</td>
+                <td class="py-2.5 px-3 border-r border-emerald-200 text-center">completion</td>
+                <td class="py-2.5 px-3 border-r border-emerald-200 text-center">accuracy</td>
+                <td class="py-2.5 px-3">transcript</td>
+              </tr>
+            </thead>
+            <tbody id="sheetTableBody" class="divide-y divide-slate-200">
+              <!-- Populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 3: CẨM NANG TRIỂN KHAI TƯƠNG TÁC A-Z (DOCUMENTATION & GENERATOR)-->
+    <!-- =================================================================== -->
+    <section id="tabContent-guide" class="hidden space-y-8">
+
+      <!-- Hero Banner Cẩm nang -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+        <div class="max-w-3xl">
+          <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold uppercase tracking-wider">Tài liệu Hướng dẫn Kỹ thuật EdTech</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">
+            Cẩm nang Triển khai Hệ thống Chấm điểm Phát âm Tiếng Anh Tương tác
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+            Hướng dẫn từng bước từ con số 0 để thiết lập hệ thống kết hợp <strong>Web Speech API</strong>, <strong>GitHub Pages (HTTPS)</strong> và <strong>Google Apps Script + Google Sheets</strong> hoàn toàn miễn phí.
+          </p>
+        </div>
+
+        <!-- Quick Step Jump -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mt-6 pt-6 border-t border-slate-100">
+          <a href="#doc-naming" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Phần 1</span>
+            Tên gọi & Thương hiệu
+          </a>
+          <a href="#doc-arch" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Phần 2</span>
+            Kiến trúc & Thiết bị
+          </a>
+          <a href="#doc-step1" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Bước 1</span>
+            Tạo Google Sheets
+          </a>
+          <a href="#doc-step2" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Bước 2</span>
+            Mã nguồn Code.gs
+          </a>
+          <a href="#doc-step3" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Bước 3</span>
+            Tạo pronunciation.html
+          </a>
+          <a href="#doc-step4" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Bước 4 & 5</span>
+            GitHub Pages & Kiểm thử
+          </a>
+        </div>
+      </div>
+
+      <!-- PHẦN 1: ĐỀ XUẤT TÊN GỌI & THƯƠNG HIỆU (TƯƠNG TÁC ĐỔI TÊN TRỰC TIẾP) -->
+      <div id="doc-naming" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">1. Đề xuất Tên gọi & Thương hiệu cho Trang web</h3>
+            <p class="text-xs sm:text-sm text-slate-500">Bạn có thể nhấn nút <strong>"Áp dụng tên này"</strong> để đổi ngay thương hiệu trên toàn bộ ứng dụng và tệp HTML tải về.</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                <th class="py-3 px-4">Tên Thương hiệu</th>
+                <th class="py-3 px-4">Tiêu đề hiển thị (<code>&lt;h1&gt;</code>)</th>
+                <th class="py-3 px-4">Tên GitHub Repo</th>
+                <th class="py-3 px-4">Phong cách & Ý nghĩa</th>
+                <th class="py-3 px-4 text-center">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr class="hover:bg-blue-50/40">
+                <td class="py-3 px-4 font-bold text-blue-700">🌟 EchoScore</td>
+                <td class="py-3 px-4 font-medium">EchoScore – Luyện Phát âm Chuẩn Mỹ</td>
+                <td class="py-3 px-4 font-mono text-xs">echoscore-app</td>
+                <td class="py-3 px-4 text-slate-600">Hiện đại, ngắn gọn, chuẩn EdTech; kết hợp giữa <em>Echo</em> (đọc nhại giọng mẫu) và <em>Score</em> (chấm điểm).</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="applyBrandName('EchoScore', 'EchoScore – Luyện Phát âm Chuẩn Mỹ')" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition">Áp dụng</button>
+                </td>
+              </tr>
+              <tr class="hover:bg-blue-50/40">
+                <td class="py-3 px-4 font-bold text-slate-800">💬 SpeakUp Lab</td>
+                <td class="py-3 px-4 font-medium">SpeakUp Lab – Phòng Luyện Nói Tiếng Anh</td>
+                <td class="py-3 px-4 font-mono text-xs">speakup-lab</td>
+                <td class="py-3 px-4 text-slate-600">Năng động, thân thiện, khích lệ học sinh tự tin mở lời luyện tập.</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="applyBrandName('SpeakUp Lab', 'SpeakUp Lab – Phòng Luyện Nói Tiếng Anh')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold hover:bg-blue-600 hover:text-white transition">Áp dụng</button>
+                </td>
+              </tr>
+              <tr class="hover:bg-blue-50/40">
+                <td class="py-3 px-4 font-bold text-slate-800">📊 VocaCheck Cloud</td>
+                <td class="py-3 px-4 font-medium">VocaCheck – Hệ thống Đánh giá Phát âm</td>
+                <td class="py-3 px-4 font-mono text-xs">vocacheck-cloud</td>
+                <td class="py-3 px-4 text-slate-600">Học thuật, chuyên nghiệp, nhấn mạnh việc kiểm tra từng từ và lưu trữ đám mây.</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="applyBrandName('VocaCheck', 'VocaCheck – Hệ thống Đánh giá Phát âm')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold hover:bg-blue-600 hover:text-white transition">Áp dụng</button>
+                </td>
+              </tr>
+              <tr class="hover:bg-blue-50/40">
+                <td class="py-3 px-4 font-bold text-slate-800">🎧 NativePulse</td>
+                <td class="py-3 px-4 font-medium">NativePulse – Bắt nhịp Giọng Bản xứ</td>
+                <td class="py-3 px-4 font-mono text-xs">native-pulse</td>
+                <td class="py-3 px-4 text-slate-600">Sang trọng, gợi hình ảnh sóng âm micro và nhịp điệu tiếng Anh bản xứ.</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="applyBrandName('NativePulse', 'NativePulse – Bắt nhịp Giọng Bản xứ')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold hover:bg-blue-600 hover:text-white transition">Áp dụng</button>
+                </td>
+              </tr>
+              <tr class="hover:bg-blue-50/40">
+                <td class="py-3 px-4 font-bold text-slate-800">🤖 EngMic AI</td>
+                <td class="py-3 px-4 font-medium">EngMic – Trợ lý Chấm điểm Phát âm</td>
+                <td class="py-3 px-4 font-mono text-xs">engmic-web</td>
+                <td class="py-3 px-4 text-slate-600">Dễ nhớ, trực quan đối với học sinh phổ thông và sinh viên.</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="applyBrandName('EngMic AI', 'EngMic – Trợ lý Chấm điểm Phát âm')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold hover:bg-blue-600 hover:text-white transition">Áp dụng</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PHẦN 2: KIẾN TRÚC HỆ THỐNG & TƯƠNG THÍCH THIẾT BỊ -->
+      <div id="doc-arch" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">2. Tổng quan Kiến trúc & Khả năng Tương thích Thiết bị</h3>
+
+        <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-sm text-blue-950 leading-relaxed">
+          <strong class="text-blue-800"><i class="fa-solid fa-lightbulb mr-1.5"></i>Tại sao phải tách biệt GitHub Pages và Google Apps Script?</strong><br>
+          Nếu đặt trực tiếp tệp HTML bên trong Google Apps Script, Google sẽ bao bọc trang web trong một khung <code>&lt;iframe&gt;</code> bảo mật, khiến trình duyệt chặn quyền truy cập micro và báo lỗi <code>not-allowed</code>. Việc tách giao diện (Frontend) sang <strong>GitHub Pages</strong> cung cấp kết nối <strong>HTTPS gốc</strong>, giải quyết triệt để lỗi chặn micro trên mọi thiết bị.
+        </div>
+
+        <!-- Visual Flow Architecture -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 relative">
+            <div class="text-xs font-bold text-blue-600 uppercase mb-1">1. Giao diện (Frontend)</div>
+            <div class="text-base font-extrabold text-slate-900 mb-2">GitHub Pages (HTTPS)</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Chạy <code>SpeechSynthesis</code> (đọc mẫu giọng Mỹ) và <code>SpeechRecognition</code> (ghi âm & chấm điểm từng từ không bị lỗi chặn micro).
+            </p>
+          </div>
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 relative">
+            <div class="text-xs font-bold text-purple-600 uppercase mb-1">2. Cầu nối (Backend API)</div>
+            <div class="text-base font-extrabold text-slate-900 mb-2">Google Apps Script</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Nhận gói dữ liệu điểm số định dạng <code>JSON</code> từ trang web gửi về thông qua phương thức <code>POST</code>.
+            </p>
+          </div>
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 relative">
+            <div class="text-xs font-bold text-emerald-600 uppercase mb-1">3. Cơ sở dữ liệu (Database)</div>
+            <div class="text-base font-extrabold text-slate-900 mb-2">Google Sheets (9 Cột)</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Tự động ghi nhận thời gian, thông tin học sinh, số lần thử, độ hoàn thành, độ chính xác và câu văn nhận diện thực tế.
+            </p>
+          </div>
+        </div>
+
+        <!-- Compatibility Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+          <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50">
+            <div class="font-bold text-sm text-emerald-900">💻 Laptop / PC (Chrome)</div>
+            <div class="text-xs text-emerald-700 mt-1">✅ Hoàn hảo 100%. Nhận diện giọng nói nhanh và chính xác nhất.</div>
+          </div>
+          <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50">
+            <div class="font-bold text-sm text-emerald-900">📱 Điện thoại Android (Chrome)</div>
+            <div class="text-xs text-emerald-700 mt-1">✅ Hoàn hảo 100%. Hoạt động ổn định với Web Speech API.</div>
+          </div>
+          <div class="p-4 rounded-xl border border-amber-200 bg-amber-50/50">
+            <div class="font-bold text-sm text-amber-900">🍎 iPhone / iPad (Safari)</div>
+            <div class="text-xs text-amber-800 mt-1">⚠️ Tốt trên iOS mới. Trên iOS cũ độ nhạy ngắt câu có thể kém ổn định hơn.</div>
+          </div>
+          <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/50">
+            <div class="font-bold text-sm text-rose-900">💬 Zalo / LINE / Messenger</div>
+            <div class="text-xs text-rose-800 mt-1">🚫 Tự động hiện cảnh báo nhắc học sinh bấm "Mở bằng Chrome / Safari".</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BƯỚC 1: THIẾT LẬP GOOGLE SHEETS -->
+      <div id="doc-step1" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-bold text-blue-600 uppercase">Bước 1</span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Thiết lập Google Sheets (Cơ sở dữ liệu đám mây)</h3>
+            <p class="text-xs sm:text-sm text-slate-500">Tạo bảng tính mới tên <code>EchoScore-Sheet</code> (hoặc <code>9.54-sheet</code>) và dán 9 tiêu đề cột dưới đây vào Hàng 1 (Row 1).</p>
+          </div>
+          <button onclick="copySheetHeaders()" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shrink-0 shadow-sm flex items-center gap-2">
+            <i class="fa-regular fa-copy"></i>
+            <span>Sao chép nhanh A1:I1 để dán vào Sheet</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                <th class="py-2.5 px-4">Ô (Cell)</th>
+                <th class="py-2.5 px-4">Tên tiêu đề (Header)</th>
+                <th class="py-2.5 px-4">Kiểu dữ liệu</th>
+                <th class="py-2.5 px-4">Ý nghĩa & Mô tả</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr><td class="py-2 px-4 font-bold">A1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">timestamp</td><td class="py-2 px-4">Ngày giờ</td><td class="py-2 px-4">Thời gian nộp bài luyện tập (Hệ thống tự động tạo)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">B1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">className</td><td class="py-2 px-4">Văn bản</td><td class="py-2 px-4">Lớp của học sinh (VD: Anh A1)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">C1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">studentId</td><td class="py-2 px-4">Văn bản / Số</td><td class="py-2 px-4">Mã số học sinh / sinh viên (VD: 1090123)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">D1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">studentName</td><td class="py-2 px-4">Văn bản</td><td class="py-2 px-4">Họ và tên học sinh</td></tr>
+              <tr><td class="py-2 px-4 font-bold">E1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">attemptCount</td><td class="py-2 px-4">Số nguyên</td><td class="py-2 px-4">Số lần luyện tập tích lũy</td></tr>
+              <tr><td class="py-2 px-4 font-bold">F1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">targetSentence</td><td class="py-2 px-4">Văn bản</td><td class="py-2 px-4">Câu tiếng Anh đề bài trong lần luyện tập đó</td></tr>
+              <tr><td class="py-2 px-4 font-bold">G1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">completion</td><td class="py-2 px-4">Phần trăm (%)</td><td class="py-2 px-4">Độ hoàn thành câu (%)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">H1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">accuracy</td><td class="py-2 px-4">Phần trăm (%)</td><td class="py-2 px-4">Độ chính xác phát âm (%)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">I1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">transcript</td><td class="py-2 px-4">Văn bản</td><td class="py-2 px-4">Văn bản giọng nói thực tế được nhận diện của học sinh</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BƯỚC 2: GOOGLE APPS SCRIPT (BACKEND API) -->
+      <div id="doc-step2" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-bold text-blue-600 uppercase">Bước 2</span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Tạo và Triển khai Google Apps Script (Backend API)</h3>
+            <p class="text-xs sm:text-sm text-slate-500">Trong Google Sheets, chọn <strong>Tiện ích mở rộng (Extensions) &rarr; Apps Script</strong>, dán mã dưới đây và nhấn <strong>Triển khai (Deploy) &rarr; Ứng dụng web (Web App)</strong>.</p>
+          </div>
+          <button onclick="copyCodeBlock('gasCodeBlock', 'Đã sao chép mã nguồn Code.gs!')" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shrink-0 flex items-center gap-2">
+            <i class="fa-regular fa-copy"></i>
+            <span>Sao chép Code.gs</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="text-slate-500 block">1. Mô tả (Description):</span>
+            <strong class="text-slate-900">API Hệ thống phát âm EchoScore</strong>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="text-slate-500 block">2. Thực thi dưới dạng (Execute as):</span>
+            <strong class="text-slate-900">Tôi (Me / Your Account)</strong>
+          </div>
+          <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200">
+            <span class="text-rose-600 block font-semibold">3. Ai có quyền truy cập (Quan trọng!):</span>
+            <strong class="text-rose-900">Bất kỳ ai (Anyone)</strong>
+          </div>
+        </div>
+
+        <pre id="gasCodeBlock" class="bg-slate-900 text-slate-100 p-5 rounded-2xl text-xs font-mono overflow-x-auto leading-relaxed">// 1. Xử lý khi tải trang web (Yêu cầu GET - Dự phòng)
+function doGet(e) {
+  return ContentService.createTextOutput("Pronunciation API is running.");
+}
+
+// 2. Xử lý ghi dữ liệu điểm số (Yêu cầu POST - Ghi chính xác 9 cột vào Google Sheet)
+function doPost(e) {
+  try {
+    // Phân tích dữ liệu định dạng JSON được gửi từ Frontend
+    var params = JSON.parse(e.postData.contents);
+
+    // Lấy bảng tính Google Sheet hiện đang được liên kết
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+    // Lần lượt ghi 9 cột dữ liệu vào dòng mới trong bảng tính
+    sheet.appendRow([
+      new Date(),                                                           // Cột A: timestamp (Thời gian ghi)
+      params.className || "",                                               // Cột B: className (Lớp)
+      params.studentId || "",                                               // Cột C: studentId (Mã số HS/SV)
+      params.studentName || "",                                             // Cột D: studentName (Họ tên)
+      params.attemptCount || 0,                                             // Cột E: attemptCount (Số lần thử)
+      params.targetSentence || "",                                          // Cột F: targetSentence (Câu đề bài)
+      (params.completion !== undefined ? params.completion + "%" : "0%"),   // Cột G: completion (Độ hoàn thành)
+      (params.accuracy !== undefined ? params.accuracy + "%" : "0%"),       // Cột H: accuracy (Độ chính xác)
+      params.transcript || ""                                               // Cột I: transcript (Văn bản giọng nói)
+    ]);
+
+    // Trả về thông báo thành công cho Frontend
+    return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    // Trả về thông báo lỗi khi có sự cố xảy ra
+    return ContentService.createTextOutput(JSON.stringify({ "status": "error", "message": error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+      </div>
+
+      <!-- BƯỚC 3: CÔNG CỤ TÙY CHỈNH & XUẤT TỆP PRONUNCIATION.HTML -->
+      <div id="doc-step3" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
+        <div>
+          <span class="text-xs font-bold text-blue-600 uppercase">Bước 3</span>
+          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Chuẩn bị Trang web Frontend (<code>pronunciation.html</code>)</h3>
+          <p class="text-xs sm:text-sm text-slate-500">Điền <code>GAS_URL</code> và Email Giáo viên của bạn vào khung bên dưới. Hệ thống sẽ tự động nhúng vào mã nguồn để bạn tải tệp <code>pronunciation.html</code> về máy ngay lập tức!</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-blue-50/60 p-5 rounded-2xl border border-blue-200">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Email Giáo viên (Dùng để mở khóa Ngân hàng câu hỏi):</label>
+            <input type="email" id="configTeacherEmail" oninput="syncConfigInputs()" value="audreyshih32@gm.chihlee.edu.tw" class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Đường dẫn Web App URL (<code>GAS_URL</code> từ Bước 2):</label>
+            <input type="url" id="configGasUrl" oninput="syncConfigInputs()" value="https://script.google.com/macros/s/AKfycbwGKabME3C398ARfyvxRpsLDyJ9jZgcnYAApWy1yN9fU1K13sf1jM5nFNjqQUAfiwO2/exec" class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white font-mono">
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <button onclick="downloadStandaloneHTML()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition shadow-sm flex items-center gap-2">
+            <i class="fa-solid fa-download"></i>
+            <span>Tải tệp pronunciation.html hoàn chỉnh</span>
+          </button>
+          <button onclick="copyStandaloneHTML()" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold transition flex items-center gap-2">
+            <i class="fa-regular fa-copy"></i>
+            <span>Sao chép toàn bộ mã HTML</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- BƯỚC 4 & 5: ĐƯA LÊN GITHUB PAGES & DANH SÁCH KIỂM TRA -->
+      <div id="doc-step4" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Bước 4: GitHub Pages -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+          <span class="text-xs font-bold text-blue-600 uppercase">Bước 4</span>
+          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Đưa Trang web lên GitHub Pages</h3>
+          <ol class="space-y-3 text-xs sm:text-sm text-slate-700">
+            <li class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <strong class="text-slate-900 block mb-0.5">1. Tạo Kho lưu trữ (Repository):</strong>
+              Đăng nhập GitHub &rarr; Nhấn dấu <code>+</code> góc phải &rarr; <strong>New repository</strong>. Đặt tên là <code>echoscore-app</code>, chọn chế độ <strong>Public</strong> rồi nhấn <strong>Create repository</strong>.
+            </li>
+            <li class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <strong class="text-slate-900 block mb-0.5">2. Tải tệp HTML lên:</strong>
+              Nhấn vào dòng <strong>uploading an existing file</strong> &rarr; Kéo thả tệp <code>pronunciation.html</code> vừa tải ở Bước 3 vào &rarr; Nhấn nút xanh <strong>Commit changes</strong>.
+            </li>
+            <li class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <strong class="text-slate-900 block mb-0.5">3. Bật GitHub Pages:</strong>
+              Vào mục <strong>Settings</strong> (Bánh răng) &rarr; Chọn <strong>Pages</strong> ở menu trái &rarr; Tại mục <strong>Branch</strong>, đổi <code>None</code> thành <code>main</code> (thư mục giữ nguyên <code>/(root)</code>) &rarr; Nhấn <strong>Save</strong>.
+            </li>
+            <li class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
+              <strong class="text-emerald-900 block mb-0.5">4. Nhận đường dẫn HTTPS gửi cho học sinh:</strong>
+              Đợi 1 phút và tải lại trang. Đường dẫn đầy đủ của học sinh sẽ là:<br>
+              <code class="font-mono text-xs bg-white px-2 py-0.5 rounded border border-emerald-300 inline-block mt-1">https://&lt;username&gt;.github.io/echoscore-app/pronunciation.html</code>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Bước 5: Interactive Checklist -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+          <span class="text-xs font-bold text-emerald-600 uppercase">Bước 5</span>
+          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Danh sách Kiểm thử Hệ thống (Checklist)</h3>
+          <p class="text-xs sm:text-sm text-slate-500">Đánh dấu vào các bước dưới đây để kiểm tra trước khi gửi đường dẫn cho cả lớp:</p>
+
+          <div class="space-y-2.5 text-xs sm:text-sm">
+            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
+              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
+              <span>Đã tạo Google Sheets với đúng <strong>9 tiêu đề cột</strong> từ <code>A1</code> đến <code>I1</code>.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
+              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
+              <span>Đã triển khai Google Apps Script với quyền truy cập <strong>Bất kỳ ai (Anyone)</strong>.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
+              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
+              <span>Đã dán <code>GAS_URL</code> vào tệp <code>pronunciation.html</code> và tải lên GitHub Pages.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
+              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
+              <span>Đã mở trang web bằng Chrome, bấm <strong>Nghe đọc mẫu (Giọng Mỹ)</strong> phát âm rõ ràng.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
+              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
+              <span>Đã đọc thử qua Micro, kiểm tra màu sắc từ (Xanh lá / Đỏ / Vàng) và xác nhận điểm đã nhảy vào Google Sheets.</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL MỞ KHÓA GIÁO VIÊN (THAY THẾ HOÀN TOÀN PROMPT/CONFIRM/ALERT)      -->
+  <!-- ===================================================================== -->
+  <div id="teacherModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <h3 class="text-lg font-extrabold text-slate-900">Xác thực Quyền Giáo viên</h3>
+        </div>
+        <button onclick="closeTeacherModal()" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+        Nhập Email giáo viên được cấp quyền để mở khóa tính năng <strong>Chuyển đổi & Tải lên Ngân hàng câu hỏi (.txt)</strong>:
+      </p>
+
+      <div>
+        <input type="email" id="modalTeacherEmailInput" placeholder="Nhập email giáo viên..." class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none">
+        <p class="text-xs text-slate-400 mt-1.5">
+          Email mặc định hiện tại: <code id="modalHintEmail" class="text-slate-600 font-mono">audreyshih32@gm.chihlee.edu.tw</code>
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-end gap-2 pt-2">
+        <button onclick="quickUnlockTeacherDemo()" class="px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold transition mr-auto">
+          ⚡ Mở khóa nhanh (Demo)
+        </button>
+        <button onclick="closeTeacherModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 text-xs font-semibold hover:bg-slate-100">
+          Hủy
+        </button>
+        <button onclick="verifyTeacherEmail()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm">
+          Xác nhận Mở khóa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL CẤU HÌNH NHANH GAS_URL & EMAIL                                  -->
+  <!-- ===================================================================== -->
+  <div id="configModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-blue-600"></i>
+          <span>Cấu hình Kết nối Google Apps Script</span>
+        </h3>
+        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs sm:text-sm">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Email Giáo viên được cấp quyền:</label>
+          <input type="email" id="modalConfigEmail" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-xs">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Web App URL (<code>GAS_URL</code>):</label>
+          <input type="url" id="modalConfigGasUrl" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-xs">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button onclick="closeConfigModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 text-xs font-semibold">Đóng</button>
+        <button onclick="saveConfigModal()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold">Lưu cấu hình</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TOAST NOTIFICATION (THAY THẾ ALERT)                                   -->
+  <!-- ===================================================================== -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- ===================================================================== -->
+  <!-- CHÂN TRANG (FOOTER)                                                   -->
+  <!-- ===================================================================== -->
+  <footer class="bg-white border-t border-slate-200 py-5 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+      <div>
+        <strong>EchoScore Cloud EdTech</strong> — Giải pháp Luyện & Chấm điểm Phát âm Tiếng Anh với Web Speech API + GitHub Pages + Google Sheets.
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="switchMainTab('app')" class="hover:text-blue-600 font-medium">Phòng Luyện Tập</button>
+        <button onclick="switchMainTab('sheet')" class="hover:text-blue-600 font-medium">Bảng Điểm 9 Cột</button>
+        <button onclick="switchMainTab('guide')" class="hover:text-blue-600 font-medium">Tài Liệu Hướng Dẫn</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- MÃ NGUỒN JAVASCRIPT ĐIỀU KHIỂN TOÀN BỘ ỨNG DỤNG                       -->
+  <!-- ===================================================================== -->
+  <script>
+    // 1. BIẾN CẤU HÌNH HỆ THỐNG
+    let AUTHORIZED_TEACHER_EMAIL = "audreyshih32@gm.chihlee.edu.tw";
+    let GAS_URL = "https://script.google.com/macros/s/AKfycbwGKabME3C398ARfyvxRpsLDyJ9jZgcnYAApWy1yN9fU1K13sf1jM5nFNjqQUAfiwO2/exec";
+    let CURRENT_BRAND_TITLE = "EchoScore – Luyện Phát âm Chuẩn Mỹ";
+
+    // Phát hiện trình duyệt tích hợp trong ứng dụng (LINE, Messenger, Teams, Zalo...)
     const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isInApp = (ua.indexOf("Line") > -1) || (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) ||
-                    (ua.indexOf("Instagram") > -1) || (ua.indexOf("Teams") > -1);
+    const isInApp = (ua.indexOf("Line") > -1) || (ua.indexOf("FBAN") > -1) ||
+                    (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1) ||
+                    (ua.indexOf("Teams") > -1) || (ua.indexOf("Zalo") > -1);
     if (isInApp) {
-      const inAppElem = document.getElementById('inAppWarning');
-      inAppElem.style.display = 'block';
+      document.getElementById('inAppWarning').classList.remove('hidden');
     }
 
-    // Google Apps Script Web App Endpoint URL (Connected to EchoScore-Sheet)
-    const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwBd663J_QDe_RD6Vw-Uv47D2KLx2iKcvrPu2uo8WdF5j6gCmXmO-fPSUeb5ZDaLHk/exec";
-    let GAS_URL = localStorage.getItem('customGasUrl') || DEFAULT_GAS_URL;
+    function toggleInAppWarning(show) {
+      const banner = document.getElementById('inAppWarning');
+      if (show) {
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
 
-    // Daily English Sentences Pool
+    // 2. KHO CÂU HỎI TIẾNG ANH MẶC ĐỊNH & GIAO TIẾP
+    const defaultProverbsPool = [
+      "Practice makes perfect.",
+      "Where there is a will, there is a way.",
+      "The quick brown fox jumps over the lazy dog.",
+      "Action speaks louder than words.",
+      "Honesty is the best policy.",
+      "Better late than never."
+    ];
+
     const dailyEnglishPool = [
       "How's it going with you today?",
       "Could you give me a quick hand with this?",
@@ -939,166 +950,235 @@
       "Thanks a lot for taking the time to help me."
     ];
 
-    // Default Sentence Bank
-    let sentenceBank = [
-      "Practice makes perfect.",
-      "Where there is a will, there is a way.",
-      "The quick brown fox jumps over the lazy dog.",
-      "Action speaks louder than words.",
-      "Honesty is the best policy.",
-      "Better late than never."
-    ];
-
+    let sentenceBank = [...defaultProverbsPool];
     let currentSentenceIndex = 0;
-    let targetSentence = sentenceBank[currentSentenceIndex];
+    let targetSentence = sentenceBank[0];
     let targetWords = [];
     let displayWords = [];
     let attemptCount = 0;
 
-    const studentClass = document.getElementById('studentClass');
-    const studentId = document.getElementById('studentId');
-    const studentName = document.getElementById('studentName');
-    const sentenceBox = document.getElementById('sentenceBox');
-    const sentenceIndexBadge = document.getElementById('sentenceIndexBadge');
-    const btnAudio = document.getElementById('btnAudio');
-    const btnMic = document.getElementById('btnMic');
-    const btnNext = document.getElementById('btnNext');
-    const btnTeacherLock = document.getElementById('btnTeacherLock');
-    const teacherPanel = document.getElementById('teacherPanel');
-    const btnRandom5 = document.getElementById('btnRandom5');
-    const fileInput = document.getElementById('fileInput');
-    const bankStatus = document.getElementById('bankStatus');
-    const attemptCountDisplay = document.getElementById('attemptCountDisplay');
-    const completionScore = document.getElementById('completionScore');
-    const accuracyScore = document.getElementById('accuracyScore');
-    const feedbackMsg = document.getElementById('feedbackMsg');
-    const gasUrlInput = document.getElementById('gasUrlInput');
-    const btnSaveGasUrl = document.getElementById('btnSaveGasUrl');
+    // 3. DỮ LIỆU BẢNG TÍNH GOOGLE SHEETS MÔ PHỎNG (9 CỘT)
+    let sheetRecords = [
+      {
+        timestamp: "2026/9/6 18:39:28",
+        className: "Anh A1",
+        studentId: "1090121",
+        studentName: "Nguyễn Minh",
+        attemptCount: 1,
+        targetSentence: "Practice makes perfect.",
+        completion: "100%",
+        accuracy: "100%",
+        transcript: "practice makes perfect"
+      },
+      {
+        timestamp: "2026/9/6 18:57:14",
+        className: "Anh A1",
+        studentId: "1090122",
+        studentName: "Trần Bảo Lan",
+        attemptCount: 1,
+        targetSentence: "Practice makes perfect.",
+        completion: "100%",
+        accuracy: "100%",
+        transcript: "practice makes perfect"
+      },
+      {
+        timestamp: "2026/9/6 19:07:58",
+        className: "Anh A2",
+        studentId: "1090125",
+        studentName: "Lê Quốc Hùng",
+        attemptCount: 1,
+        targetSentence: "Action speaks louder than words.",
+        completion: "100%",
+        accuracy: "80%",
+        transcript: "actions speaks louder than words"
+      }
+    ];
 
-    if (gasUrlInput) {
-      gasUrlInput.value = GAS_URL;
-      btnSaveGasUrl.addEventListener('click', () => {
-        const val = gasUrlInput.value.trim();
-        if (val) {
-          GAS_URL = val;
-          localStorage.setItem('customGasUrl', val);
-          alert("Google Apps Script Web App URL updated successfully!");
+    // 4. HÀM HIỂN THỊ TOAST NOTIFICATION (THAY THẾ ALERT)
+    function showToast(message, type = "info") {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const colors = {
+        success: "bg-emerald-600 text-white",
+        error: "bg-rose-600 text-white",
+        warning: "bg-amber-500 text-white",
+        info: "bg-slate-900 text-white"
+      };
+      const icons = {
+        success: "fa-circle-check",
+        error: "fa-circle-xmark",
+        warning: "fa-triangle-exclamation",
+        info: "fa-circle-info"
+      };
+
+      toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-semibold flex items-center gap-2.5 pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0`;
+      toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.info} text-base shrink-0"></i><span>${message}</span>`;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // 5. CHUYỂN ĐỔI TAB TRÊN THANH ĐIỀU HƯỚNG
+    function switchMainTab(tabName) {
+      ['app', 'sheet', 'guide'].forEach(t => {
+        const section = document.getElementById(`tabContent-${t}`);
+        const btn = document.getElementById(`tabBtn-${t}`);
+        if (t === tabName) {
+          section.classList.remove('hidden');
+          btn.className = "tab-nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-blue-600 shadow-sm whitespace-nowrap";
+        } else {
+          section.classList.add('hidden');
+          btn.className = "tab-nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap";
         }
       });
     }
 
-    // Dynamic Feedback Message with Smooth Fade-out / Fade-in
-    function setFeedback(htmlContent, borderColor = 'var(--primary)') {
-      feedbackMsg.style.opacity = '0';
-      feedbackMsg.style.transform = 'translateY(3px)';
-      setTimeout(() => {
-        feedbackMsg.innerHTML = htmlContent;
-        feedbackMsg.style.borderLeftColor = borderColor;
-        feedbackMsg.style.opacity = '1';
-        feedbackMsg.style.transform = 'translateY(0)';
-      }, 120);
-    }
-
-    // Number Counter with Pulse & Fade Animation
-    function animateStat(element, newValue) {
-      element.style.opacity = '0.3';
-      element.style.transform = 'scale(0.85)';
-      setTimeout(() => {
-        element.innerText = newValue;
-        element.style.opacity = '1';
-        element.style.transform = 'scale(1)';
-      }, 100);
-    }
-
-    // Sentence Switch with Smooth Fade-out / Fade-in
-    function renderSentenceWithTransition(newSentence) {
-      sentenceBox.style.opacity = '0';
-      sentenceBox.style.transform = 'translateY(4px)';
-      setTimeout(() => {
-        initSentence(newSentence);
-        sentenceBox.style.opacity = '1';
-        sentenceBox.style.transform = 'translateY(0)';
-      }, 150);
-    }
-
-    // Check teacher unlocked state
-    if (localStorage.getItem('teacherUnlocked') === 'true') {
-      teacherPanel.classList.add('is-open');
-      btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Teacher Unlocked</span>';
-    }
-
-    // Teacher Authorization Toggle Event
-    btnTeacherLock.addEventListener('click', () => {
-      if (teacherPanel.classList.contains('is-open')) {
-        if (confirm("Do you want to lock and hide the teacher panel?")) {
-          teacherPanel.classList.remove('is-open');
-          btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock"></i><span>Teacher Unlock</span>';
-          localStorage.removeItem('teacherUnlocked');
-        }
-        return;
-      }
-      const inputEmail = prompt("Please enter the authorized teacher's email to unlock settings:");
-      if (inputEmail && inputEmail.trim().toLowerCase() === AUTHORIZED_TEACHER_EMAIL.toLowerCase()) {
-        alert("Verification successful! Teacher panel unlocked.");
-        teacherPanel.classList.add('is-open');
-        btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Teacher Unlocked</span>';
-        localStorage.setItem('teacherUnlocked', 'true');
-      } else if (inputEmail !== null) {
-        alert("Email verification failed. You do not have permission to access teacher settings!");
-      }
-    });
-
-    function updateSentenceBadge() {
-      if (sentenceIndexBadge) {
-        sentenceIndexBadge.innerHTML = `<i class="fa-solid fa-bookmark"></i><span>Sentence Progress ${currentSentenceIndex + 1} / ${sentenceBank.length}</span>`;
-      }
-    }
-
+    // 6. KHỞI TẠO CÂU ĐỀ BÀI & GẮN SỰ KIỆN ĐỌC TỪNG TỪ
     function initSentence(sentenceText) {
       targetSentence = sentenceText;
       targetWords = targetSentence.toLowerCase().match(/\b[\w'-]+\b/g) || [];
       displayWords = targetSentence.split(/(\s+)/);
       let wordCounter = 0;
+
+      const sentenceBox = document.getElementById('sentenceBox');
       sentenceBox.innerHTML = displayWords.map(chunk => {
         if (/\b[\w'-]+\b/.test(chunk)) {
-          const html = `<span class="w-unit pending" id="w-${wordCounter}" data-word="${chunk.toLowerCase().replace(/[^\w'-]/g, '')}">${chunk}</span>`;
+          const cleanWord = chunk.toLowerCase().replace(/[^\w'-]/g, '');
+          const html = `<span class="w-unit pending" id="w-${wordCounter}" data-word="${cleanWord}" onclick="speakSingleWord('${cleanWord.replace(/'/g, "\\'")}')" title="Nhấn để nghe phát âm từ '${chunk}'">${chunk}</span>`;
           wordCounter++;
           return html;
         }
         return chunk;
       }).join('');
-      updateSentenceBadge();
+
+      document.getElementById('sentenceProgressBadge').innerText = `${currentSentenceIndex + 1} / ${sentenceBank.length}`;
+    }
+
+    function speakSingleWord(word) {
+      if (!('speechSynthesis' in window)) return;
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const utter = new SpeechSynthesisUtterance(word);
+      utter.lang = 'en-US';
+      utter.rate = 0.85;
+      synth.speak(utter);
     }
 
     function resetScoresAndLoadFirst() {
       currentSentenceIndex = 0;
-      renderSentenceWithTransition(sentenceBank[0]);
-      animateStat(completionScore, "0%");
-      animateStat(accuracyScore, "0%");
+      initSentence(sentenceBank[0]);
+      document.getElementById('completionScore').innerText = "0%";
+      document.getElementById('accuracyScore').innerText = "0%";
       attemptCount = 0;
-      animateStat(attemptCountDisplay, "0 times");
+      document.getElementById('attemptCountDisplay').innerText = "0 lần";
       if (checkFormValidity()) {
-        setFeedback(`<i class="fa-solid fa-circle-check" style="color: var(--success);"></i><span>Successfully loaded new question bank (${sentenceBank.length} sentences). Click "Start Speaking" to practice.</span>`, 'var(--success)');
+        document.getElementById('feedbackMsg').innerHTML = `Đã tải thành công ngân hàng câu mới (Tổng <strong>${sentenceBank.length} câu</strong>), nhấn nút ghi âm để bắt đầu luyện tập.`;
       }
     }
 
-    // Initialize first sentence
-    initSentence(targetSentence);
+    // 7. KIỂM TRA THÔNG TIN HỌC SINH & ĐIỀN NHANH MẪU
+    function checkFormValidity() {
+      const sClass = document.getElementById('studentClass').value.trim();
+      const sId = document.getElementById('studentId').value.trim();
+      const sName = document.getElementById('studentName').value.trim();
+      const btnMic = document.getElementById('btnMic');
+      const feedbackMsg = document.getElementById('feedbackMsg');
 
-    // Load 5 Random Daily Sentences
-    btnRandom5.addEventListener('click', () => {
+      if (sClass !== "" && sId !== "" && sName !== "") {
+        btnMic.disabled = false;
+        if (feedbackMsg.innerText.includes("Vui lòng điền thông tin")) {
+          feedbackMsg.innerHTML = `<span class="text-emerald-600"><i class="fa-solid fa-circle-check mr-1"></i>Đã điền thông tin học sinh <strong>${sName}</strong>, hãy nhấn nút <strong>Bắt đầu ghi âm luyện tập</strong>!</span>`;
+        }
+        return true;
+      } else {
+        btnMic.disabled = true;
+        feedbackMsg.innerHTML = `Vui lòng điền thông tin học sinh ở phía trên (hoặc nhấn nút <strong>"Điền nhanh HS mẫu"</strong>) trước khi bắt đầu luyện tập.`;
+        return false;
+      }
+    }
+
+    function fillDemoStudent() {
+      document.getElementById('studentClass').value = "Anh A1";
+      document.getElementById('studentId').value = "1090123";
+      document.getElementById('studentName').value = "Nguyễn Văn An";
+      checkFormValidity();
+      showToast("Đã điền thông tin học sinh mẫu! Bạn có thể bấm Ghi âm hoặc Giả lập đọc thử.", "success");
+    }
+
+    // 8. CHỨC NĂNG MỞ KHÓA GIÁO VIÊN & TÙY CHỈNH NGÂN HÀNG CÂU HỎI
+    function setTeacherUnlockedState(unlocked) {
+      const panel = document.getElementById('teacherPanel');
+      const lockIcon = document.getElementById('teacherLockIcon');
+      const lockText = document.getElementById('teacherLockText');
+      if (unlocked) {
+        panel.classList.remove('hidden');
+        lockIcon.className = "fa-solid fa-lock-open text-emerald-600";
+        lockText.innerText = "Giáo viên đã mở khóa";
+        localStorage.setItem('teacherUnlocked', 'true');
+      } else {
+        panel.classList.add('hidden');
+        lockIcon.className = "fa-solid fa-lock";
+        lockText.innerText = "Mở khóa Giáo viên";
+        localStorage.removeItem('teacherUnlocked');
+      }
+    }
+
+    function handleTeacherLockClick() {
+      const panel = document.getElementById('teacherPanel');
+      if (!panel.classList.contains('hidden')) {
+        setTeacherUnlockedState(false);
+        showToast("Đã khóa và ẩn khu vực chức năng Giáo viên.", "info");
+      } else {
+        document.getElementById('modalHintEmail').innerText = AUTHORIZED_TEACHER_EMAIL;
+        document.getElementById('modalTeacherEmailInput').value = "";
+        document.getElementById('teacherModal').classList.remove('hidden');
+      }
+    }
+
+    function closeTeacherModal() {
+      document.getElementById('teacherModal').classList.add('hidden');
+    }
+
+    function verifyTeacherEmail() {
+      const input = document.getElementById('modalTeacherEmailInput').value.trim();
+      if (input.toLowerCase() === AUTHORIZED_TEACHER_EMAIL.toLowerCase()) {
+        setTeacherUnlockedState(true);
+        closeTeacherModal();
+        showToast("Xác thực thành công! Đã mở khóa khu vực Giáo viên.", "success");
+      } else {
+        showToast("Email không khớp với Email Giáo viên được cấp quyền!", "error");
+      }
+    }
+
+    function quickUnlockTeacherDemo() {
+      setTeacherUnlockedState(true);
+      closeTeacherModal();
+      showToast("Đã mở khóa nhanh chế độ Giáo viên (Demo)!", "success");
+    }
+
+    function loadDefaultProverbs() {
+      sentenceBank = [...defaultProverbsPool];
+      document.getElementById('bankStatus').innerText = `Ngân hàng câu hiện tại: Ngân hàng châm ngôn mặc định (Tổng ${sentenceBank.length} câu)`;
+      resetScoresAndLoadFirst();
+      showToast("Đã tải bộ 6 câu châm ngôn tiếng Anh mặc định.", "info");
+    }
+
+    function loadRandomDailyEnglish() {
       const shuffled = [...dailyEnglishPool].sort(() => 0.5 - Math.random());
       sentenceBank = shuffled.slice(0, 5);
-      bankStatus.style.opacity = '0';
-      setTimeout(() => {
-        bankStatus.innerHTML = `<i class="fa-solid fa-database"></i><span>Current Bank: Random Daily English (5 sentences)</span>`;
-        bankStatus.style.opacity = '1';
-      }, 120);
+      document.getElementById('bankStatus').innerText = "Ngân hàng câu hiện tại: Tiếng Anh giao tiếp ngẫu nhiên (Tổng 5 câu)";
       resetScoresAndLoadFirst();
-    });
+      showToast("Đã tải ngẫu nhiên 5 câu tiếng Anh giao tiếp hàng ngày!", "success");
+    }
 
-    // Upload text.txt custom bank
-    fileInput.addEventListener('change', (e) => {
+    function handleCustomFileUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
@@ -1107,246 +1187,192 @@
         const lines = text.split(/\r?\n/).map(line => line.trim().replace(/^"|"$/g, '')).filter(line => line.length > 0);
         if (lines.length > 0) {
           sentenceBank = lines;
-          bankStatus.style.opacity = '0';
-          setTimeout(() => {
-            bankStatus.innerHTML = `<i class="fa-solid fa-database"></i><span>Current Bank: Custom File ${file.name} (${lines.length} sentences)</span>`;
-            bankStatus.style.opacity = '1';
-          }, 120);
+          document.getElementById('bankStatus').innerText = `Ngân hàng câu hiện tại: Tệp tùy chỉnh ${file.name} (Tổng ${lines.length} câu)`;
           resetScoresAndLoadFirst();
+          showToast(`Đã tải ${lines.length} câu từ tệp ${file.name}!`, "success");
         } else {
-          alert("No valid English sentences found in the uploaded text file!");
+          showToast("Tệp văn bản tải lên không có câu tiếng Anh hợp lệ!", "error");
         }
       };
       reader.readAsText(file, 'UTF-8');
-    });
+    }
 
-    // Switch to Next Sentence
-    btnNext.addEventListener('click', () => {
-      currentSentenceIndex = (currentSentenceIndex + 1) % sentenceBank.length;
-      renderSentenceWithTransition(sentenceBank[currentSentenceIndex]);
-      animateStat(completionScore, "0%");
-      animateStat(accuracyScore, "0%");
-      if (checkFormValidity()) {
-        setFeedback(`<i class="fa-solid fa-circle-info" style="color: var(--primary);"></i><span>Switched to sentence ${currentSentenceIndex + 1} / ${sentenceBank.length}. Click "Start Speaking" to practice.</span>`, 'var(--primary)');
+    function addSingleCustomSentence() {
+      const input = document.getElementById('customSentenceInput');
+      const val = input.value.trim();
+      if (!val) {
+        showToast("Vui lòng nhập nội dung câu tiếng Anh muốn thêm!", "warning");
+        return;
       }
-    });
+      sentenceBank.unshift(val);
+      input.value = "";
+      document.getElementById('bankStatus').innerText = `Ngân hàng câu hiện tại: Đã thêm câu mới (Tổng ${sentenceBank.length} câu)`;
+      resetScoresAndLoadFirst();
+      showToast("Đã thêm câu mới vào vị trí đầu tiên của đề bài!", "success");
+    }
 
-    function checkFormValidity() {
-      if (studentClass.value.trim() !== "" && studentId.value.trim() !== "" && studentName.value.trim() !== "") {
-        btnMic.disabled = false;
-        if (feedbackMsg.innerText.includes("Please fill in your student information")) {
-          setFeedback(`<i class="fa-solid fa-circle-check" style="color: var(--success);"></i><span>Information completed. Click "Start Speaking" to begin your practice.</span>`, 'var(--success)');
-        }
-        return true;
-      } else {
-        btnMic.disabled = true;
-        setFeedback(`<i class="fa-solid fa-circle-info" style="color: var(--primary);"></i><span>Please fill in your student information above before starting the practice.</span>`, 'var(--primary)');
-        return false;
+    function nextSentence() {
+      currentSentenceIndex = (currentSentenceIndex + 1) % sentenceBank.length;
+      initSentence(sentenceBank[currentSentenceIndex]);
+      document.getElementById('completionScore').innerText = "0%";
+      document.getElementById('accuracyScore').innerText = "0%";
+      if (checkFormValidity()) {
+        document.getElementById('feedbackMsg').innerHTML = `Đã chuyển sang câu thứ <strong>${currentSentenceIndex + 1}/${sentenceBank.length}</strong>, nhấn nút ghi âm để bắt đầu luyện tập.`;
       }
     }
 
-    [studentClass, studentId, studentName].forEach(input => {
-      input.addEventListener('input', checkFormValidity);
-    });
-    checkFormValidity();
-
-    // Text-to-Speech (TTS) Demo
-    btnAudio.addEventListener('click', () => {
+    // 9. ĐỌC MẪU GIỌNG MỸ (TEXT-TO-SPEECH)
+    function speakTargetSentence(rate = 0.85) {
+      if (!('speechSynthesis' in window)) {
+        showToast("Trình duyệt của bạn không hỗ trợ đọc văn bản (SpeechSynthesis).", "error");
+        return;
+      }
       const synth = window.speechSynthesis;
       synth.cancel();
       const utterance = new SpeechSynthesisUtterance(targetSentence);
       utterance.lang = 'en-US';
-      utterance.rate = 0.85;
+      utterance.rate = rate;
       const voices = synth.getVoices();
       if (voices.length > 0) {
         const usVoice = voices.find(v => v.lang.includes('en-US') || v.lang.includes('en_US'));
         if (usVoice) utterance.voice = usVoice;
       }
       synth.speak(utterance);
-    });
+    }
 
-    // Speech-to-Text (STT) Recognition with Real-Time Feedback & State Management
+    // 10. NHẬN DIỆN GIỌNG NÓI & THUẬT TOÁN CHẤM ĐIỂM TỪNG TỪ
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i><span>Your browser does not support Speech Recognition. Please use Google Chrome or Safari.</span>`, 'var(--warning)');
-      btnMic.disabled = true;
-    } else {
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'en-US';
-      recognition.interimResults = true;  // Enable real-time interim speech results
-      recognition.continuous = false;    // Clean utterance-level recognition
-      recognition.maxAlternatives = 1;
+    let recognitionInstance = null;
 
-      let isRecording = false;
-      let speechReceived = false;
-      let finalTranscript = '';
-      let interimTranscript = '';
+    if (SpeechRecognition) {
+      recognitionInstance = new SpeechRecognition();
+      recognitionInstance.lang = 'en-US';
+      recognitionInstance.interimResults = false;
 
-      function evaluateAndScore(spokenText) {
-        if (!spokenText || !spokenText.trim()) return;
-
-        attemptCount++;
-        animateStat(attemptCountDisplay, `${attemptCount} times`);
-
-        const studentWords = spokenText.toLowerCase().match(/\b[\w'-]+\b/g) || [];
-        let sIdx = 0;
-        let correctCount = 0;
-        let missingCount = 0;
-        let wrongCount = 0;
-
-        for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
-          const target = targetWords[tIdx];
-          const el = document.getElementById(`w-${tIdx}`);
-          if (sIdx < studentWords.length) {
-            if (studentWords[sIdx] === target) {
-              if (el) el.className = "w-unit correct";
-              correctCount++;
-              sIdx++;
-            } else {
-              const nextMatchIndex = studentWords.slice(sIdx).indexOf(target);
-              if (nextMatchIndex !== -1) {
-                if (el) el.className = "w-unit missing";
-                missingCount++;
-              } else {
-                if (el) el.className = "w-unit wrong";
-                wrongCount++;
-                sIdx++;
-              }
-            }
-          } else {
-            if (el) el.className = "w-unit missing";
-            missingCount++;
-          }
-        }
-
-        const attemptWordsCount = correctCount + wrongCount;
-        const completionRate = Math.round((attemptWordsCount / targetWords.length) * 100);
-        const accuracyRate = attemptWordsCount > 0 ? Math.round((correctCount / attemptWordsCount) * 100) : 0;
-
-        animateStat(completionScore, `${completionRate}%`);
-        animateStat(accuracyScore, `${accuracyRate}%`);
-        setFeedback(`<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--primary);"></i><span>Syncing attempt #${attemptCount} to Google Sheets...</span>`, 'var(--primary)');
-        sendDataToGoogleSheet(completionRate, accuracyRate, spokenText, attemptCount, targetSentence);
-      }
-
-      function stopMic() {
-        if (isRecording) {
-          try { recognition.stop(); } catch(e) {}
-        }
-      }
-
-      btnMic.addEventListener('click', async () => {
-        if (!checkFormValidity()) return;
-
-        if (isRecording) {
-          // User manually stops speaking
-          stopMic();
-          return;
-        }
-
-        // Check/prompt microphone permission explicitly
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            stream.getTracks().forEach(t => t.stop()); // Release track for SpeechRecognition
-          } catch (err) {
-            setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--danger);"></i><span>Microphone access was denied. Please allow microphone permission in browser settings.</span>`, 'var(--danger)');
-            return;
-          }
-        }
-
-        // Reset recognition state
-        finalTranscript = '';
-        interimTranscript = '';
-        speechReceived = false;
-
-        try {
-          recognition.start();
-        } catch (err) {
-          try {
-            recognition.stop();
-            setTimeout(() => recognition.start(), 100);
-          } catch(e) {}
-        }
-      });
-
-      recognition.onstart = () => {
-        isRecording = true;
-        btnMic.classList.add('recording');
-        btnMic.innerHTML = `<i class="fa-solid fa-stop-circle fa-fade"></i><span>Done Speaking</span>`;
-        setFeedback(`<i class="fa-solid fa-wave-square fa-fade" style="color: var(--danger);"></i><span>Listening to [${studentClass.value}] ${studentName.value}... Speak now.</span>`, 'var(--danger)');
-        
-        // Reset word highlights to pending
+      recognitionInstance.onstart = () => {
+        const btnMic = document.getElementById('btnMic');
+        btnMic.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+        btnMic.classList.add('bg-rose-600', 'hover:bg-rose-700', 'recording-pulse');
+        document.getElementById('btnMicText').innerText = "Học sinh đang ghi âm...";
+        const sClass = document.getElementById('studentClass').value;
+        const sName = document.getElementById('studentName').value;
+        document.getElementById('feedbackMsg').innerHTML = `<span class="text-rose-600 font-bold"><i class="fa-solid fa-ear-listen mr-1.5 animate-bounce"></i>Đang lắng nghe phát âm của bạn [${sClass}] ${sName}...</span>`;
         for (let i = 0; i < targetWords.length; i++) {
           const el = document.getElementById(`w-${i}`);
           if (el) el.className = "w-unit pending";
         }
       };
 
-      recognition.onresult = (event) => {
-        speechReceived = true;
-        interimTranscript = '';
-
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript + ' ';
-          } else {
-            interimTranscript += event.results[i][0].transcript;
-          }
-        }
-
-        const liveText = (finalTranscript + ' ' + interimTranscript).trim();
-        if (liveText) {
-          // Display recognized words in real-time
-          feedbackMsg.innerHTML = `<i class="fa-solid fa-microphone-lines fa-fade" style="color: var(--primary);"></i><span>Hearing: "<strong>${liveText}</strong>"...</span>`;
-          feedbackMsg.style.borderLeftColor = 'var(--primary)';
-
-          // Real-time highlight matching words
-          const currentWords = liveText.toLowerCase().match(/\b[\w'-]+\b/g) || [];
-          for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
-            const target = targetWords[tIdx];
-            const el = document.getElementById(`w-${tIdx}`);
-            if (el && currentWords.includes(target)) {
-              el.className = "w-unit correct";
-            }
-          }
-        }
+      recognitionInstance.onend = () => {
+        const btnMic = document.getElementById('btnMic');
+        btnMic.classList.remove('bg-rose-600', 'hover:bg-rose-700', 'recording-pulse');
+        btnMic.classList.add('bg-blue-600', 'hover:bg-blue-700');
+        document.getElementById('btnMicText').innerText = "Bắt đầu ghi âm luyện tập";
       };
 
-      recognition.onerror = (event) => {
-        console.warn('SpeechRecognition error:', event.error);
-        if (event.error === 'no-speech') {
-          setFeedback(`<i class="fa-solid fa-volume-xmark" style="color: var(--warning);"></i><span>No voice detected. Please speak louder into your microphone and try again.</span>`, 'var(--warning)');
-        } else if (event.error === 'not-allowed') {
-          setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--danger);"></i><span>Microphone permission denied. Click the mic icon in your browser address bar to Allow.</span>`, 'var(--danger)');
-        } else if (event.error === 'network') {
-          setFeedback(`<i class="fa-solid fa-wifi" style="color: var(--danger);"></i><span>Speech recognition network error. Please check your internet connection.</span>`, 'var(--danger)');
-        } else {
-          setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Recognition error: ${event.error}. Please try again.</span>`, 'var(--danger)');
-        }
+      recognitionInstance.onresult = (event) => {
+        const studentSpeech = event.results[0][0].transcript;
+        evaluatePronunciationResult(studentSpeech);
       };
 
-      recognition.onend = () => {
-        isRecording = false;
-        btnMic.classList.remove('recording');
-        btnMic.innerHTML = `<i class="fa-solid fa-microphone"></i><span>Start Speaking</span>`;
-
-        const totalSpoken = (finalTranscript + ' ' + interimTranscript).trim();
-        if (totalSpoken) {
-          evaluateAndScore(totalSpoken);
-        } else if (!speechReceived) {
-          if (!feedbackMsg.innerText.includes("No voice detected") && !feedbackMsg.innerText.includes("denied")) {
-            setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--warning);"></i><span>No speech captured. Please ensure your microphone is enabled and click "Start Speaking" again.</span>`, 'var(--warning)');
-          }
-        }
+      recognitionInstance.onerror = (event) => {
+        document.getElementById('feedbackMsg').innerHTML = `<span class="text-rose-600">Lỗi Micro (${event.error}): Vui lòng xác nhận đã cấp quyền Micro hoặc bấm nút <strong>"Giả lập đọc thử"</strong>.</span>`;
       };
     }
 
+    function startSpeechRecognition() {
+      if (!checkFormValidity()) {
+        showToast("Vui lòng điền Lớp, Mã số và Họ tên học sinh trước!", "warning");
+        return;
+      }
+      if (!recognitionInstance) {
+        showToast("Trình duyệt không hỗ trợ SpeechRecognition. Đang chạy chế độ Giả lập đọc thử!", "warning");
+        simulateStudentSpeech();
+        return;
+      }
+      try {
+        recognitionInstance.start();
+      } catch (e) {
+        recognitionInstance.stop();
+      }
+    }
+
+    // Chế độ giả lập đọc thử để người dùng kiểm nghiệm thuật toán chấm màu từng từ ngay lập tức
+    function simulateStudentSpeech() {
+      if (!checkFormValidity()) {
+        fillDemoStudent();
+      }
+      // Tạo ngẫu nhiên 1 lần đọc hoàn hảo (100%) hoặc 1 lần đọc sai/thiếu 1 từ để thấy rõ màu Xanh/Đỏ/Vàng
+      const words = [...targetWords];
+      let simulatedTranscript = targetSentence;
+      if (attemptCount % 2 === 1 && words.length >= 4) {
+        // Lần chẵn: giả lập đọc sai 1 từ và thiếu 1 từ
+        const modified = [...words];
+        modified[1] = "something"; // từ sai (màu đỏ)
+        modified.splice(2, 1);     // từ bị bỏ sót (màu vàng)
+        simulatedTranscript = modified.join(" ");
+      }
+      evaluatePronunciationResult(simulatedTranscript);
+      showToast("Đã thực hiện chấm điểm phát âm và lưu vào Bảng Điểm Google Sheet!", "success");
+    }
+
+    function evaluatePronunciationResult(studentSpeech) {
+      attemptCount++;
+      document.getElementById('attemptCountDisplay').innerText = `${attemptCount} lần`;
+
+      const studentWords = studentSpeech.toLowerCase().match(/\b[\w'-]+\b/g) || [];
+
+      let sIdx = 0;
+      let correctCount = 0;
+      let missingCount = 0;
+      let wrongCount = 0;
+
+      for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
+        const target = targetWords[tIdx];
+        const el = document.getElementById(`w-${tIdx}`);
+
+        if (sIdx < studentWords.length) {
+          if (studentWords[sIdx] === target) {
+            if (el) el.className = "w-unit correct";
+            correctCount++;
+            sIdx++;
+          } else {
+            const nextMatchIndex = studentWords.slice(sIdx).indexOf(target);
+            if (nextMatchIndex !== -1) {
+              if (el) el.className = "w-unit missing";
+              missingCount++;
+            } else {
+              if (el) el.className = "w-unit wrong";
+              wrongCount++;
+              sIdx++;
+            }
+          }
+        } else {
+          if (el) el.className = "w-unit missing";
+          missingCount++;
+        }
+      }
+
+      const attemptWordsCount = correctCount + wrongCount;
+      const completionRate = Math.round((attemptWordsCount / targetWords.length) * 100);
+      const accuracyRate = attemptWordsCount > 0 ? Math.round((correctCount / attemptWordsCount) * 100) : 0;
+
+      document.getElementById('completionScore').innerText = `${completionRate}%`;
+      document.getElementById('accuracyScore').innerText = `${accuracyRate}%`;
+      document.getElementById('feedbackMsg').innerHTML = `<div><i class="fa-solid fa-rotate fa-spin mr-1.5 text-blue-600"></i>Đang đồng bộ dữ liệu luyện tập lần thứ ${attemptCount} lên đám mây...</div>`;
+
+      sendDataToGoogleSheet(completionRate, accuracyRate, studentSpeech, attemptCount, targetSentence);
+    }
+
     function sendDataToGoogleSheet(completion, accuracy, transcript, currentAttempt, targetSentenceText) {
+      const sClass = document.getElementById('studentClass').value.trim();
+      const sId = document.getElementById('studentId').value.trim();
+      const sName = document.getElementById('studentName').value.trim();
+
       const payload = {
-        className: studentClass.value.trim(),
-        studentId: studentId.value.trim(),
-        studentName: studentName.value.trim(),
+        className: sClass,
+        studentId: sId,
+        studentName: sName,
         attemptCount: currentAttempt,
         targetSentence: targetSentenceText,
         completion: completion,
@@ -1354,6 +1380,22 @@
         transcript: transcript
       };
 
+      // Lưu vào bảng Google Sheets mô phỏng ngay trên giao diện
+      const nowStr = new Date().toLocaleString('vi-VN');
+      sheetRecords.unshift({
+        timestamp: nowStr,
+        className: sClass,
+        studentId: sId,
+        studentName: sName,
+        attemptCount: currentAttempt,
+        targetSentence: targetSentenceText,
+        completion: `${completion}%`,
+        accuracy: `${accuracy}%`,
+        transcript: transcript
+      });
+      renderSheetTable();
+
+      // Gửi POST thực tế tới GAS_URL
       fetch(GAS_URL, {
         method: "POST",
         mode: "no-cors",
@@ -1361,17 +1403,487 @@
         body: JSON.stringify(payload)
       })
       .then(() => {
-        setFeedback(`
-          <i class="fa-solid fa-circle-check" style="color: var(--success);"></i>
-          <span>
-            Attempt <strong>#${currentAttempt}</strong> synced! Recognized: "<em style="color: var(--text-muted);">${transcript}</em>"
-          </span>
-        `, 'var(--success)');
+        document.getElementById('feedbackMsg').innerHTML = `
+          <span class="text-emerald-600 font-bold">✅ Điểm luyện tập lần thứ ${currentAttempt} đã được đồng bộ thành công!</span><br>
+          <span class="text-slate-600">Bạn <strong>${sName}</strong> thực tế đã nói: "<em class="text-slate-500">${transcript}</em>"</span>
+        `;
       })
-      .catch(err => {
-        setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Cloud sync failed. Please check your internet connection.</span>`, 'var(--danger)');
+      .catch(() => {
+        document.getElementById('feedbackMsg').innerHTML = `
+          <span class="text-amber-600 font-bold">⚠️ Đã lưu vào Bảng Điểm trên trang (Chưa kết nối mạng tới GAS_URL).</span><br>
+          <span class="text-slate-600">Bạn <strong>${sName}</strong> thực tế đã nói: "<em class="text-slate-500">${transcript}</em>"</span>
+        `;
       });
     }
+
+    // 11. HIỂN THỊ & XUẤT DỮ LIỆU BẢNG GOOGLE SHEETS 9 CỘT
+    function renderSheetTable() {
+      const tbody = document.getElementById('sheetTableBody');
+      document.getElementById('sheetBadgeCount').innerText = sheetRecords.length;
+
+      tbody.innerHTML = sheetRecords.map((row, idx) => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-2.5 px-2 text-center bg-slate-100 text-slate-500 font-mono text-xs border-r border-slate-200">${idx + 2}</td>
+          <td class="py-2.5 px-3 font-mono text-xs text-slate-500 border-r border-slate-200 whitespace-nowrap">${row.timestamp}</td>
+          <td class="py-2.5 px-3 font-semibold text-slate-800 border-r border-slate-200">${row.className}</td>
+          <td class="py-2.5 px-3 font-mono text-xs text-slate-700 border-r border-slate-200">${row.studentId}</td>
+          <td class="py-2.5 px-3 font-semibold text-slate-900 border-r border-slate-200">${row.studentName}</td>
+          <td class="py-2.5 px-3 text-center font-bold text-purple-600 border-r border-slate-200">${row.attemptCount}</td>
+          <td class="py-2.5 px-3 text-slate-800 border-r border-slate-200">${row.targetSentence}</td>
+          <td class="py-2.5 px-3 text-center font-bold text-emerald-600 border-r border-slate-200">${row.completion}</td>
+          <td class="py-2.5 px-3 text-center font-bold text-blue-600 border-r border-slate-200">${row.accuracy}</td>
+          <td class="py-2.5 px-3 italic text-slate-600">${row.transcript}</td>
+        </tr>
+      `).join('');
+    }
+
+    function copyTextToClipboard(text, successMsg) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast(successMsg, "success");
+      } catch (err) {
+        showToast("Không thể sao chép tự động, vui lòng bôi đen để sao chép.", "error");
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function copySheetHeaders() {
+      const headers = "timestamp\tclassName\tstudentId\tstudentName\tattemptCount\ttargetSentence\tcompletion\taccuracy\ttranscript";
+      copyTextToClipboard(headers, "Đã sao chép 9 tiêu đề cột! Hãy bấm vào ô A1 trên Google Sheets và nhấn Ctrl+V.");
+    }
+
+    function copyCodeBlock(elementId, msg) {
+      const code = document.getElementById(elementId).innerText;
+      copyTextToClipboard(code, msg);
+    }
+
+    function exportSheetCSV() {
+      const headers = ["timestamp", "className", "studentId", "studentName", "attemptCount", "targetSentence", "completion", "accuracy", "transcript"];
+      const csvRows = [
+        headers.join(","),
+        ...sheetRecords.map(r => [
+          `"${r.timestamp}"`,
+          `"${r.className}"`,
+          `"${r.studentId}"`,
+          `"${r.studentName}"`,
+          r.attemptCount,
+          `"${r.targetSentence.replace(/"/g, '""')}"`,
+          `"${r.completion}"`,
+          `"${r.accuracy}"`,
+          `"${r.transcript.replace(/"/g, '""')}"`
+        ].join(","))
+      ];
+      const blob = new Blob(["\uFEFF" + csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "EchoScore_Sheet_Records.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("Đã tải xuống tệp dữ liệu EchoScore_Sheet_Records.csv!", "success");
+    }
+
+    // 12. ĐỔI TÊN THƯƠNG HIỆU & CẤU HÌNH ĐỘNG
+    function applyBrandName(shortName, fullTitle) {
+      CURRENT_BRAND_TITLE = fullTitle;
+      document.getElementById('navBrandName').innerText = shortName;
+      document.getElementById('appMainTitle').innerText = fullTitle;
+      showToast(`Đã đổi tên hệ thống thành "${fullTitle}"!`, "success");
+    }
+
+    function syncConfigInputs() {
+      AUTHORIZED_TEACHER_EMAIL = document.getElementById('configTeacherEmail').value.trim();
+      GAS_URL = document.getElementById('configGasUrl').value.trim();
+    }
+
+    function openConfigModal() {
+      document.getElementById('modalConfigEmail').value = AUTHORIZED_TEACHER_EMAIL;
+      document.getElementById('modalConfigGasUrl').value = GAS_URL;
+      document.getElementById('configModal').classList.remove('hidden');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('configModal').classList.add('hidden');
+    }
+
+    function saveConfigModal() {
+      AUTHORIZED_TEACHER_EMAIL = document.getElementById('modalConfigEmail').value.trim();
+      GAS_URL = document.getElementById('modalConfigGasUrl').value.trim();
+      document.getElementById('configTeacherEmail').value = AUTHORIZED_TEACHER_EMAIL;
+      document.getElementById('configGasUrl').value = GAS_URL;
+      closeConfigModal();
+      showToast("Đã cập nhật cấu hình GAS_URL và Email Giáo viên!", "success");
+    }
+
+    // 13. TẠO & TẢI XUỐNG TỆP PRONUNCIATION.HTML ĐỘC LẬP CHO GITHUB PAGES
+    function generateStandaloneHTMLContent() {
+      return `<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${CURRENT_BRAND_TITLE}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --primary: #3498db; --success: #2ecc71; --warning: #f1c40f;
+      --danger: #e74c3c; --purple: #8e44ad; --orange: #e67e22;
+      --teal: #1abc9c; --dark: #1e293b; --light-bg: #f8fafc; --border: #cbd5e1;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      background-color: #f0f4f8; color: var(--dark); margin: 0; padding: 30px 15px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .inapp-warning {
+      display: none; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba;
+      padding: 12px; border-radius: 8px; margin-bottom: 15px; width: 100%; max-width: 700px;
+      font-size: 14px; line-height: 1.5; text-align: center;
+    }
+    .instructor-card {
+      background: white; padding: 30px 25px; border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08); width: 100%; max-width: 700px; position: relative;
+    }
+    .header-container { display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 20px; }
+    h1 { text-align: center; color: var(--dark); font-size: 24px; margin: 0; font-weight: 700; }
+    .btn-teacher-lock {
+      position: absolute; right: 0; background: transparent; border: 1px solid #cbd5e1;
+      color: #64748b; padding: 4px 10px; font-size: 12px; border-radius: 20px; cursor: pointer;
+    }
+    .teacher-panel {
+      display: none; background: #eef6fb; border: 1px solid #bee3f8;
+      border-radius: 12px; padding: 15px; margin-bottom: 20px;
+    }
+    .panel-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+    .teacher-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .btn-file-label, .btn-random {
+      color: white; padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+    }
+    .btn-file-label { background-color: var(--teal); display: inline-block; }
+    .btn-random { background-color: var(--orange); }
+    .bank-status { font-size: 12px; color: #64748b; margin-top: 8px; }
+    .student-info-form {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;
+      background: var(--light-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px;
+    }
+    .form-group { display: flex; flex-direction: column; text-align: left; }
+    .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .form-group label::after { content: " *"; color: var(--danger); }
+    .form-group input { padding: 8px 12px; font-size: 14px; border: 1px solid var(--border); border-radius: 6px; outline: none; }
+    .sentence-box {
+      font-size: 26px; font-weight: 600; line-height: 1.8; padding: 24px 28px;
+      background: #ffffff; border-radius: 16px; border: 2px solid #cbd5e1; margin-bottom: 20px; text-align: left;
+    }
+    .w-unit { display: inline-block; margin: 2px 1px; padding: 2px 8px; border-radius: 6px; font-weight: 600; transition: all 0.2s; }
+    .w-unit.pending { color: #334155; background: transparent; padding: 2px 0; margin: 0; }
+    .w-unit.correct { color: #fff; background-color: var(--success); }
+    .w-unit.wrong { color: #fff; background-color: var(--danger); }
+    .w-unit.missing { color: #fff; background-color: var(--warning); }
+    .legend { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; font-size: 13px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .dot { width: 10px; height: 10px; border-radius: 3px; }
+    .control-panel { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+    button { padding: 10px 18px; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-audio { background: #e2e8f0; color: var(--dark); }
+    .btn-mic { background: var(--primary); color: white; }
+    .btn-next { background: var(--purple); color: white; }
+    .btn-mic.recording { background: var(--danger); }
+    button:disabled { background-color: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
+    .score-board {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;
+      background: var(--light-bg); padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center;
+    }
+    .score-num { font-size: 26px; font-weight: 800; margin-top: 4px; }
+    .score-num.count { color: var(--purple); }
+    .score-num.complete { color: var(--success); }
+    .score-num.total { color: var(--primary); }
+    .feedback-msg { grid-column: span 3; margin-top: 8px; font-weight: bold; color: #475569; border-top: 1px dashed #cbd5e1; padding-top: 12px; font-size: 14px; }
+    @media (max-width: 500px) {
+      .sentence-box { font-size: 22px; padding: 18px 20px; }
+      .student-info-form, .score-board { grid-template-columns: 1fr; }
+      .feedback-msg { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="inapp-warning" id="inAppWarning">
+    Phát hiện bạn đang sử dụng trình duyệt trong ứng dụng.<br>
+    Vui lòng nhấn <strong>"⋮"</strong> hoặc <strong>"Chia sẻ"</strong> ở góc trên bên phải, chọn <strong>"Mở bằng Chrome / Safari"</strong> để cấp quyền micro.
+  </div>
+  <div class="instructor-card">
+    <div class="header-container">
+      <h1>🎙️ ${CURRENT_BRAND_TITLE}</h1>
+      <button class="btn-teacher-lock" id="btnTeacherLock">🔒 Mở khóa GV</button>
+    </div>
+    <div class="teacher-panel" id="teacherPanel">
+      <div class="panel-title">⚙️ Chuyển đổi & Tùy chỉnh Ngân hàng câu hỏi</div>
+      <div style="margin-bottom: 10px; display: flex; gap: 6px;">
+        <input type="email" id="teacherEmailInput" placeholder="Nhập Email Giáo viên..." style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; flex: 1;">
+        <button id="btnVerifyEmail" style="padding: 6px 12px; background: #2563eb; color: #fff; font-size: 12px;">Xác thực</button>
+      </div>
+      <div class="teacher-actions" id="teacherActionsBox" style="display: none;">
+        <button class="btn-random" id="btnRandom5">🎲 Tải ngẫu nhiên 5 câu giao tiếp</button>
+        <label class="btn-file-label" for="fileInput">📂 Tải lên text.txt tùy chỉnh</label>
+        <input type="file" id="fileInput" accept=".txt" style="display: none;">
+      </div>
+      <div class="bank-status" id="bankStatus">Ngân hàng câu hiện tại: Ngân hàng châm ngôn mặc định (6 câu)</div>
+    </div>
+    <div class="student-info-form">
+      <div class="form-group"><label for="studentClass">Lớp</label><input type="text" id="studentClass" placeholder="VD: Anh A1" required></div>
+      <div class="form-group"><label for="studentId">Mã số HS/SV</label><input type="text" id="studentId" placeholder="VD: 1090123" required></div>
+      <div class="form-group"><label for="studentName">Họ và tên</label><input type="text" id="studentName" placeholder="VD: Nguyễn Văn A" required></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="dot" style="background: #7f8c8d"></span> Chưa luyện tập</div>
+      <div class="legend-item"><span class="dot" style="background: var(--success)"></span> Phát âm đúng</div>
+      <div class="legend-item"><span class="dot" style="background: var(--danger)"></span> Phát âm sai</div>
+      <div class="legend-item"><span class="dot" style="background: var(--warning)"></span> Đọc thiếu từ</div>
+    </div>
+    <div class="sentence-box" id="sentenceBox"></div>
+    <div class="control-panel">
+      <button class="btn-audio" id="btnAudio">🔊 Nghe đọc mẫu (Giọng Mỹ)</button>
+      <button class="btn-mic" id="btnMic">🎤 Bắt đầu ghi âm luyện tập</button>
+      <button class="btn-next" id="btnNext">⏭️ Câu tiếp theo</button>
+    </div>
+    <div class="score-board">
+      <div class="score-card"><div>Số lần đã thử</div><div class="score-num count" id="attemptCountDisplay">0 lần</div></div>
+      <div class="score-card"><div>Độ hoàn thành câu</div><div class="score-num complete" id="completionScore">0%</div></div>
+      <div class="score-card"><div>Độ chính xác phát âm</div><div class="score-num total" id="accuracyScore">0%</div></div>
+      <div class="feedback-msg" id="feedbackMsg">Vui lòng điền thông tin học sinh ở phía trên trước khi bắt đầu luyện tập.</div>
+    </div>
+  </div>
+  <script>
+    const AUTHORIZED_TEACHER_EMAIL = "${AUTHORIZED_TEACHER_EMAIL}";
+    const GAS_URL = "${GAS_URL}";
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    if ((ua.indexOf("Line") > -1) || (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1) || (ua.indexOf("Teams") > -1)) {
+      document.getElementById('inAppWarning').style.display = 'block';
+    }
+    const dailyEnglishPool = [
+      "How's it going with you today?", "Could you give me a quick hand with this?",
+      "Sorry, I didn't quite catch what you said.", "Let's grab a cup of coffee sometime this week.",
+      "Do you happen to know where the restroom is?", "That sounds like a wonderful idea!",
+      "I'll get back to you as soon as possible.", "What do you feel like eating for dinner tonight?",
+      "Take your time, there is no rush at all.", "Thanks a lot for taking the time to help me."
+    ];
+    let sentenceBank = [
+      "Practice makes perfect.", "Where there is a will, there is a way.",
+      "The quick brown fox jumps over the lazy dog.", "Action speaks louder than words.",
+      "Honesty is the best policy.", "Better late than never."
+    ];
+    let currentSentenceIndex = 0;
+    let targetSentence = sentenceBank[0];
+    let targetWords = [];
+    let attemptCount = 0;
+
+    const studentClass = document.getElementById('studentClass');
+    const studentId = document.getElementById('studentId');
+    const studentName = document.getElementById('studentName');
+    const sentenceBox = document.getElementById('sentenceBox');
+    const btnAudio = document.getElementById('btnAudio');
+    const btnMic = document.getElementById('btnMic');
+    const btnNext = document.getElementById('btnNext');
+    const btnTeacherLock = document.getElementById('btnTeacherLock');
+    const teacherPanel = document.getElementById('teacherPanel');
+    const teacherActionsBox = document.getElementById('teacherActionsBox');
+    const btnVerifyEmail = document.getElementById('btnVerifyEmail');
+    const teacherEmailInput = document.getElementById('teacherEmailInput');
+    const btnRandom5 = document.getElementById('btnRandom5');
+    const fileInput = document.getElementById('fileInput');
+    const bankStatus = document.getElementById('bankStatus');
+    const attemptCountDisplay = document.getElementById('attemptCountDisplay');
+    const completionScore = document.getElementById('completionScore');
+    const accuracyScore = document.getElementById('accuracyScore');
+    const feedbackMsg = document.getElementById('feedbackMsg');
+
+    btnTeacherLock.addEventListener('click', () => {
+      teacherPanel.style.display = teacherPanel.style.display === 'block' ? 'none' : 'block';
+    });
+
+    btnVerifyEmail.addEventListener('click', () => {
+      if (teacherEmailInput.value.trim().toLowerCase() === AUTHORIZED_TEACHER_EMAIL.toLowerCase()) {
+        teacherActionsBox.style.display = 'flex';
+        btnTeacherLock.innerText = "🔓 GV đã mở khóa";
+        feedbackMsg.innerText = "Đã mở khóa chức năng tùy chỉnh ngân hàng câu hỏi của Giáo viên.";
+      } else {
+        feedbackMsg.innerText = "Email xác thực không đúng!";
+      }
+    });
+
+    function initSentence(sentenceText) {
+      targetSentence = sentenceText;
+      targetWords = targetSentence.toLowerCase().match(/\\b[\\w'-]+\\b/g) || [];
+      const displayWords = targetSentence.split(/(\\s+)/);
+      let wordCounter = 0;
+      sentenceBox.innerHTML = displayWords.map(chunk => {
+        if (/\\b[\\w'-]+\\b/.test(chunk)) {
+          const html = \`<span class="w-unit pending" id="w-\${wordCounter}">\${chunk}</span>\`;
+          wordCounter++;
+          return html;
+        }
+        return chunk;
+      }).join('');
+    }
+
+    function resetScoresAndLoadFirst() {
+      currentSentenceIndex = 0;
+      initSentence(sentenceBank[0]);
+      completionScore.innerText = "0%";
+      accuracyScore.innerText = "0%";
+      attemptCount = 0;
+      attemptCountDisplay.innerText = "0 lần";
+    }
+
+    initSentence(targetSentence);
+
+    btnRandom5.addEventListener('click', () => {
+      sentenceBank = [...dailyEnglishPool].sort(() => 0.5 - Math.random()).slice(0, 5);
+      bankStatus.innerText = "Ngân hàng câu hiện tại: Tiếng Anh giao tiếp ngẫu nhiên (5 câu)";
+      resetScoresAndLoadFirst();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const lines = ev.target.result.split(/\\r?\\n/).map(l => l.trim()).filter(l => l.length > 0);
+        if (lines.length > 0) {
+          sentenceBank = lines;
+          bankStatus.innerText = \`Ngân hàng câu: \${file.name} (\${lines.length} câu)\`;
+          resetScoresAndLoadFirst();
+        }
+      };
+      reader.readAsText(file, 'UTF-8');
+    });
+
+    btnNext.addEventListener('click', () => {
+      currentSentenceIndex = (currentSentenceIndex + 1) % sentenceBank.length;
+      initSentence(sentenceBank[currentSentenceIndex]);
+      completionScore.innerText = "0%";
+      accuracyScore.innerText = "0%";
+    });
+
+    function checkFormValidity() {
+      if (studentClass.value.trim() && studentId.value.trim() && studentName.value.trim()) {
+        btnMic.disabled = false;
+        return true;
+      }
+      btnMic.disabled = true;
+      return false;
+    }
+    [studentClass, studentId, studentName].forEach(el => el.addEventListener('input', checkFormValidity));
+    checkFormValidity();
+
+    btnAudio.addEventListener('click', () => {
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const utter = new SpeechSynthesisUtterance(targetSentence);
+      utter.lang = 'en-US';
+      utter.rate = 0.85;
+      synth.speak(utter);
+    });
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      feedbackMsg.innerText = "Trình duyệt không hỗ trợ nhận diện giọng nói, vui lòng mở bằng Chrome hoặc Safari.";
+      btnMic.disabled = true;
+    } else {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      btnMic.addEventListener('click', () => {
+        if (!checkFormValidity()) return;
+        try { recognition.start(); } catch (e) { recognition.stop(); }
+      });
+      recognition.onstart = () => {
+        btnMic.classList.add('recording');
+        btnMic.innerText = "🛑 Đang ghi âm...";
+      };
+      recognition.onend = () => {
+        btnMic.classList.remove('recording');
+        btnMic.innerText = "🎤 Bắt đầu ghi âm luyện tập";
+      };
+      recognition.onresult = (event) => {
+        attemptCount++;
+        attemptCountDisplay.innerText = \`\${attemptCount} lần\`;
+        const studentSpeech = event.results[0][0].transcript;
+        const studentWords = studentSpeech.toLowerCase().match(/\\b[\\w'-]+\\b/g) || [];
+        let sIdx = 0, correctCount = 0, missingCount = 0, wrongCount = 0;
+        for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
+          const target = targetWords[tIdx];
+          const el = document.getElementById(\`w-\${tIdx}\`);
+          if (sIdx < studentWords.length) {
+            if (studentWords[sIdx] === target) {
+              if (el) el.className = "w-unit correct";
+              correctCount++; sIdx++;
+            } else if (studentWords.slice(sIdx).indexOf(target) !== -1) {
+              if (el) el.className = "w-unit missing";
+              missingCount++;
+            } else {
+              if (el) el.className = "w-unit wrong";
+              wrongCount++; sIdx++;
+            }
+          } else {
+            if (el) el.className = "w-unit missing";
+            missingCount++;
+          }
+        }
+        const attemptWordsCount = correctCount + wrongCount;
+        const completionRate = Math.round((attemptWordsCount / targetWords.length) * 100);
+        const accuracyRate = attemptWordsCount > 0 ? Math.round((correctCount / attemptWordsCount) * 100) : 0;
+        completionScore.innerText = \`\${completionRate}%\`;
+        accuracyScore.innerText = \`\${accuracyRate}%\`;
+        fetch(GAS_URL, {
+          method: "POST", mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            className: studentClass.value.trim(), studentId: studentId.value.trim(),
+            studentName: studentName.value.trim(), attemptCount: attemptCount,
+            targetSentence: targetSentence, completion: completionRate,
+            accuracy: accuracyRate, transcript: studentSpeech
+          })
+        }).then(() => {
+          feedbackMsg.innerHTML = \`<span style="color:var(--success)">✅ Đã đồng bộ lần thử thứ \${attemptCount}!</span><br>Bạn đã nói: "\${studentSpeech}"\`;
+        });
+      };
+    }
+  <\/script>
+</body>
+</html>`;
+    }
+
+    function downloadStandaloneHTML() {
+      const htmlContent = generateStandaloneHTMLContent();
+      const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "pronunciation.html";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("Đã tải xuống tệp pronunciation.html sẵn sàng đưa lên GitHub Pages!", "success");
+    }
+
+    function copyStandaloneHTML() {
+      const htmlContent = generateStandaloneHTMLContent();
+      copyTextToClipboard(htmlContent, "Đã sao chép toàn bộ mã nguồn pronunciation.html!");
+    }
+
+    // KHỞI CHẠY LẦN ĐẦU KHI TẢI TRANG
+    window.onload = function () {
+      if (localStorage.getItem('teacherUnlocked') === 'true') {
+        setTeacherUnlockedState(true);
+      }
+      initSentence(targetSentence);
+      renderSheetTable();
+    };
   </script>
 </body>
 </html>
