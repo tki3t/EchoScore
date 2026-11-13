@@ -22,7 +22,7 @@ function setupSheetHeaders(sheet) {
       "accuracy",
       "transcript"
     ]);
-    
+
     // Style the header row with Indigo background and bold white text
     const headerRange = sheet.getRange(1, 1, 1, 9);
     headerRange.setFontWeight("bold");
@@ -42,14 +42,14 @@ function doGet(e) {
     try {
       ss = SpreadsheetApp.getActiveSpreadsheet();
     } catch(err) {}
-    
+
     if (!ss && SPREADSHEET_ID) {
       ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     }
-    
+
     const sheet = ss.getActiveSheet();
     setupSheetHeaders(sheet);
-    
+
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
       message: "AI Pronunciation Assessment API is running! Headers verified.",
@@ -82,11 +82,11 @@ function doPost(e) {
     try {
       ss = SpreadsheetApp.getActiveSpreadsheet();
     } catch(err) {}
-    
+
     if (!ss && SPREADSHEET_ID) {
       ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     }
-    
+
     const sheet = ss.getActiveSheet();
     setupSheetHeaders(sheet);
 
