@@ -206,7 +206,7 @@
 
       <!-- Main App Card (Matches and upgrades the original instructor-card) -->
       <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl shadow-slate-200/70 border border-slate-200/80 p-5 sm:p-8 relative overflow-hidden">
-        
+
         <!-- Card Header -->
         <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-5 mb-6 border-b border-slate-100">
           <div class="flex items-center gap-3 text-center sm:text-left">
@@ -1606,8 +1606,11 @@ function doPost(e) {
     .feedback-msg { grid-column: span 3; margin-top: 8px; font-weight: bold; color: #475569; border-top: 1px dashed #cbd5e1; padding-top: 12px; font-size: 14px; }
     @media (max-width: 500px) {
       .sentence-box { font-size: 22px; padding: 18px 20px; }
-      .student-info-form, .score-board { grid-template-columns: 1fr; }
-      .feedback-msg { grid-column: span 1; }
+      .student-info-form { grid-template-columns: 1fr; }
+      .score-board { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 10px 8px; }
+      .score-card { padding: 4px 2px; }
+      .score-num { font-size: 18px; }
+      .feedback-msg { grid-column: span 3; }
     }
   </style>
 </head>
@@ -1681,7 +1684,6 @@ function doPost(e) {
     let targetSentence = sentenceBank[0];
     let targetWords = [];
     let attemptCount = 0;
-
     const studentClass = document.getElementById('studentClass');
     const studentId = document.getElementById('studentId');
     const studentName = document.getElementById('studentName');
@@ -1701,11 +1703,9 @@ function doPost(e) {
     const completionScore = document.getElementById('completionScore');
     const accuracyScore = document.getElementById('accuracyScore');
     const feedbackMsg = document.getElementById('feedbackMsg');
-
     btnTeacherLock.addEventListener('click', () => {
       teacherPanel.style.display = teacherPanel.style.display === 'block' ? 'none' : 'block';
     });
-
     btnVerifyEmail.addEventListener('click', () => {
       if (teacherEmailInput.value.trim().toLowerCase() === AUTHORIZED_TEACHER_EMAIL.toLowerCase()) {
         teacherActionsBox.style.display = 'flex';
@@ -1715,7 +1715,6 @@ function doPost(e) {
         feedbackMsg.innerText = "Email xác thực không đúng!";
       }
     });
-
     function initSentence(sentenceText) {
       targetSentence = sentenceText;
       targetWords = targetSentence.toLowerCase().match(/\\b[\\w'-]+\\b/g) || [];
@@ -1730,7 +1729,6 @@ function doPost(e) {
         return chunk;
       }).join('');
     }
-
     function resetScoresAndLoadFirst() {
       currentSentenceIndex = 0;
       initSentence(sentenceBank[0]);
@@ -1739,15 +1737,12 @@ function doPost(e) {
       attemptCount = 0;
       attemptCountDisplay.innerText = "0 lần";
     }
-
     initSentence(targetSentence);
-
     btnRandom5.addEventListener('click', () => {
       sentenceBank = [...dailyEnglishPool].sort(() => 0.5 - Math.random()).slice(0, 5);
       bankStatus.innerText = "Ngân hàng câu hiện tại: Tiếng Anh giao tiếp ngẫu nhiên (5 câu)";
       resetScoresAndLoadFirst();
     });
-
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -1762,14 +1757,12 @@ function doPost(e) {
       };
       reader.readAsText(file, 'UTF-8');
     });
-
     btnNext.addEventListener('click', () => {
       currentSentenceIndex = (currentSentenceIndex + 1) % sentenceBank.length;
       initSentence(sentenceBank[currentSentenceIndex]);
       completionScore.innerText = "0%";
       accuracyScore.innerText = "0%";
     });
-
     function checkFormValidity() {
       if (studentClass.value.trim() && studentId.value.trim() && studentName.value.trim()) {
         btnMic.disabled = false;
@@ -1780,7 +1773,6 @@ function doPost(e) {
     }
     [studentClass, studentId, studentName].forEach(el => el.addEventListener('input', checkFormValidity));
     checkFormValidity();
-
     btnAudio.addEventListener('click', () => {
       const synth = window.speechSynthesis;
       synth.cancel();
@@ -1789,7 +1781,6 @@ function doPost(e) {
       utter.rate = 0.85;
       synth.speak(utter);
     });
-
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       feedbackMsg.innerText = "Trình duyệt không hỗ trợ nhận diện giọng nói, vui lòng mở bằng Chrome hoặc Safari.";
