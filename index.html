@@ -1165,7 +1165,7 @@
       synth.speak(utterance);
     });
 
-    // Speech-to-Text (STT) Recognition
+    // Speech-to-Text (STT) Recognition with Real-Time Feedback & State Management
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i><span>Your browser does not support Speech Recognition. Please use Google Chrome or Safari.</span>`, 'var(--warning)');
@@ -1173,33 +1173,22 @@
     } else {
       const recognition = new SpeechRecognition();
       recognition.lang = 'en-US';
-      recognition.interimResults = false;
+      recognition.interimResults = true;  // Enable real-time interim speech results
+      recognition.continuous = false;    // Clean utterance-level recognition
+      recognition.maxAlternatives = 1;
 
-      btnMic.addEventListener('click', () => {
-        if (!checkFormValidity()) return;
-        try { recognition.start(); } catch (e) { recognition.stop(); }
-      });
+      let isRecording = false;
+      let speechReceived = false;
+      let finalTranscript = '';
+      let interimTranscript = '';
 
-      recognition.onstart = () => {
-        btnMic.classList.add('recording');
-        btnMic.innerHTML = `<i class="fa-solid fa-microphone-lines fa-fade"></i><span>Recording...</span>`;
-        setFeedback(`<i class="fa-solid fa-wave-square fa-fade" style="color: var(--danger);"></i><span>Listening to [${studentClass.value}] ${studentName.value}... Speak clearly into your mic.</span>`, 'var(--danger)');
-        for (let i = 0; i < targetWords.length; i++) {
-          const el = document.getElementById(`w-${i}`);
-          if (el) el.className = "w-unit pending";
-        }
-      };
+      function evaluateAndScore(spokenText) {
+        if (!spokenText || !spokenText.trim()) return;
 
-      recognition.onend = () => {
-        btnMic.classList.remove('recording');
-        btnMic.innerHTML = `<i class="fa-solid fa-microphone"></i><span>Start Speaking</span>`;
-      };
-
-      recognition.onresult = (event) => {
         attemptCount++;
         animateStat(attemptCountDisplay, `${attemptCount} times`);
-        const studentSpeech = event.results[0][0].transcript;
-        const studentWords = studentSpeech.toLowerCase().match(/\b[\w'-]+\b/g) || [];
+
+        const studentWords = spokenText.toLowerCase().match(/\b[\w'-]+\b/g) || [];
         let sIdx = 0;
         let correctCount = 0;
         let missingCount = 0;
@@ -1236,12 +1225,120 @@
 
         animateStat(completionScore, `${completionRate}%`);
         animateStat(accuracyScore, `${accuracyRate}%`);
-        setFeedback(`<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--primary);"></i><span>Syncing attempt #${attemptCount} data to Google Sheets...</span>`, 'var(--primary)');
-        sendDataToGoogleSheet(completionRate, accuracyRate, studentSpeech, attemptCount, targetSentence);
+        setFeedback(`<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--primary);"></i><span>Syncing attempt #${attemptCount} to Google Sheets...</span>`, 'var(--primary)');
+        sendDataToGoogleSheet(completionRate, accuracyRate, spokenText, attemptCount, targetSentence);
+      }
+
+      function stopMic() {
+        if (isRecording) {
+          try { recognition.stop(); } catch(e) {}
+        }
+      }
+
+      btnMic.addEventListener('click', async () => {
+        if (!checkFormValidity()) return;
+
+        if (isRecording) {
+          // User manually stops speaking
+          stopMic();
+          return;
+        }
+
+        // Check/prompt microphone permission explicitly
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(t => t.stop()); // Release track for SpeechRecognition
+          } catch (err) {
+            setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--danger);"></i><span>Microphone access was denied. Please allow microphone permission in browser settings.</span>`, 'var(--danger)');
+            return;
+          }
+        }
+
+        // Reset recognition state
+        finalTranscript = '';
+        interimTranscript = '';
+        speechReceived = false;
+
+        try {
+          recognition.start();
+        } catch (err) {
+          try {
+            recognition.stop();
+            setTimeout(() => recognition.start(), 100);
+          } catch(e) {}
+        }
+      });
+
+      recognition.onstart = () => {
+        isRecording = true;
+        btnMic.classList.add('recording');
+        btnMic.innerHTML = `<i class="fa-solid fa-stop-circle fa-fade"></i><span>Done Speaking</span>`;
+        setFeedback(`<i class="fa-solid fa-wave-square fa-fade" style="color: var(--danger);"></i><span>Listening to [${studentClass.value}] ${studentName.value}... Speak now.</span>`, 'var(--danger)');
+        
+        // Reset word highlights to pending
+        for (let i = 0; i < targetWords.length; i++) {
+          const el = document.getElementById(`w-${i}`);
+          if (el) el.className = "w-unit pending";
+        }
+      };
+
+      recognition.onresult = (event) => {
+        speechReceived = true;
+        interimTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + ' ';
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+
+        const liveText = (finalTranscript + ' ' + interimTranscript).trim();
+        if (liveText) {
+          // Display recognized words in real-time
+          feedbackMsg.innerHTML = `<i class="fa-solid fa-microphone-lines fa-fade" style="color: var(--primary);"></i><span>Hearing: "<strong>${liveText}</strong>"...</span>`;
+          feedbackMsg.style.borderLeftColor = 'var(--primary)';
+
+          // Real-time highlight matching words
+          const currentWords = liveText.toLowerCase().match(/\b[\w'-]+\b/g) || [];
+          for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
+            const target = targetWords[tIdx];
+            const el = document.getElementById(`w-${tIdx}`);
+            if (el && currentWords.includes(target)) {
+              el.className = "w-unit correct";
+            }
+          }
+        }
       };
 
       recognition.onerror = (event) => {
-        setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Error: ${event.error}. Please ensure microphone permission is granted.</span>`, 'var(--danger)');
+        console.warn('SpeechRecognition error:', event.error);
+        if (event.error === 'no-speech') {
+          setFeedback(`<i class="fa-solid fa-volume-xmark" style="color: var(--warning);"></i><span>No voice detected. Please speak louder into your microphone and try again.</span>`, 'var(--warning)');
+        } else if (event.error === 'not-allowed') {
+          setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--danger);"></i><span>Microphone permission denied. Click the mic icon in your browser address bar to Allow.</span>`, 'var(--danger)');
+        } else if (event.error === 'network') {
+          setFeedback(`<i class="fa-solid fa-wifi" style="color: var(--danger);"></i><span>Speech recognition network error. Please check your internet connection.</span>`, 'var(--danger)');
+        } else {
+          setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Recognition error: ${event.error}. Please try again.</span>`, 'var(--danger)');
+        }
+      };
+
+      recognition.onend = () => {
+        isRecording = false;
+        btnMic.classList.remove('recording');
+        btnMic.innerHTML = `<i class="fa-solid fa-microphone"></i><span>Start Speaking</span>`;
+
+        const totalSpoken = (finalTranscript + ' ' + interimTranscript).trim();
+        if (totalSpoken) {
+          evaluateAndScore(totalSpoken);
+        } else if (!speechReceived) {
+          if (!feedbackMsg.innerText.includes("No voice detected") && !feedbackMsg.innerText.includes("denied")) {
+            setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--warning);"></i><span>No speech captured. Please ensure your microphone is enabled and click "Start Speaking" again.</span>`, 'var(--warning)');
+          }
+        }
       };
     }
 
