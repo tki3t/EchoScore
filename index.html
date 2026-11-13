@@ -599,6 +599,17 @@
       opacity: 0.95;
     }
 
+    .btn-type {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .btn-type:hover:not(:disabled) {
+      background: var(--bg-muted);
+      color: var(--text-main);
+    }
+
     .btn:disabled {
       background: var(--bg-muted);
       border-color: var(--border-color);
@@ -870,6 +881,10 @@
         <button class="btn btn-next" id="btnNext">
           <i class="fa-solid fa-forward-step"></i>
           <span>Next Sentence</span>
+        </button>
+        <button class="btn btn-type" id="btnTypeTest" title="Simulate speaking by typing">
+          <i class="fa-regular fa-keyboard"></i>
+          <span>Type Test</span>
         </button>
       </div>
 
@@ -1165,181 +1180,221 @@
       synth.speak(utterance);
     });
 
-    // Speech-to-Text (STT) Recognition with Real-Time Feedback & State Management
+    // Speech-to-Text (STT) Recognition with Robust Continuous Capture & Fresh Instance Per Session
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i><span>Your browser does not support Speech Recognition. Please use Google Chrome or Safari.</span>`, 'var(--warning)');
-      btnMic.disabled = true;
-    } else {
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'en-US';
-      recognition.interimResults = true;  // Enable real-time interim speech results
-      recognition.continuous = false;    // Clean utterance-level recognition
-      recognition.maxAlternatives = 1;
+    const btnTypeTest = document.getElementById('btnTypeTest');
 
-      let isRecording = false;
-      let speechReceived = false;
-      let finalTranscript = '';
-      let interimTranscript = '';
+    function evaluateAndScore(spokenText) {
+      if (!spokenText || !spokenText.trim()) return;
 
-      function evaluateAndScore(spokenText) {
-        if (!spokenText || !spokenText.trim()) return;
+      attemptCount++;
+      animateStat(attemptCountDisplay, `${attemptCount} times`);
 
-        attemptCount++;
-        animateStat(attemptCountDisplay, `${attemptCount} times`);
+      const studentWords = spokenText.toLowerCase().match(/\b[\w'-]+\b/g) || [];
+      let sIdx = 0;
+      let correctCount = 0;
+      let missingCount = 0;
+      let wrongCount = 0;
 
-        const studentWords = spokenText.toLowerCase().match(/\b[\w'-]+\b/g) || [];
-        let sIdx = 0;
-        let correctCount = 0;
-        let missingCount = 0;
-        let wrongCount = 0;
-
-        for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
-          const target = targetWords[tIdx];
-          const el = document.getElementById(`w-${tIdx}`);
-          if (sIdx < studentWords.length) {
-            if (studentWords[sIdx] === target) {
-              if (el) el.className = "w-unit correct";
-              correctCount++;
-              sIdx++;
-            } else {
-              const nextMatchIndex = studentWords.slice(sIdx).indexOf(target);
-              if (nextMatchIndex !== -1) {
-                if (el) el.className = "w-unit missing";
-                missingCount++;
-              } else {
-                if (el) el.className = "w-unit wrong";
-                wrongCount++;
-                sIdx++;
-              }
-            }
+      for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
+        const target = targetWords[tIdx];
+        const el = document.getElementById(`w-${tIdx}`);
+        if (sIdx < studentWords.length) {
+          if (studentWords[sIdx] === target) {
+            if (el) el.className = "w-unit correct";
+            correctCount++;
+            sIdx++;
           } else {
-            if (el) el.className = "w-unit missing";
-            missingCount++;
+            const nextMatchIndex = studentWords.slice(sIdx).indexOf(target);
+            if (nextMatchIndex !== -1) {
+              if (el) el.className = "w-unit missing";
+              missingCount++;
+            } else {
+              if (el) el.className = "w-unit wrong";
+              wrongCount++;
+              sIdx++;
+            }
           }
-        }
-
-        const attemptWordsCount = correctCount + wrongCount;
-        const completionRate = Math.round((attemptWordsCount / targetWords.length) * 100);
-        const accuracyRate = attemptWordsCount > 0 ? Math.round((correctCount / attemptWordsCount) * 100) : 0;
-
-        animateStat(completionScore, `${completionRate}%`);
-        animateStat(accuracyScore, `${accuracyRate}%`);
-        setFeedback(`<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--primary);"></i><span>Syncing attempt #${attemptCount} to Google Sheets...</span>`, 'var(--primary)');
-        sendDataToGoogleSheet(completionRate, accuracyRate, spokenText, attemptCount, targetSentence);
-      }
-
-      function stopMic() {
-        if (isRecording) {
-          try { recognition.stop(); } catch(e) {}
+        } else {
+          if (el) el.className = "w-unit missing";
+          missingCount++;
         }
       }
 
-      btnMic.addEventListener('click', async () => {
+      const attemptWordsCount = correctCount + wrongCount;
+      const completionRate = Math.round((attemptWordsCount / targetWords.length) * 100);
+      const accuracyRate = attemptWordsCount > 0 ? Math.round((correctCount / attemptWordsCount) * 100) : 0;
+
+      animateStat(completionScore, `${completionRate}%`);
+      animateStat(accuracyScore, `${accuracyRate}%`);
+      setFeedback(`<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--primary);"></i><span>Syncing attempt #${attemptCount} to Google Sheets...</span>`, 'var(--primary)');
+      sendDataToGoogleSheet(completionRate, accuracyRate, spokenText, attemptCount, targetSentence);
+    }
+
+    // Optional Type to Test simulation
+    if (btnTypeTest) {
+      btnTypeTest.addEventListener('click', () => {
         if (!checkFormValidity()) return;
-
-        if (isRecording) {
-          // User manually stops speaking
-          stopMic();
-          return;
-        }
-
-        // Check/prompt microphone permission explicitly
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            stream.getTracks().forEach(t => t.stop()); // Release track for SpeechRecognition
-          } catch (err) {
-            setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--danger);"></i><span>Microphone access was denied. Please allow microphone permission in browser settings.</span>`, 'var(--danger)');
-            return;
-          }
-        }
-
-        // Reset recognition state
-        finalTranscript = '';
-        interimTranscript = '';
-        speechReceived = false;
-
-        try {
-          recognition.start();
-        } catch (err) {
-          try {
-            recognition.stop();
-            setTimeout(() => recognition.start(), 100);
-          } catch(e) {}
+        const simulated = prompt("Enter speech text to test pronunciation scoring:", targetSentence);
+        if (simulated && simulated.trim()) {
+          evaluateAndScore(simulated.trim());
         }
       });
+    }
 
-      recognition.onstart = () => {
-        isRecording = true;
-        btnMic.classList.add('recording');
-        btnMic.innerHTML = `<i class="fa-solid fa-stop-circle fa-fade"></i><span>Done Speaking</span>`;
-        setFeedback(`<i class="fa-solid fa-wave-square fa-fade" style="color: var(--danger);"></i><span>Listening to [${studentClass.value}] ${studentName.value}... Speak now.</span>`, 'var(--danger)');
-        
+    if (!SpeechRecognition) {
+      setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i><span>Your browser does not support Speech Recognition. Please use Google Chrome on desktop or Android.</span>`, 'var(--warning)');
+      btnMic.disabled = true;
+    } else {
+      let recognition = null;
+      let isRecording = false;
+      let finalTranscript = '';
+      let interimTranscript = '';
+      let autoStopTimer = null;
+
+      function stopRecording() {
+        if (autoStopTimer) {
+          clearTimeout(autoStopTimer);
+          autoStopTimer = null;
+        }
+        if (recognition && isRecording) {
+          try {
+            recognition.stop();
+          } catch(e) {
+            try { recognition.abort(); } catch(err) {}
+          }
+        }
+        isRecording = false;
+        btnMic.classList.remove('recording');
+        btnMic.innerHTML = `<i class="fa-solid fa-microphone"></i><span>Start Speaking</span>`;
+      }
+
+      function startRecording() {
+        if (!checkFormValidity()) return;
+
+        // Clean up any lingering previous instance
+        if (recognition) {
+          try { recognition.abort(); } catch(e) {}
+          recognition = null;
+        }
+
+        finalTranscript = '';
+        interimTranscript = '';
+
         // Reset word highlights to pending
         for (let i = 0; i < targetWords.length; i++) {
           const el = document.getElementById(`w-${i}`);
           if (el) el.className = "w-unit pending";
         }
-      };
 
-      recognition.onresult = (event) => {
-        speechReceived = true;
-        interimTranscript = '';
+        // Create a FRESH SpeechRecognition instance each time to prevent Chrome zombie states
+        recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = true;       // Keep listening so the speaker is never prematurely cut off
+        recognition.interimResults = true;   // Live transcript stream
+        recognition.maxAlternatives = 1;
 
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript + ' ';
-          } else {
-            interimTranscript += event.results[i][0].transcript;
-          }
-        }
+        recognition.onstart = () => {
+          isRecording = true;
+          btnMic.classList.add('recording');
+          btnMic.innerHTML = `<i class="fa-solid fa-stop-circle fa-fade"></i><span>Done Speaking</span>`;
+          setFeedback(`<i class="fa-solid fa-microphone text-rose-500 fa-fade"></i><span>Microphone active. Please read the sentence aloud:</span>`, 'var(--danger)');
 
-        const liveText = (finalTranscript + ' ' + interimTranscript).trim();
-        if (liveText) {
-          // Display recognized words in real-time
-          feedbackMsg.innerHTML = `<i class="fa-solid fa-microphone-lines fa-fade" style="color: var(--primary);"></i><span>Hearing: "<strong>${liveText}</strong>"...</span>`;
-          feedbackMsg.style.borderLeftColor = 'var(--primary)';
+          // Safety timeout after 20 seconds
+          autoStopTimer = setTimeout(() => {
+            if (isRecording) {
+              stopRecording();
+            }
+          }, 20000);
+        };
 
-          // Real-time highlight matching words
-          const currentWords = liveText.toLowerCase().match(/\b[\w'-]+\b/g) || [];
-          for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
-            const target = targetWords[tIdx];
-            const el = document.getElementById(`w-${tIdx}`);
-            if (el && currentWords.includes(target)) {
-              el.className = "w-unit correct";
+        recognition.onsoundstart = () => {
+          setFeedback(`<i class="fa-solid fa-wave-square text-emerald-500 fa-fade"></i><span>Sound detected! Listening to your voice...</span>`, 'var(--success)');
+        };
+
+        recognition.onspeechstart = () => {
+          setFeedback(`<i class="fa-solid fa-comment-dots text-primary fa-fade"></i><span>Speech detected! Transcribing...</span>`, 'var(--primary)');
+        };
+
+        recognition.onresult = (event) => {
+          let accumulatedFinal = '';
+          let accumulatedInterim = '';
+
+          for (let i = 0; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              accumulatedFinal += event.results[i][0].transcript + ' ';
+            } else {
+              accumulatedInterim += event.results[i][0].transcript;
             }
           }
-        }
-      };
 
-      recognition.onerror = (event) => {
-        console.warn('SpeechRecognition error:', event.error);
-        if (event.error === 'no-speech') {
-          setFeedback(`<i class="fa-solid fa-volume-xmark" style="color: var(--warning);"></i><span>No voice detected. Please speak louder into your microphone and try again.</span>`, 'var(--warning)');
-        } else if (event.error === 'not-allowed') {
-          setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--danger);"></i><span>Microphone permission denied. Click the mic icon in your browser address bar to Allow.</span>`, 'var(--danger)');
-        } else if (event.error === 'network') {
-          setFeedback(`<i class="fa-solid fa-wifi" style="color: var(--danger);"></i><span>Speech recognition network error. Please check your internet connection.</span>`, 'var(--danger)');
-        } else {
-          setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Recognition error: ${event.error}. Please try again.</span>`, 'var(--danger)');
-        }
-      };
+          finalTranscript = accumulatedFinal;
+          interimTranscript = accumulatedInterim;
 
-      recognition.onend = () => {
-        isRecording = false;
-        btnMic.classList.remove('recording');
-        btnMic.innerHTML = `<i class="fa-solid fa-microphone"></i><span>Start Speaking</span>`;
+          const currentSpeech = (finalTranscript + ' ' + interimTranscript).trim();
+          if (currentSpeech) {
+            feedbackMsg.innerHTML = `<i class="fa-solid fa-microphone-lines fa-fade" style="color: var(--primary);"></i><span>Heard: "<strong>${currentSpeech}</strong>"</span>`;
+            feedbackMsg.style.borderLeftColor = 'var(--primary)';
 
-        const totalSpoken = (finalTranscript + ' ' + interimTranscript).trim();
-        if (totalSpoken) {
-          evaluateAndScore(totalSpoken);
-        } else if (!speechReceived) {
-          if (!feedbackMsg.innerText.includes("No voice detected") && !feedbackMsg.innerText.includes("denied")) {
-            setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--warning);"></i><span>No speech captured. Please ensure your microphone is enabled and click "Start Speaking" again.</span>`, 'var(--warning)');
+            // Real-time highlight matching words in green
+            const currentWords = currentSpeech.toLowerCase().match(/\b[\w'-]+\b/g) || [];
+            for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
+              const target = targetWords[tIdx];
+              const el = document.getElementById(`w-${tIdx}`);
+              if (el && currentWords.includes(target)) {
+                el.className = "w-unit correct";
+              }
+            }
           }
+        };
+
+        recognition.onerror = (event) => {
+          console.warn('SpeechRecognition error:', event.error);
+          if (event.error === 'no-speech') {
+            setFeedback(`<i class="fa-solid fa-volume-xmark" style="color: var(--warning);"></i><span>No speech detected. Please speak closer to your microphone or check microphone volume in Windows settings.</span>`, 'var(--warning)');
+          } else if (event.error === 'not-allowed') {
+            setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--danger);"></i><span>Microphone blocked. Click the camera/microphone icon in Chrome's address bar to Allow access.</span>`, 'var(--danger)');
+          } else if (event.error === 'network') {
+            setFeedback(`<i class="fa-solid fa-wifi" style="color: var(--danger);"></i><span>Google Speech Recognition network error. Please check your internet connection.</span>`, 'var(--danger)');
+          } else {
+            setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Recognition error: ${event.error}. Please try again.</span>`, 'var(--danger)');
+          }
+        };
+
+        recognition.onend = () => {
+          if (autoStopTimer) {
+            clearTimeout(autoStopTimer);
+            autoStopTimer = null;
+          }
+          isRecording = false;
+          btnMic.classList.remove('recording');
+          btnMic.innerHTML = `<i class="fa-solid fa-microphone"></i><span>Start Speaking</span>`;
+
+          const totalSpoken = (finalTranscript + ' ' + interimTranscript).trim();
+          if (totalSpoken) {
+            evaluateAndScore(totalSpoken);
+          } else {
+            if (!feedbackMsg.innerText.includes("No speech") && !feedbackMsg.innerText.includes("blocked") && !feedbackMsg.innerText.includes("network")) {
+              setFeedback(`<i class="fa-solid fa-microphone-slash" style="color: var(--warning);"></i><span>No speech captured. Please speak clearly into your microphone and click "Start Speaking" again.</span>`, 'var(--warning)');
+            }
+          }
+        };
+
+        try {
+          recognition.start();
+        } catch (err) {
+          console.error(err);
+          setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Could not start microphone: ${err.message}. Please click to retry.</span>`, 'var(--danger)');
         }
-      };
+      }
+
+      btnMic.addEventListener('click', () => {
+        if (isRecording) {
+          stopRecording();
+        } else {
+          startRecording();
+        }
+      });
     }
 
     function sendDataToGoogleSheet(completion, accuracy, transcript, currentAttempt, targetSentenceText) {
