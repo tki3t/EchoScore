@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI English Pronunciation Assessment System (Cloud-Connected)</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Light Mode Palette */
+      --bg-page: #f1f5f9;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-muted: #e2e8f0;
+      
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-subtle: #94a3b8;
+      
+      --border-color: #e2e8f0;
+      --border-focus: #6366f1;
+      
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --success-text: #065f46;
+      
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --danger-text: #991b1b;
+      
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --warning-text: #92400e;
+      
+      --teal: #0d9488;
+      --purple: #7c3aed;
+      --blue: #2563eb;
+      
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      --shadow-card: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Full-screen Single Page Container on PC */
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Container */
+    .app-wrapper {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* FADE IN / FADE OUT ANIMATIONS */
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes pulseRecord {
+      from { transform: scale(1); }
+      to { transform: scale(1.02); }
+    }
+
+    .fade-item {
+      opacity: 0;
+      animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .delay-0 { animation-delay: 0.03s; }
+    .delay-1 { animation-delay: 0.08s; }
+    .delay-2 { animation-delay: 0.14s; }
+    .delay-3 { animation-delay: 0.20s; }
+    .delay-4 { animation-delay: 0.26s; }
+    .delay-5 { animation-delay: 0.32s; }
+    .delay-6 { animation-delay: 0.38s; }
+    .delay-7 { animation-delay: 0.44s; }
+
+    /* In-App Browser Warning */
+    .inapp-warning {
+      display: none;
+      background-color: var(--warning-light);
+      color: var(--warning-text);
+      border: 1px solid #fde68a;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      line-height: 1.4;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .inapp-warning i {
+      margin-right: 5px;
+      color: var(--warning);
+    }
+
+    /* Main Card - Compact Single Page Layout */
+    .main-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: 16px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      position: relative;
+    }
+
+    /* Header Bar */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      gap: 12px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 3px 8px rgba(79, 70, 229, 0.2);
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn-teacher-lock {
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-teacher-lock:hover {
+      background-color: var(--bg-muted);
+      color: var(--text-main);
+    }
+
+    /* Teacher Panel */
+    .teacher-panel {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      padding: 0 14px;
+      margin-bottom: 0;
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.25s ease,
+                  padding 0.25s ease,
+                  border-color 0.25s ease;
+    }
+
+    .teacher-panel.is-open {
+      max-height: 250px;
+      opacity: 1;
+      padding: 12px 14px;
+      border-color: #cbd5e1;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .panel-title i {
+      color: var(--primary);
+    }
+
+    .teacher-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-random, .btn-file-label, .btn-sheet-link {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #ffffff;
+      border: none;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-random { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+    .btn-file-label { background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); }
+    .btn-sheet-link { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+
+    /* GAS URL Config Row */
+    .gas-config-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .gas-config-row label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .gas-input-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .gas-input-group input {
+      flex: 1;
+      padding: 5px 8px;
+      font-size: 11px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background: #ffffff;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .gas-input-group input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-save-gas {
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-save-gas:hover {
+      background: var(--primary-hover);
+    }
+
+    .bank-status {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Student Form Section - Compact */
+    .student-info-section {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .student-info-form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      background: var(--bg-subtle);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .form-group label i {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .required-star {
+      color: var(--danger);
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-family: inherit;
+      color: var(--text-main);
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+    }
+
+    .form-group input::placeholder {
+      color: var(--text-subtle);
+    }
+
+    /* Legend Bar - Compact */
+    .legend-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      padding: 2px 0;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-item i {
+      font-size: 12px;
+    }
+
+    .icon-pending { color: #94a3b8; }
+    .icon-correct { color: var(--success); }
+    .icon-wrong { color: var(--danger); }
+    .icon-missing { color: var(--warning); }
+
+    /* Target Sentence Card - Compact */
+    .sentence-card {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.015);
+      transition: border-color 0.2s ease;
+    }
+
+    .sentence-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sentence-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: var(--radius-full);
+    }
+
+    .sentence-box {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 1.5;
+      text-align: left;
+      word-break: break-word;
+      letter-spacing: 0.01em;
+      min-height: 44px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    /* Word Units */
+    .w-unit {
+      display: inline-block;
+      margin: 2px 2px;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    .w-unit.pending {
+      color: #334155;
+      background-color: rgba(226, 232, 240, 0.5);
+      border-bottom: 2px solid #cbd5e1;
+    }
+
+    .w-unit.correct {
+      color: #ffffff;
+      background-color: var(--success);
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+      animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .w-unit.wrong {
+      color: #ffffff;
+      background-color: var(--danger);
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+      animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .w-unit.missing {
+      color: #ffffff;
+      background-color: var(--warning);
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+      animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Control Panel - Compact */
+    .control-panel {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .btn-audio {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-audio:hover:not(:disabled) {
+      background: var(--bg-muted);
+      border-color: #cbd5e1;
+    }
+
+    .btn-mic {
+      background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
+      min-width: 155px;
+    }
+
+    .btn-mic:hover:not(:disabled) {
+      opacity: 0.95;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-mic.recording {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      box-shadow: 0 3px 12px rgba(239, 68, 68, 0.45);
+      animation: pulseRecord 1.2s infinite ease-in-out alternate;
+    }
+
+    .btn-next {
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(124, 58, 237, 0.25);
+    }
+
+    .btn-next:hover:not(:disabled) {
+      opacity: 0.95;
+    }
+
+    .btn:disabled {
+      background: var(--bg-muted);
+      border-color: var(--border-color);
+      color: var(--text-subtle);
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    /* Score Board Grid - Compact */
+    .score-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      background: var(--bg-subtle);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .score-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .score-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .score-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.1;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .score-num.count { color: var(--purple); }
+    .score-num.complete { color: var(--success); }
+    .score-num.total { color: var(--primary); }
+
+    /* Live Feedback Message Box - Compact */
+    .feedback-msg {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: opacity 0.2s ease, transform 0.2s ease, border-left-color 0.25s ease;
+    }
+
+    .feedback-msg i {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 640px) {
+      body {
+        padding: 12px 8px;
+        justify-content: flex-start;
+      }
+
+      .main-card {
+        padding: 16px 12px;
+        gap: 12px;
+      }
+
+      .header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .student-info-form {
+        grid-template-columns: 1fr;
+        padding: 10px;
+      }
+
+      .sentence-box {
+        font-size: 18px;
+      }
+
+      .control-panel {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .control-panel .btn {
+        width: 100%;
+        padding: 10px 14px;
+      }
+
+      .score-board {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- In-App Browser Warning -->
+    <div class="inapp-warning fade-item delay-0" id="inAppWarning">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <strong>In-App Browser Detected.</strong> Please tap menu and choose <strong>"Open in Chrome / Safari"</strong> for mic access.
+    </div>
+
+    <!-- Main Card Container (Staggered Fade-in) -->
+    <div class="main-card fade-item delay-1">
+      
+      <!-- Header Bar -->
+      <div class="header-bar fade-item delay-2">
+        <div class="brand-group">
+          <div class="brand-icon">
+            <i class="fa-solid fa-headphones-simple"></i>
+          </div>
+          <div class="brand-text">
+            <h1>AI English Pronunciation Lab</h1>
+            <p>Real-Time Speech Recognition & Cloud Progress Tracking</p>
+          </div>
+        </div>
+
+        <button class="btn-teacher-lock" id="btnTeacherLock">
+          <i class="fa-solid fa-lock"></i>
+          <span>Teacher Unlock</span>
+        </button>
+      </div>
+
+      <!-- Teacher Bank Settings Panel (Smooth slide & fade) -->
+      <div class="teacher-panel" id="teacherPanel">
+        <div class="panel-title">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Question Bank & Settings (Teacher Access)</span>
+        </div>
+        <div class="teacher-actions">
+          <button class="btn-random" id="btnRandom5">
+            <i class="fa-solid fa-dice"></i>
+            <span>Load 5 Random Sentences</span>
+          </button>
+          
+          <label class="btn-file-label" for="fileInput">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span>Upload text.txt Bank</span>
+          </label>
+          <input type="file" id="fileInput" accept=".txt" style="display: none;">
+
+          <a href="https://docs.google.com/spreadsheets/d/12bc3j6bjRtwhXh5JIha3fpVopdLxCKVDjRT-sJx-1AY/edit" target="_blank" class="btn-sheet-link">
+            <i class="fa-solid fa-table"></i>
+            <span>Open EchoScore-Sheet</span>
+          </a>
+        </div>
+
+        <!-- Google Apps Script URL Setting -->
+        <div class="gas-config-row">
+          <label for="gasUrlInput">
+            <i class="fa-solid fa-link"></i>
+            <span>Google Apps Script Web App Endpoint:</span>
+          </label>
+          <div class="gas-input-group">
+            <input type="url" id="gasUrlInput" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+            <button type="button" id="btnSaveGasUrl" class="btn-save-gas">Save & Apply</button>
+          </div>
+        </div>
+
+        <div class="bank-status" id="bankStatus">
+          <i class="fa-solid fa-database"></i>
+          <span>Current Bank: Default Proverbs (6 sentences)</span>
+        </div>
+      </div>
+
+      <!-- 1. Student Profile Form Section -->
+      <div class="student-info-section fade-item delay-3">
+        <div class="section-label">
+          <i class="fa-solid fa-user-pen"></i>
+          <span>Student Profile</span>
+        </div>
+        <div class="student-info-form">
+          <div class="form-group">
+            <label for="studentClass">
+              <i class="fa-solid fa-chalkboard-user"></i>
+              <span>Class</span>
+              <span class="required-star">*</span>
+            </label>
+            <input type="text" id="studentClass" placeholder="e.g. Class 101" required>
+          </div>
+          <div class="form-group">
+            <label for="studentId">
+              <i class="fa-solid fa-id-card"></i>
+              <span>Student ID</span>
+              <span class="required-star">*</span>
+            </label>
+            <input type="text" id="studentId" placeholder="e.g. 1090123" required>
+          </div>
+          <div class="form-group">
+            <label for="studentName">
+              <i class="fa-solid fa-signature"></i>
+              <span>Full Name</span>
+              <span class="required-star">*</span>
+            </label>
+            <input type="text" id="studentName" placeholder="e.g. Alex Johnson" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Legend Explanation Bar -->
+      <div class="legend-bar fade-item delay-4">
+        <div class="legend-item">
+          <i class="fa-regular fa-circle icon-pending"></i>
+          <span>Unpracticed</span>
+        </div>
+        <div class="legend-item">
+          <i class="fa-solid fa-circle-check icon-correct"></i>
+          <span>Correct</span>
+        </div>
+        <div class="legend-item">
+          <i class="fa-solid fa-circle-xmark icon-wrong"></i>
+          <span>Incorrect</span>
+        </div>
+        <div class="legend-item">
+          <i class="fa-solid fa-circle-exclamation icon-missing"></i>
+          <span>Missing Word</span>
+        </div>
+      </div>
+
+      <!-- 3. Target Sentence Display Card -->
+      <div class="sentence-card fade-item delay-5">
+        <div class="sentence-header">
+          <div class="sentence-badge" id="sentenceIndexBadge">
+            <i class="fa-solid fa-bookmark"></i>
+            <span>Sentence Progress 1 / 6</span>
+          </div>
+        </div>
+        <div class="sentence-box" id="sentenceBox"></div>
+      </div>
+
+      <!-- 4. Interactive Control Buttons -->
+      <div class="control-panel fade-item delay-6">
+        <button class="btn btn-audio" id="btnAudio">
+          <i class="fa-solid fa-volume-high"></i>
+          <span>Listen Demo (US)</span>
+        </button>
+        <button class="btn btn-mic" id="btnMic">
+          <i class="fa-solid fa-microphone"></i>
+          <span>Start Speaking</span>
+        </button>
+        <button class="btn btn-next" id="btnNext">
+          <i class="fa-solid fa-forward-step"></i>
+          <span>Next Sentence</span>
+        </button>
+      </div>
+
+      <!-- 5. Score & Analytics Board -->
+      <div class="score-board fade-item delay-7">
+        <div class="score-card">
+          <div class="score-label">
+            <i class="fa-solid fa-rotate-right" style="color: var(--purple);"></i>
+            <span>Attempts</span>
+          </div>
+          <div class="score-num count" id="attemptCountDisplay">0 times</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">
+            <i class="fa-solid fa-chart-pie" style="color: var(--success);"></i>
+            <span>Completion</span>
+          </div>
+          <div class="score-num complete" id="completionScore">0%</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">
+            <i class="fa-solid fa-bullseye" style="color: var(--primary);"></i>
+            <span>Accuracy</span>
+          </div>
+          <div class="score-num total" id="accuracyScore">0%</div>
+        </div>
+      </div>
+
+      <!-- 6. Dynamic Live Feedback Message Banner -->
+      <div class="feedback-msg fade-item delay-7" id="feedbackMsg">
+        <i class="fa-solid fa-circle-info" style="color: var(--primary);"></i>
+        <span>Please fill in your student information above before starting the practice.</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Authorized Teacher Email
+    const AUTHORIZED_TEACHER_EMAIL = "audreyshih32@gm.chihlee.edu.tw";
+
+    // Detect In-App Browsers (LINE, Messenger, Teams, etc.)
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const isInApp = (ua.indexOf("Line") > -1) || (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) ||
+                    (ua.indexOf("Instagram") > -1) || (ua.indexOf("Teams") > -1);
+    if (isInApp) {
+      const inAppElem = document.getElementById('inAppWarning');
+      inAppElem.style.display = 'block';
+    }
+
+    // Google Apps Script Web App Endpoint URL (Connected to EchoScore-Sheet)
+    const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwBd663J_QDe_RD6Vw-Uv47D2KLx2iKcvrPu2uo8WdF5j6gCmXmO-fPSUeb5ZDaLHk/exec";
+    let GAS_URL = localStorage.getItem('customGasUrl') || DEFAULT_GAS_URL;
+
+    // Daily English Sentences Pool
+    const dailyEnglishPool = [
+      "How's it going with you today?",
+      "Could you give me a quick hand with this?",
+      "Sorry, I didn't quite catch what you said.",
+      "Let's grab a cup of coffee sometime this week.",
+      "Do you happen to know where the restroom is?",
+      "That sounds like a wonderful idea!",
+      "I'll get back to you as soon as possible.",
+      "What do you feel like eating for dinner tonight?",
+      "Take your time, there is no rush at all.",
+      "Thanks a lot for taking the time to help me."
+    ];
+
+    // Default Sentence Bank
+    let sentenceBank = [
+      "Practice makes perfect.",
+      "Where there is a will, there is a way.",
+      "The quick brown fox jumps over the lazy dog.",
+      "Action speaks louder than words.",
+      "Honesty is the best policy.",
+      "Better late than never."
+    ];
+
+    let currentSentenceIndex = 0;
+    let targetSentence = sentenceBank[currentSentenceIndex];
+    let targetWords = [];
+    let displayWords = [];
+    let attemptCount = 0;
+
+    const studentClass = document.getElementById('studentClass');
+    const studentId = document.getElementById('studentId');
+    const studentName = document.getElementById('studentName');
+    const sentenceBox = document.getElementById('sentenceBox');
+    const sentenceIndexBadge = document.getElementById('sentenceIndexBadge');
+    const btnAudio = document.getElementById('btnAudio');
+    const btnMic = document.getElementById('btnMic');
+    const btnNext = document.getElementById('btnNext');
+    const btnTeacherLock = document.getElementById('btnTeacherLock');
+    const teacherPanel = document.getElementById('teacherPanel');
+    const btnRandom5 = document.getElementById('btnRandom5');
+    const fileInput = document.getElementById('fileInput');
+    const bankStatus = document.getElementById('bankStatus');
+    const attemptCountDisplay = document.getElementById('attemptCountDisplay');
+    const completionScore = document.getElementById('completionScore');
+    const accuracyScore = document.getElementById('accuracyScore');
+    const feedbackMsg = document.getElementById('feedbackMsg');
+    const gasUrlInput = document.getElementById('gasUrlInput');
+    const btnSaveGasUrl = document.getElementById('btnSaveGasUrl');
+
+    if (gasUrlInput) {
+      gasUrlInput.value = GAS_URL;
+      btnSaveGasUrl.addEventListener('click', () => {
+        const val = gasUrlInput.value.trim();
+        if (val) {
+          GAS_URL = val;
+          localStorage.setItem('customGasUrl', val);
+          alert("Google Apps Script Web App URL updated successfully!");
+        }
+      });
+    }
+
+    // Dynamic Feedback Message with Smooth Fade-out / Fade-in
+    function setFeedback(htmlContent, borderColor = 'var(--primary)') {
+      feedbackMsg.style.opacity = '0';
+      feedbackMsg.style.transform = 'translateY(3px)';
+      setTimeout(() => {
+        feedbackMsg.innerHTML = htmlContent;
+        feedbackMsg.style.borderLeftColor = borderColor;
+        feedbackMsg.style.opacity = '1';
+        feedbackMsg.style.transform = 'translateY(0)';
+      }, 120);
+    }
+
+    // Number Counter with Pulse & Fade Animation
+    function animateStat(element, newValue) {
+      element.style.opacity = '0.3';
+      element.style.transform = 'scale(0.85)';
+      setTimeout(() => {
+        element.innerText = newValue;
+        element.style.opacity = '1';
+        element.style.transform = 'scale(1)';
+      }, 100);
+    }
+
+    // Sentence Switch with Smooth Fade-out / Fade-in
+    function renderSentenceWithTransition(newSentence) {
+      sentenceBox.style.opacity = '0';
+      sentenceBox.style.transform = 'translateY(4px)';
+      setTimeout(() => {
+        initSentence(newSentence);
+        sentenceBox.style.opacity = '1';
+        sentenceBox.style.transform = 'translateY(0)';
+      }, 150);
+    }
+
+    // Check teacher unlocked state
+    if (localStorage.getItem('teacherUnlocked') === 'true') {
+      teacherPanel.classList.add('is-open');
+      btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Teacher Unlocked</span>';
+    }
+
+    // Teacher Authorization Toggle Event
+    btnTeacherLock.addEventListener('click', () => {
+      if (teacherPanel.classList.contains('is-open')) {
+        if (confirm("Do you want to lock and hide the teacher panel?")) {
+          teacherPanel.classList.remove('is-open');
+          btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock"></i><span>Teacher Unlock</span>';
+          localStorage.removeItem('teacherUnlocked');
+        }
+        return;
+      }
+      const inputEmail = prompt("Please enter the authorized teacher's email to unlock settings:");
+      if (inputEmail && inputEmail.trim().toLowerCase() === AUTHORIZED_TEACHER_EMAIL.toLowerCase()) {
+        alert("Verification successful! Teacher panel unlocked.");
+        teacherPanel.classList.add('is-open');
+        btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Teacher Unlocked</span>';
+        localStorage.setItem('teacherUnlocked', 'true');
+      } else if (inputEmail !== null) {
+        alert("Email verification failed. You do not have permission to access teacher settings!");
+      }
+    });
+
+    function updateSentenceBadge() {
+      if (sentenceIndexBadge) {
+        sentenceIndexBadge.innerHTML = `<i class="fa-solid fa-bookmark"></i><span>Sentence Progress ${currentSentenceIndex + 1} / ${sentenceBank.length}</span>`;
+      }
+    }
+
+    function initSentence(sentenceText) {
+      targetSentence = sentenceText;
+      targetWords = targetSentence.toLowerCase().match(/\b[\w'-]+\b/g) || [];
+      displayWords = targetSentence.split(/(\s+)/);
+      let wordCounter = 0;
+      sentenceBox.innerHTML = displayWords.map(chunk => {
+        if (/\b[\w'-]+\b/.test(chunk)) {
+          const html = `<span class="w-unit pending" id="w-${wordCounter}" data-word="${chunk.toLowerCase().replace(/[^\w'-]/g, '')}">${chunk}</span>`;
+          wordCounter++;
+          return html;
+        }
+        return chunk;
+      }).join('');
+      updateSentenceBadge();
+    }
+
+    function resetScoresAndLoadFirst() {
+      currentSentenceIndex = 0;
+      renderSentenceWithTransition(sentenceBank[0]);
+      animateStat(completionScore, "0%");
+      animateStat(accuracyScore, "0%");
+      attemptCount = 0;
+      animateStat(attemptCountDisplay, "0 times");
+      if (checkFormValidity()) {
+        setFeedback(`<i class="fa-solid fa-circle-check" style="color: var(--success);"></i><span>Successfully loaded new question bank (${sentenceBank.length} sentences). Click "Start Speaking" to practice.</span>`, 'var(--success)');
+      }
+    }
+
+    // Initialize first sentence
+    initSentence(targetSentence);
+
+    // Load 5 Random Daily Sentences
+    btnRandom5.addEventListener('click', () => {
+      const shuffled = [...dailyEnglishPool].sort(() => 0.5 - Math.random());
+      sentenceBank = shuffled.slice(0, 5);
+      bankStatus.style.opacity = '0';
+      setTimeout(() => {
+        bankStatus.innerHTML = `<i class="fa-solid fa-database"></i><span>Current Bank: Random Daily English (5 sentences)</span>`;
+        bankStatus.style.opacity = '1';
+      }, 120);
+      resetScoresAndLoadFirst();
+    });
+
+    // Upload text.txt custom bank
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target.result;
+        const lines = text.split(/\r?\n/).map(line => line.trim().replace(/^"|"$/g, '')).filter(line => line.length > 0);
+        if (lines.length > 0) {
+          sentenceBank = lines;
+          bankStatus.style.opacity = '0';
+          setTimeout(() => {
+            bankStatus.innerHTML = `<i class="fa-solid fa-database"></i><span>Current Bank: Custom File ${file.name} (${lines.length} sentences)</span>`;
+            bankStatus.style.opacity = '1';
+          }, 120);
+          resetScoresAndLoadFirst();
+        } else {
+          alert("No valid English sentences found in the uploaded text file!");
+        }
+      };
+      reader.readAsText(file, 'UTF-8');
+    });
+
+    // Switch to Next Sentence
+    btnNext.addEventListener('click', () => {
+      currentSentenceIndex = (currentSentenceIndex + 1) % sentenceBank.length;
+      renderSentenceWithTransition(sentenceBank[currentSentenceIndex]);
+      animateStat(completionScore, "0%");
+      animateStat(accuracyScore, "0%");
+      if (checkFormValidity()) {
+        setFeedback(`<i class="fa-solid fa-circle-info" style="color: var(--primary);"></i><span>Switched to sentence ${currentSentenceIndex + 1} / ${sentenceBank.length}. Click "Start Speaking" to practice.</span>`, 'var(--primary)');
+      }
+    });
+
+    function checkFormValidity() {
+      if (studentClass.value.trim() !== "" && studentId.value.trim() !== "" && studentName.value.trim() !== "") {
+        btnMic.disabled = false;
+        if (feedbackMsg.innerText.includes("Please fill in your student information")) {
+          setFeedback(`<i class="fa-solid fa-circle-check" style="color: var(--success);"></i><span>Information completed. Click "Start Speaking" to begin your practice.</span>`, 'var(--success)');
+        }
+        return true;
+      } else {
+        btnMic.disabled = true;
+        setFeedback(`<i class="fa-solid fa-circle-info" style="color: var(--primary);"></i><span>Please fill in your student information above before starting the practice.</span>`, 'var(--primary)');
+        return false;
+      }
+    }
+
+    [studentClass, studentId, studentName].forEach(input => {
+      input.addEventListener('input', checkFormValidity);
+    });
+    checkFormValidity();
+
+    // Text-to-Speech (TTS) Demo
+    btnAudio.addEventListener('click', () => {
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const utterance = new SpeechSynthesisUtterance(targetSentence);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      const voices = synth.getVoices();
+      if (voices.length > 0) {
+        const usVoice = voices.find(v => v.lang.includes('en-US') || v.lang.includes('en_US'));
+        if (usVoice) utterance.voice = usVoice;
+      }
+      synth.speak(utterance);
+    });
+
+    // Speech-to-Text (STT) Recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i><span>Your browser does not support Speech Recognition. Please use Google Chrome or Safari.</span>`, 'var(--warning)');
+      btnMic.disabled = true;
+    } else {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+
+      btnMic.addEventListener('click', () => {
+        if (!checkFormValidity()) return;
+        try { recognition.start(); } catch (e) { recognition.stop(); }
+      });
+
+      recognition.onstart = () => {
+        btnMic.classList.add('recording');
+        btnMic.innerHTML = `<i class="fa-solid fa-microphone-lines fa-fade"></i><span>Recording...</span>`;
+        setFeedback(`<i class="fa-solid fa-wave-square fa-fade" style="color: var(--danger);"></i><span>Listening to [${studentClass.value}] ${studentName.value}... Speak clearly into your mic.</span>`, 'var(--danger)');
+        for (let i = 0; i < targetWords.length; i++) {
+          const el = document.getElementById(`w-${i}`);
+          if (el) el.className = "w-unit pending";
+        }
+      };
+
+      recognition.onend = () => {
+        btnMic.classList.remove('recording');
+        btnMic.innerHTML = `<i class="fa-solid fa-microphone"></i><span>Start Speaking</span>`;
+      };
+
+      recognition.onresult = (event) => {
+        attemptCount++;
+        animateStat(attemptCountDisplay, `${attemptCount} times`);
+        const studentSpeech = event.results[0][0].transcript;
+        const studentWords = studentSpeech.toLowerCase().match(/\b[\w'-]+\b/g) || [];
+        let sIdx = 0;
+        let correctCount = 0;
+        let missingCount = 0;
+        let wrongCount = 0;
+
+        for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
+          const target = targetWords[tIdx];
+          const el = document.getElementById(`w-${tIdx}`);
+          if (sIdx < studentWords.length) {
+            if (studentWords[sIdx] === target) {
+              if (el) el.className = "w-unit correct";
+              correctCount++;
+              sIdx++;
+            } else {
+              const nextMatchIndex = studentWords.slice(sIdx).indexOf(target);
+              if (nextMatchIndex !== -1) {
+                if (el) el.className = "w-unit missing";
+                missingCount++;
+              } else {
+                if (el) el.className = "w-unit wrong";
+                wrongCount++;
+                sIdx++;
+              }
+            }
+          } else {
+            if (el) el.className = "w-unit missing";
+            missingCount++;
+          }
+        }
+
+        const attemptWordsCount = correctCount + wrongCount;
+        const completionRate = Math.round((attemptWordsCount / targetWords.length) * 100);
+        const accuracyRate = attemptWordsCount > 0 ? Math.round((correctCount / attemptWordsCount) * 100) : 0;
+
+        animateStat(completionScore, `${completionRate}%`);
+        animateStat(accuracyScore, `${accuracyRate}%`);
+        setFeedback(`<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--primary);"></i><span>Syncing attempt #${attemptCount} data to Google Sheets...</span>`, 'var(--primary)');
+        sendDataToGoogleSheet(completionRate, accuracyRate, studentSpeech, attemptCount, targetSentence);
+      };
+
+      recognition.onerror = (event) => {
+        setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Error: ${event.error}. Please ensure microphone permission is granted.</span>`, 'var(--danger)');
+      };
+    }
+
+    function sendDataToGoogleSheet(completion, accuracy, transcript, currentAttempt, targetSentenceText) {
+      const payload = {
+        className: studentClass.value.trim(),
+        studentId: studentId.value.trim(),
+        studentName: studentName.value.trim(),
+        attemptCount: currentAttempt,
+        targetSentence: targetSentenceText,
+        completion: completion,
+        accuracy: accuracy,
+        transcript: transcript
+      };
+
+      fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        setFeedback(`
+          <i class="fa-solid fa-circle-check" style="color: var(--success);"></i>
+          <span>
+            Attempt <strong>#${currentAttempt}</strong> synced! Recognized: "<em style="color: var(--text-muted);">${transcript}</em>"
+          </span>
+        `, 'var(--success)');
+      })
+      .catch(err => {
+        setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Cloud sync failed. Please check your internet connection.</span>`, 'var(--danger)');
+      });
+    }
+  </script>
+</body>
+</html>
