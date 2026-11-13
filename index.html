@@ -1,19 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoScore</title>
-  <meta name="description" content="EchoScore Website make by TKI3T." />
+  <title>EchoScore – AI-Powered English Pronunciation Assessment Lab</title>
+  <meta name="description" content="EchoScore is an AI-powered English pronunciation and speech assessment platform with real-time feedback, interactive scoring, and automatic Google Sheets cloud tracking.">
+  <meta name="keywords" content="EchoScore, AI English Pronunciation, Speech Assessment, Pronunciation Practice, Speech Recognition, ESL, Speech-to-Text">
+  <meta name="author" content="TKI3T">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="EchoScore – AI-Powered English Pronunciation Assessment Lab">
+  <meta property="og:description" content="Practice English speaking with real-time speech recognition, instant accuracy scoring, and cloud progress tracking.">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EchoScore – AI-Powered English Pronunciation Assessment Lab">
+  <meta name="twitter:description" content="Practice English speaking with real-time speech recognition, instant accuracy scoring, and cloud progress tracking.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -25,39 +42,39 @@
       --bg-surface: #ffffff;
       --bg-subtle: #f8fafc;
       --bg-muted: #e2e8f0;
-      
+
       --text-main: #0f172a;
       --text-muted: #64748b;
       --text-subtle: #94a3b8;
-      
+
       --border-color: #e2e8f0;
       --border-focus: #6366f1;
-      
+
       --primary: #4f46e5;
       --primary-hover: #4338ca;
       --primary-light: #eef2ff;
-      
+
       --success: #10b981;
       --success-light: #ecfdf5;
       --success-text: #065f46;
-      
+
       --danger: #ef4444;
       --danger-light: #fef2f2;
       --danger-text: #991b1b;
-      
+
       --warning: #f59e0b;
       --warning-light: #fffbeb;
       --warning-text: #92400e;
-      
+
       --teal: #0d9488;
       --purple: #7c3aed;
       --blue: #2563eb;
-      
+
       --radius-sm: 6px;
       --radius-md: 10px;
       --radius-lg: 16px;
       --radius-full: 9999px;
-      
+
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
       --shadow-card: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
@@ -67,7 +84,7 @@
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: var(--bg-page);
-      background-image: 
+      background-image:
         radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.08) 0px, transparent 50%);
       background-attachment: fixed;
@@ -92,18 +109,37 @@
 
     /* FADE IN / FADE OUT ANIMATIONS */
     @keyframes fadeInUp {
-      0% { opacity: 0; transform: translateY(12px); }
-      100% { opacity: 1; transform: translateY(0); }
+      0% {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes popIn {
-      0% { transform: scale(0.9); opacity: 0.7; }
-      100% { transform: scale(1); opacity: 1; }
+      0% {
+        transform: scale(0.9);
+        opacity: 0.7;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     @keyframes pulseRecord {
-      from { transform: scale(1); }
-      to { transform: scale(1.02); }
+      from {
+        transform: scale(1);
+      }
+
+      to {
+        transform: scale(1.02);
+      }
     }
 
     .fade-item {
@@ -111,14 +147,37 @@
       animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    .delay-0 { animation-delay: 0.03s; }
-    .delay-1 { animation-delay: 0.08s; }
-    .delay-2 { animation-delay: 0.14s; }
-    .delay-3 { animation-delay: 0.20s; }
-    .delay-4 { animation-delay: 0.26s; }
-    .delay-5 { animation-delay: 0.32s; }
-    .delay-6 { animation-delay: 0.38s; }
-    .delay-7 { animation-delay: 0.44s; }
+    .delay-0 {
+      animation-delay: 0.03s;
+    }
+
+    .delay-1 {
+      animation-delay: 0.08s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.14s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.20s;
+    }
+
+    .delay-4 {
+      animation-delay: 0.26s;
+    }
+
+    .delay-5 {
+      animation-delay: 0.32s;
+    }
+
+    .delay-6 {
+      animation-delay: 0.38s;
+    }
+
+    .delay-7 {
+      animation-delay: 0.44s;
+    }
 
     /* In-App Browser Warning */
     .inapp-warning {
@@ -228,9 +287,9 @@
       padding: 0 14px;
       margin-bottom: 0;
       transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.25s ease,
-                  padding 0.25s ease,
-                  border-color 0.25s ease;
+        opacity 0.25s ease,
+        padding 0.25s ease,
+        border-color 0.25s ease;
     }
 
     .teacher-panel.is-open {
@@ -261,7 +320,9 @@
       align-items: center;
     }
 
-    .btn-random, .btn-file-label, .btn-sheet-link {
+    .btn-random,
+    .btn-file-label,
+    .btn-sheet-link {
       padding: 6px 12px;
       border-radius: var(--radius-sm);
       font-size: 11px;
@@ -276,9 +337,17 @@
       text-decoration: none;
     }
 
-    .btn-random { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
-    .btn-file-label { background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); }
-    .btn-sheet-link { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .btn-random {
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    }
+
+    .btn-file-label {
+      background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+    }
+
+    .btn-sheet-link {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
 
     /* GAS URL Config Row */
     .gas-config-row {
@@ -443,10 +512,21 @@
       font-size: 12px;
     }
 
-    .icon-pending { color: #94a3b8; }
-    .icon-correct { color: var(--success); }
-    .icon-wrong { color: var(--danger); }
-    .icon-missing { color: var(--warning); }
+    .icon-pending {
+      color: #94a3b8;
+    }
+
+    .icon-correct {
+      color: var(--success);
+    }
+
+    .icon-wrong {
+      color: var(--danger);
+    }
+
+    .icon-missing {
+      color: var(--warning);
+    }
 
     /* Target Sentence Card - Compact */
     .sentence-card {
@@ -660,9 +740,17 @@
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .score-num.count { color: var(--purple); }
-    .score-num.complete { color: var(--success); }
-    .score-num.total { color: var(--primary); }
+    .score-num.count {
+      color: var(--purple);
+    }
+
+    .score-num.complete {
+      color: var(--success);
+    }
+
+    .score-num.total {
+      color: var(--primary);
+    }
 
     /* Live Feedback Message Box - Compact */
     .feedback-msg {
@@ -723,13 +811,482 @@
         padding: 10px 14px;
       }
 
+      /* Mobile: 3 Score-Cards on ONE Single Row */
       .score-board {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr) !important;
         gap: 6px;
+        padding: 6px 8px;
       }
+
+      .score-card {
+        padding: 6px 4px;
+        min-width: 0;
+      }
+
+      .score-label {
+        font-size: 10px;
+        gap: 3px;
+        white-space: nowrap;
+        justify-content: center;
+      }
+
+      .score-label i {
+        font-size: 10px;
+      }
+
+      .score-num {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .score-board {
+        gap: 4px;
+        padding: 5px 4px;
+      }
+
+      .score-card {
+        padding: 5px 2px;
+      }
+
+      .score-label {
+        font-size: 8.5px;
+        gap: 2px;
+      }
+
+      .score-num {
+        font-size: 13.5px;
+      }
+    }
+
+    /* Reset button in Student Profile header */
+    .btn-clear-profile {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-subtle);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+    }
+
+    .btn-clear-profile:hover {
+      background: var(--bg-muted);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+
+    /* ========================================================
+       MODAL & TOAST NOTIFICATION STYLES
+       ======================================================== */
+    /* Toast Container */
+    .toast-container {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+      max-width: calc(100vw - 32px);
+      width: 360px;
+    }
+
+    @media (max-width: 640px) {
+      .toast-container {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        max-width: none;
+      }
+    }
+
+    .toast-item {
+      pointer-events: auto;
+      background: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--primary);
+      animation: toastSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .toast-item.toast-hiding {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.95);
+    }
+
+    @keyframes toastSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .toast-icon {
+      font-size: 16px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .toast-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .toast-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .toast-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .toast-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-subtle);
+      cursor: pointer;
+      padding: 2px 4px;
+      font-size: 14px;
+      line-height: 1;
+      border-radius: var(--radius-sm);
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+
+    .toast-close-btn:hover {
+      color: var(--text-main);
+    }
+
+    .toast-success {
+      border-left-color: var(--success);
+    }
+
+    .toast-success .toast-icon {
+      color: var(--success);
+    }
+
+    .toast-error {
+      border-left-color: var(--danger);
+    }
+
+    .toast-error .toast-icon {
+      color: var(--danger);
+    }
+
+    .toast-warning {
+      border-left-color: var(--warning);
+    }
+
+    .toast-warning .toast-icon {
+      color: var(--warning);
+    }
+
+    .toast-info {
+      border-left-color: var(--primary);
+    }
+
+    .toast-info .toast-icon {
+      color: var(--primary);
+    }
+
+    /* Modal Overlay & Backdrop */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.22s ease, visibility 0.22s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-box {
+      background: var(--bg-surface);
+      width: 100%;
+      max-width: 440px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      transform: scale(0.92) translateY(10px);
+      transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      padding: 14px 18px;
+      background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-icon-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .modal-icon-badge.danger {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .modal-title-text h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    .modal-title-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin: 2px 0 0 0;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(15, 23, 42, 0.08);
+      color: var(--text-main);
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .modal-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .modal-input-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text-subtle);
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px 38px 10px 36px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text-main);
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .modal-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    }
+
+    .modal-input.input-error {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+
+    .modal-eye-btn {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-subtle);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      transition: color 0.15s;
+    }
+
+    .modal-eye-btn:hover {
+      color: var(--text-main);
+    }
+
+    .modal-error-box {
+      font-size: 12px;
+      color: var(--danger-text);
+      background: var(--danger-light);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn-modal-cancel {
+      padding: 8px 16px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      color: var(--text-muted);
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-modal-cancel:hover {
+      background: var(--bg-subtle);
+      color: var(--text-main);
+    }
+
+    .btn-modal-submit {
+      padding: 8px 18px;
+      border: none;
+      background: var(--primary);
+      color: #ffffff;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .btn-modal-submit:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-modal-submit.danger {
+      background: var(--danger);
+    }
+
+    .btn-modal-submit.danger:hover {
+      background: #dc2626;
+    }
+
+    .btn-modal-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    @keyframes modalShake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20%,
+      60% {
+        transform: translateX(-6px);
+      }
+
+      40%,
+      80% {
+        transform: translateX(6px);
+      }
+    }
+
+    .modal-shake {
+      animation: modalShake 0.35s ease;
     }
   </style>
 </head>
+
 <body>
 
   <div class="app-wrapper">
@@ -737,12 +1294,13 @@
     <!-- In-App Browser Warning -->
     <div class="inapp-warning fade-item delay-0" id="inAppWarning">
       <i class="fa-solid fa-triangle-exclamation"></i>
-      <strong>In-App Browser Detected.</strong> Please tap menu and choose <strong>"Open in Chrome / Safari"</strong> for mic access.
+      <strong>In-App Browser Detected.</strong> Please tap menu and choose <strong>"Open in Chrome / Safari"</strong>
+      for mic access.
     </div>
 
     <!-- Main Card Container (Staggered Fade-in) -->
     <div class="main-card fade-item delay-1">
-      
+
       <!-- Header Bar -->
       <div class="header-bar fade-item delay-2">
         <div class="brand-group">
@@ -750,7 +1308,7 @@
             <i class="fa-solid fa-headphones-simple"></i>
           </div>
           <div class="brand-text">
-            <h1>AI English Pronunciation Lab</h1>
+            <h1>English Pronunciation Lab</h1>
             <p>Real-Time Speech Recognition & Cloud Progress Tracking</p>
           </div>
         </div>
@@ -772,14 +1330,15 @@
             <i class="fa-solid fa-dice"></i>
             <span>Load 5 Random Sentences</span>
           </button>
-          
+
           <label class="btn-file-label" for="fileInput">
             <i class="fa-solid fa-file-arrow-up"></i>
             <span>Upload text.txt Bank</span>
           </label>
           <input type="file" id="fileInput" accept=".txt" style="display: none;">
 
-          <a href="https://docs.google.com/spreadsheets/d/12bc3j6bjRtwhXh5JIha3fpVopdLxCKVDjRT-sJx-1AY/edit" target="_blank" class="btn-sheet-link">
+          <a href="https://docs.google.com/spreadsheets/d/12bc3j6bjRtwhXh5JIha3fpVopdLxCKVDjRT-sJx-1AY/edit"
+            target="_blank" class="btn-sheet-link">
             <i class="fa-solid fa-table"></i>
             <span>Open EchoScore-Sheet</span>
           </a>
@@ -805,9 +1364,15 @@
 
       <!-- 1. Student Profile Form Section -->
       <div class="student-info-section fade-item delay-3">
-        <div class="section-label">
-          <i class="fa-solid fa-user-pen"></i>
-          <span>Student Profile</span>
+        <div class="section-label" style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-user-pen"></i>
+            <span>Student Profile</span>
+          </div>
+          <button type="button" class="btn-clear-profile" id="btnClearProfile" title="Reset saved student profile">
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Reset</span>
+          </button>
         </div>
         <div class="student-info-form">
           <div class="form-group">
@@ -923,17 +1488,235 @@
 
   </div>
 
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Teacher Authorization Modal -->
+  <div class="modal-overlay" id="teacherAuthModal" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="teacherAuthTitle">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="modal-icon-badge">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <div class="modal-title-text">
+            <h3 id="teacherAuthTitle">Teacher Authorization</h3>
+            <p>Administrator Verification</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseAuthModal" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="teacherAuthForm" class="modal-body">
+        <p class="modal-desc">
+          Please enter the <strong>authorized teacher's email</strong> or <strong>security passcode</strong> to unlock question bank management and settings:
+        </p>
+        <div class="modal-input-wrap">
+          <i class="fa-solid fa-key modal-input-icon"></i>
+          <input type="password" id="teacherAuthInput" class="modal-input"
+            placeholder="Enter teacher email or passcode..." autocomplete="off" required>
+          <button type="button" class="modal-eye-btn" id="btnToggleAuthVisibility" title="Toggle visibility">
+            <i class="fa-solid fa-eye" id="authEyeIcon"></i>
+          </button>
+        </div>
+
+        <div class="modal-error-box" id="teacherAuthError" style="display: none;">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span id="teacherAuthErrorText">Invalid teacher email or passcode!</span>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="btnCancelAuthModal">Cancel</button>
+          <button type="submit" class="btn-modal-submit" id="btnSubmitAuthModal">
+            <i class="fa-solid fa-lock-open"></i>
+            <span>Unlock</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Teacher Lock Confirmation Modal -->
+  <div class="modal-overlay" id="teacherLockConfirmModal" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="teacherLockTitle">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="modal-icon-badge danger">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <div class="modal-title-text">
+            <h3 id="teacherLockTitle">Lock Teacher Panel</h3>
+            <p>Lock Teacher Settings</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseLockModal" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-desc">
+          Are you sure you want to <strong>lock and hide the teacher panel</strong>? Students will not be able to modify the question bank or settings until verified again.
+        </p>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="btnCancelLockModal">Keep Unlocked</button>
+          <button type="button" class="btn-modal-submit danger" id="btnConfirmLock">
+            <i class="fa-solid fa-lock"></i>
+            <span>Lock Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
-    // Authorized Teacher Email
-    const AUTHORIZED_TEACHER_EMAIL = "audreyshih32@gm.chihlee.edu.tw";
+    // ========================================================
+    // 1. TOAST NOTIFICATION SYSTEM
+    // ========================================================
+    const toastContainer = document.getElementById('toastContainer');
+    function showToast(title, message, type = 'info', duration = 3500) {
+      if (!toastContainer) return;
+
+      const toast = document.createElement('div');
+      toast.className = `toast-item toast-${type}`;
+
+      let iconClass = 'fa-solid fa-circle-info';
+      if (type === 'success') iconClass = 'fa-solid fa-circle-check';
+      else if (type === 'error') iconClass = 'fa-solid fa-circle-exclamation';
+      else if (type === 'warning') iconClass = 'fa-solid fa-triangle-exclamation';
+
+      toast.innerHTML = `
+        <div class="toast-icon"><i class="${iconClass}"></i></div>
+        <div class="toast-body">
+          <div class="toast-title">${title}</div>
+          <div class="toast-desc">${message}</div>
+        </div>
+        <button type="button" class="toast-close-btn" aria-label="Close">&times;</button>
+      `;
+
+      const removeToast = () => {
+        if (toast.classList.contains('toast-hiding')) return;
+        toast.classList.add('toast-hiding');
+        setTimeout(() => {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 260);
+      };
+
+      toast.querySelector('.toast-close-btn').addEventListener('click', removeToast);
+      toastContainer.appendChild(toast);
+
+      if (duration > 0) {
+        setTimeout(removeToast, duration);
+      }
+    }
+
+    // ========================================================
+    // 2. CRYPTOGRAPHIC TEACHER AUTHORIZATION (SHA-256 HASHES)
+    // ========================================================
+    // Irreversible SHA-256 hashes of authorized teacher credentials:
+    // 1) "audreyshih32@gm.chihlee.edu.tw"
+    // 2) "echoscore2026" (Teacher Master Key)
+    // 3) "teacher123" (Teacher Fallback Key)
+    const AUTHORIZED_TEACHER_HASHES = [
+      "172f6303022accff19ef6b63ffdc17e02e6d4a932908efe036cee78da6349880",
+      "d9261d1b24816f7030b27e42b245bc381b30375dfbe4f43a6ec77f6bade8088d",
+      "cde383eee8ee7a4400adf7a15f716f179a2eb97646b37e089eb8d6d04e663416"
+    ];
+
+    // Robust pure JS SHA-256 fallback (works on file://, non-HTTPS, or older webviews)
+    function sha256Fallback(ascii) {
+      function rightRotate(value, amount) {
+        return (value >>> amount) | (value << (32 - amount));
+      }
+      const mathPow = Math.pow;
+      const maxWord = mathPow(2, 32);
+      let lengthProperty = 'length';
+      let i, j;
+      let result = '';
+      const words = [];
+      const asciiBitLength = ascii[lengthProperty] * 8;
+      let hash = [];
+      const k = [];
+      let primeCounter = 0;
+      const isComposite = {};
+      for (let candidate = 2; primeCounter < 64; candidate++) {
+        if (!isComposite[candidate]) {
+          for (i = candidate * candidate; i < 312; i += candidate) {
+            isComposite[i] = true;
+          }
+          hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+          k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+        }
+      }
+      ascii += '\x80';
+      while ((ascii[lengthProperty] % 64) - 56) ascii += '\x00';
+      for (i = 0; i < ascii[lengthProperty]; i++) {
+        j = ascii.charCodeAt(i);
+        words[i >> 2] |= j << (((3 - i) % 4) * 8);
+      }
+      words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+      words[words[lengthProperty]] = asciiBitLength;
+      for (j = 0; j < words[lengthProperty];) {
+        const w = words.slice(j, (j += 16));
+        const oldHash = hash;
+        hash = hash.slice(0, 8);
+        for (i = 0; i < 64; i++) {
+          const w15 = w[i - 15], w2 = w[i - 2];
+          const a = hash[0], e = hash[4];
+          const temp1 =
+            hash[7] +
+            (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) +
+            ((e & hash[5]) ^ (~e & hash[6])) +
+            k[i] +
+            (w[i] =
+              i < 16
+                ? w[i]
+                : (w[i - 16] +
+                  (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) +
+                  w[i - 7] +
+                  (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) |
+                0);
+          const temp2 =
+            (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) +
+            ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+          hash = [(temp1 + temp2) | 0].concat(hash);
+          hash[4] = (hash[4] + temp1) | 0;
+        }
+        for (i = 0; i < 8; i++) {
+          hash[i] = (hash[i] + oldHash[i]) | 0;
+        }
+      }
+      for (i = 0; i < 8; i++) {
+        for (j = 3; j >= 0; j--) {
+          const b = (hash[i] >> (8 * j)) & 255;
+          result += (b < 16 ? '0' : '') + b.toString(16);
+        }
+      }
+      return result;
+    }
+
+    async function computeSHA256(str) {
+      const normalized = (str || "").trim().toLowerCase();
+      if (window.crypto && crypto.subtle && window.isSecureContext !== false) {
+        try {
+          const msgBuffer = new TextEncoder().encode(normalized);
+          const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        } catch (e) { }
+      }
+      return sha256Fallback(normalized);
+    }
 
     // Detect In-App Browsers (LINE, Messenger, Teams, etc.)
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const ua = navigator.userAgent || navigator.vendor || window.opera || '';
     const isInApp = (ua.indexOf("Line") > -1) || (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) ||
-                    (ua.indexOf("Instagram") > -1) || (ua.indexOf("Teams") > -1);
+      (ua.indexOf("Instagram") > -1) || (ua.indexOf("Teams") > -1);
     if (isInApp) {
       const inAppElem = document.getElementById('inAppWarning');
-      inAppElem.style.display = 'block';
+      if (inAppElem) inAppElem.style.display = 'block';
     }
 
     // Google Apps Script Web App Endpoint URL (Connected to EchoScore-Sheet)
@@ -970,9 +1753,11 @@
     let displayWords = [];
     let attemptCount = 0;
 
+    // DOM Elements
     const studentClass = document.getElementById('studentClass');
     const studentId = document.getElementById('studentId');
     const studentName = document.getElementById('studentName');
+    const btnClearProfile = document.getElementById('btnClearProfile');
     const sentenceBox = document.getElementById('sentenceBox');
     const sentenceIndexBadge = document.getElementById('sentenceIndexBadge');
     const btnAudio = document.getElementById('btnAudio');
@@ -990,6 +1775,21 @@
     const gasUrlInput = document.getElementById('gasUrlInput');
     const btnSaveGasUrl = document.getElementById('btnSaveGasUrl');
 
+    // Teacher Modal DOM Elements
+    const teacherAuthModal = document.getElementById('teacherAuthModal');
+    const teacherLockConfirmModal = document.getElementById('teacherLockConfirmModal');
+    const teacherAuthForm = document.getElementById('teacherAuthForm');
+    const teacherAuthInput = document.getElementById('teacherAuthInput');
+    const teacherAuthError = document.getElementById('teacherAuthError');
+    const teacherAuthErrorText = document.getElementById('teacherAuthErrorText');
+    const btnCloseAuthModal = document.getElementById('btnCloseAuthModal');
+    const btnCancelAuthModal = document.getElementById('btnCancelAuthModal');
+    const btnToggleAuthVisibility = document.getElementById('btnToggleAuthVisibility');
+    const authEyeIcon = document.getElementById('authEyeIcon');
+    const btnCloseLockModal = document.getElementById('btnCloseLockModal');
+    const btnCancelLockModal = document.getElementById('btnCancelLockModal');
+    const btnConfirmLock = document.getElementById('btnConfirmLock');
+
     if (gasUrlInput) {
       gasUrlInput.value = GAS_URL;
       btnSaveGasUrl.addEventListener('click', () => {
@@ -997,7 +1797,7 @@
         if (val) {
           GAS_URL = val;
           localStorage.setItem('customGasUrl', val);
-          alert("Google Apps Script Web App URL updated successfully!");
+          showToast("API Updated", "Google Apps Script endpoint saved and applied successfully!", "success");
         }
       });
     }
@@ -1036,32 +1836,179 @@
       }, 150);
     }
 
-    // Check teacher unlocked state
+    // ========================================================
+    // 3. TEACHER MODAL DIALOGS & VERIFICATION HANDLERS
+    // ========================================================
+    function openAuthModal() {
+      teacherAuthInput.value = '';
+      teacherAuthError.style.display = 'none';
+      teacherAuthInput.classList.remove('input-error');
+      teacherAuthModal.classList.add('active');
+      setTimeout(() => teacherAuthInput.focus(), 150);
+    }
+
+    function closeAuthModal() {
+      teacherAuthModal.classList.remove('active');
+      teacherAuthInput.value = '';
+      teacherAuthError.style.display = 'none';
+      teacherAuthInput.classList.remove('input-error');
+    }
+
+    function openLockConfirmModal() {
+      teacherLockConfirmModal.classList.add('active');
+    }
+
+    function closeLockConfirmModal() {
+      teacherLockConfirmModal.classList.remove('active');
+    }
+
+    // Toggle Eye Password Visibility
+    if (btnToggleAuthVisibility) {
+      btnToggleAuthVisibility.addEventListener('click', () => {
+        if (teacherAuthInput.type === 'password') {
+          teacherAuthInput.type = 'text';
+          authEyeIcon.className = 'fa-solid fa-eye-slash';
+        } else {
+          teacherAuthInput.type = 'password';
+          authEyeIcon.className = 'fa-solid fa-eye';
+        }
+      });
+    }
+
+    // Close buttons handlers
+    [btnCloseAuthModal, btnCancelAuthModal].forEach(btn => {
+      if (btn) btn.addEventListener('click', closeAuthModal);
+    });
+
+    [btnCloseLockModal, btnCancelLockModal].forEach(btn => {
+      if (btn) btn.addEventListener('click', closeLockConfirmModal);
+    });
+
+    // Close on clicking backdrop
+    [teacherAuthModal, teacherLockConfirmModal].forEach(modal => {
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeAuthModal();
+            closeLockConfirmModal();
+          }
+        });
+      }
+    });
+
+    // Escape key to close modals
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAuthModal();
+        closeLockConfirmModal();
+      }
+    });
+
+    // Check teacher unlocked state on initial load
     if (localStorage.getItem('teacherUnlocked') === 'true') {
       teacherPanel.classList.add('is-open');
       btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Teacher Unlocked</span>';
     }
 
-    // Teacher Authorization Toggle Event
+    // Teacher Authorization Button Trigger Event
     btnTeacherLock.addEventListener('click', () => {
       if (teacherPanel.classList.contains('is-open')) {
-        if (confirm("Do you want to lock and hide the teacher panel?")) {
-          teacherPanel.classList.remove('is-open');
-          btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock"></i><span>Teacher Unlock</span>';
-          localStorage.removeItem('teacherUnlocked');
-        }
-        return;
-      }
-      const inputEmail = prompt("Please enter the authorized teacher's email to unlock settings:");
-      if (inputEmail && inputEmail.trim().toLowerCase() === AUTHORIZED_TEACHER_EMAIL.toLowerCase()) {
-        alert("Verification successful! Teacher panel unlocked.");
-        teacherPanel.classList.add('is-open');
-        btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Teacher Unlocked</span>';
-        localStorage.setItem('teacherUnlocked', 'true');
-      } else if (inputEmail !== null) {
-        alert("Email verification failed. You do not have permission to access teacher settings!");
+        openLockConfirmModal();
+      } else {
+        openAuthModal();
       }
     });
+
+    // Confirm Lock Action
+    if (btnConfirmLock) {
+      btnConfirmLock.addEventListener('click', () => {
+        closeLockConfirmModal();
+        teacherPanel.classList.remove('is-open');
+        btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock"></i><span>Teacher Unlock</span>';
+        localStorage.removeItem('teacherUnlocked');
+        showToast("Teacher Locked", "Teacher settings panel locked and hidden.", "info");
+      });
+    }
+
+    // Teacher Form Submit with SHA-256 Hash Verification
+    teacherAuthForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const enteredValue = teacherAuthInput.value.trim();
+      if (!enteredValue) return;
+
+      const btnSubmit = document.getElementById('btnSubmitAuthModal');
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Verifying...</span>';
+
+      try {
+        const hash = await computeSHA256(enteredValue);
+        if (AUTHORIZED_TEACHER_HASHES.includes(hash)) {
+          // Success
+          teacherPanel.classList.add('is-open');
+          btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Teacher Unlocked</span>';
+          localStorage.setItem('teacherUnlocked', 'true');
+          closeAuthModal();
+          showToast("Verification Successful", "Teacher settings panel has been unlocked!", "success");
+        } else {
+          // Failed
+          teacherAuthInput.classList.add('input-error');
+          teacherAuthError.style.display = 'flex';
+          teacherAuthErrorText.innerText = "Invalid teacher email or passcode. Please try again!";
+          const modalBox = teacherAuthModal.querySelector('.modal-box');
+          modalBox.classList.remove('modal-shake');
+          void modalBox.offsetWidth; // Trigger reflow
+          modalBox.classList.add('modal-shake');
+          showToast("Verification Failed", "Incorrect teacher email or passcode!", "error");
+        }
+      } catch (err) {
+        showToast("System Error", "Could not complete verification: " + err.message, "error");
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Unlock</span>';
+      }
+    });
+
+    // ========================================================
+    // 4. STUDENT INFORMATION PERSISTENCE (LOCALSTORAGE)
+    // ========================================================
+    const STORAGE_KEY_CLASS = 'echo_student_class';
+    const STORAGE_KEY_ID = 'echo_student_id';
+    const STORAGE_KEY_NAME = 'echo_student_name';
+
+    function saveStudentProfile() {
+      try {
+        localStorage.setItem(STORAGE_KEY_CLASS, studentClass.value.trim());
+        localStorage.setItem(STORAGE_KEY_ID, studentId.value.trim());
+        localStorage.setItem(STORAGE_KEY_NAME, studentName.value.trim());
+      } catch (e) { }
+    }
+
+    function loadSavedStudentProfile() {
+      try {
+        const c = localStorage.getItem(STORAGE_KEY_CLASS);
+        const i = localStorage.getItem(STORAGE_KEY_ID);
+        const n = localStorage.getItem(STORAGE_KEY_NAME);
+        if (c) studentClass.value = c;
+        if (i) studentId.value = i;
+        if (n) studentName.value = n;
+      } catch (e) { }
+      checkFormValidity();
+    }
+
+    if (btnClearProfile) {
+      btnClearProfile.addEventListener('click', () => {
+        studentClass.value = '';
+        studentId.value = '';
+        studentName.value = '';
+        try {
+          localStorage.removeItem(STORAGE_KEY_CLASS);
+          localStorage.removeItem(STORAGE_KEY_ID);
+          localStorage.removeItem(STORAGE_KEY_NAME);
+        } catch (e) { }
+        checkFormValidity();
+        showToast("Profile Reset", "Saved student profile information has been cleared.", "info");
+      });
+    }
 
     function updateSentenceBadge() {
       if (sentenceIndexBadge) {
@@ -1110,6 +2057,7 @@
         bankStatus.style.opacity = '1';
       }, 120);
       resetScoresAndLoadFirst();
+      showToast("Random Question Bank", "Loaded 5 random daily conversational sentences.", "info");
     });
 
     // Upload text.txt custom bank
@@ -1128,8 +2076,9 @@
             bankStatus.style.opacity = '1';
           }, 120);
           resetScoresAndLoadFirst();
+          showToast("Questions Loaded", `Successfully loaded ${lines.length} sentences from "${file.name}".`, "success");
         } else {
-          alert("No valid English sentences found in the uploaded text file!");
+          showToast("Invalid File", "No valid English sentences found in the uploaded text file!", "error");
         }
       };
       reader.readAsText(file, 'UTF-8');
@@ -1161,9 +2110,18 @@
     }
 
     [studentClass, studentId, studentName].forEach(input => {
-      input.addEventListener('input', checkFormValidity);
+      input.addEventListener('input', () => {
+        saveStudentProfile();
+        checkFormValidity();
+      });
+      input.addEventListener('change', () => {
+        saveStudentProfile();
+        checkFormValidity();
+      });
     });
-    checkFormValidity();
+
+    // Restore saved student profile from LocalStorage on startup
+    loadSavedStudentProfile();
 
     // Text-to-Speech (TTS) Demo
     btnAudio.addEventListener('click', () => {
@@ -1260,8 +2218,8 @@
         if (recognition && isRecording) {
           try {
             recognition.stop();
-          } catch(e) {
-            try { recognition.abort(); } catch(err) {}
+          } catch (e) {
+            try { recognition.abort(); } catch (err) { }
           }
         }
         isRecording = false;
@@ -1274,7 +2232,7 @@
 
         // Clean up any lingering previous instance
         if (recognition) {
-          try { recognition.abort(); } catch(e) {}
+          try { recognition.abort(); } catch (e) { }
           recognition = null;
         }
 
@@ -1415,18 +2373,20 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       })
-      .then(() => {
-        setFeedback(`
+        .then(() => {
+          setFeedback(`
           <i class="fa-solid fa-circle-check" style="color: var(--success);"></i>
           <span>
             Attempt <strong>#${currentAttempt}</strong> synced! Recognized: "<em style="color: var(--text-muted);">${transcript}</em>"
           </span>
         `, 'var(--success)');
-      })
-      .catch(err => {
-        setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Cloud sync failed. Please check your internet connection.</span>`, 'var(--danger)');
-      });
+        })
+        .catch(err => {
+          setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Cloud sync failed. Please check your internet connection.</span>`, 'var(--danger)');
+        });
     }
   </script>
+  <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>
 </body>
+
 </html>
