@@ -9,12 +9,12 @@
   <meta name="keywords" content="EchoScore, AI English Pronunciation, Speech Assessment, Pronunciation Practice, Speech Recognition, ESL, Speech-to-Text">
   <meta name="author" content="TKI3T">
 
-  <!-- Open Graph / Facebook -->
+  
   <meta property="og:type" content="website">
   <meta property="og:title" content="EchoScore – AI-Powered English Pronunciation Assessment Lab">
   <meta property="og:description" content="Practice English speaking with real-time speech recognition, instant accuracy scoring, and cloud progress tracking.">
 
-  <!-- Twitter Card -->
+  
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="EchoScore – AI-Powered English Pronunciation Assessment Lab">
   <meta name="twitter:description" content="Practice English speaking with real-time speech recognition, instant accuracy scoring, and cloud progress tracking.">
@@ -37,7 +37,7 @@
     }
 
     :root {
-      /* Neobrutalism Vibrant Palette */
+      
       --bg-page: #faf5ee;
       --bg-surface: #ffffff;
       --bg-subtle: #fefce8;
@@ -76,7 +76,7 @@
       --shadow-card: 8px 8px 0px #000000;
     }
 
-    /* Neobrutalism Canvas Background with Retro Polka Dot Grid */
+    
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: var(--bg-page);
@@ -93,7 +93,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Container */
+    
     .app-wrapper {
       width: 100%;
       max-width: 760px;
@@ -102,7 +102,7 @@
       gap: 12px;
     }
 
-    /* Pop / Fade Animations */
+    
     @keyframes fadeInUp {
       0% {
         opacity: 0;
@@ -150,7 +150,7 @@
     .delay-6 { animation-delay: 0.26s; }
     .delay-7 { animation-delay: 0.30s; }
 
-    /* In-App Browser Warning Banner */
+    
     .inapp-warning {
       display: none;
       background-color: var(--warning);
@@ -171,7 +171,7 @@
       font-size: 14px;
     }
 
-    /* Main Card - Chunky Neobrutalism Board */
+    
     .main-card {
       background: var(--bg-surface);
       border: 3.5px solid #000000;
@@ -184,7 +184,7 @@
       position: relative;
     }
 
-    /* Header Bar */
+    
     .header-bar {
       display: flex;
       justify-content: space-between;
@@ -261,7 +261,7 @@
       box-shadow: 1px 1px 0px #000000;
     }
 
-    /* Teacher Panel (Warm Neobrutalism Container) */
+    
     .teacher-panel {
       max-height: 0;
       opacity: 0;
@@ -345,7 +345,7 @@
       box-shadow: 1px 1px 0px #000000;
     }
 
-    /* GAS URL Config Row */
+    
     .gas-config-row {
       display: flex;
       flex-direction: column;
@@ -422,7 +422,7 @@
       gap: 6px;
     }
 
-    /* Student Form Section */
+    
     .student-info-section {
       display: flex;
       flex-direction: column;
@@ -502,7 +502,7 @@
       font-weight: 500;
     }
 
-    /* Reset button in Student Profile header */
+    
     .btn-clear-profile {
       background: #fee2e2;
       border: 2px solid #000000;
@@ -531,7 +531,7 @@
       box-shadow: 1px 1px 0px #000000;
     }
 
-    /* Legend Bar - Neobrutalism Sticker Badges */
+    
     .legend-bar {
       display: flex;
       justify-content: center;
@@ -565,7 +565,21 @@
     .icon-wrong { color: #dc2626; }
     .icon-missing { color: #d97706; }
 
-    /* Target Sentence Card */
+    
+    @media (max-width: 640px) {
+      .legend-bar {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        width: 100% !important;
+      }
+      .legend-item {
+        justify-content: center !important;
+        padding: 6px 10px !important;
+      }
+    }
+
+    
     .sentence-card {
       background: #ffffff;
       border: 3px solid #000000;
@@ -615,7 +629,7 @@
       transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
-    /* Word Units - Neobrutalism Tactile Chips */
+    
     .w-unit {
       display: inline-block;
       margin: 3px 3px;
@@ -657,7 +671,7 @@
       animation: popIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Control Panel - Tactile Chunky Buttons */
+    
     .control-panel {
       display: flex;
       gap: 10px;
@@ -717,11 +731,6 @@
       color: #000000;
     }
 
-    .btn-type {
-      background: #ffffff;
-      color: #000000;
-    }
-
     .btn:disabled {
       background: #e2e8f0;
       border-color: #94a3b8;
@@ -731,7 +740,7 @@
       transform: none;
     }
 
-    /* Score Board Grid - Neobrutalism Banner */
+    
     .score-board {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -780,7 +789,7 @@
     .score-num.complete { color: #16a34a; }
     .score-num.total { color: #2563eb; }
 
-    /* Live Feedback Message Box */
+    
     .feedback-msg {
       background: #ffffff;
       border: 2.5px solid #000000;
@@ -803,7 +812,7 @@
       flex-shrink: 0;
     }
 
-    /* Mobile Responsive Adjustments */
+    
     @media (max-width: 640px) {
       body {
         padding: 12px 8px;
@@ -837,12 +846,18 @@
         width: 100%;
       }
 
+      
+      .app-footer {
+        margin-top: 18px;
+        padding: 6px 0 22px 0;
+      }
+
       .control-panel .btn {
         width: 100%;
         padding: 11px 14px;
       }
 
-      /* Mobile: 3 Score-Cards on ONE Single Row */
+      
       .score-board {
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 6px;
@@ -892,9 +907,7 @@
       }
     }
 
-    /* ========================================================
-       NEOBRUTALISM TOAST NOTIFICATION STYLES
-       ======================================================== */
+    
     .toast-container {
       position: fixed;
       top: 18px;
@@ -916,6 +929,29 @@
         width: auto;
         max-width: none;
       }
+      @keyframes toastSlideOut {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          box-shadow: 5px 5px 0px #000000;
+          max-height: 120px;
+          margin-bottom: 0;
+        }
+        25% {
+          transform: translateY(-4px) scale(1.02);
+          box-shadow: 6px 6px 0px #000000;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-24px) scale(0.9);
+          box-shadow: 0px 0px 0px #000000;
+          max-height: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+          margin-bottom: -10px;
+          border-color: transparent;
+        }
+      }
     }
 
     .toast-item {
@@ -935,8 +971,32 @@
     }
 
     .toast-item.toast-hiding {
-      opacity: 0;
-      transform: translateY(-8px) scale(0.95);
+      animation: toastSlideOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+      pointer-events: none !important;
+    }
+
+    @keyframes toastSlideOut {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        box-shadow: 5px 5px 0px #000000;
+        max-height: 120px;
+        margin-bottom: 0;
+      }
+      25% {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 6px 6px 0px #000000;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(45px) scale(0.92);
+        box-shadow: 0px 0px 0px #000000;
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-bottom: -10px;
+        border-color: transparent;
+      }
     }
 
     @keyframes toastSlideIn {
@@ -1006,9 +1066,7 @@
     .toast-warning { background: #fef9c3; }
     .toast-info { background: #e0e7ff; }
 
-    /* ========================================================
-       NEOBRUTALISM MODAL OVERLAY & BOX STYLES
-       ======================================================== */
+    
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -1294,24 +1352,81 @@
     .modal-shake {
       animation: modalShake 0.35s ease;
     }
-  </style>
+
+    .app-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      text-align: center;
+      margin-top: 24px;
+      padding: 10px 0 28px 0;
+    }
+
+    .footer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: #000000;
+      border: 2px solid #000000;
+      box-shadow: 3px 3px 0px #000000;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+
+    
+    .footer-link {
+      color: #000000;
+      text-decoration: underline !important;
+      text-decoration-color: #000000 !important;
+      text-underline-offset: 2.5px;
+      text-decoration-thickness: 1.5px;
+      font-weight: 900;
+      transition: color 0.15s ease;
+    }
+    .footer-link:hover {
+      text-decoration: underline !important;
+      text-decoration-color: #000000 !important;
+      color: #2563eb;
+    }
+    .text-rose-500 {
+      color: #f43f5e !important;
+    }
+
+    .footer-badge:hover {
+      transform: translate(-1.5px, -1.5px);
+      box-shadow: 4px 4px 0px #000000;
+      background: #fef08a;
+    }
+
+    .footer-badge strong {
+      color: #000000;
+      font-weight: 900;
+    }
+</style>
 </head>
 
 <body>
 
   <div class="app-wrapper">
 
-    <!-- In-App Browser Warning -->
+    
     <div class="inapp-warning fade-item delay-0" id="inAppWarning">
       <i class="fa-solid fa-triangle-exclamation"></i>
       <strong>In-App Browser Detected.</strong> Please tap menu and choose <strong>"Open in Chrome / Safari"</strong>
       for mic access.
     </div>
 
-    <!-- Main Card Container (Staggered Fade-in) -->
+    
     <div class="main-card fade-item delay-1">
 
-      <!-- Header Bar -->
+      
       <div class="header-bar fade-item delay-2">
         <div class="brand-group">
           <div class="brand-icon">
@@ -1329,7 +1444,7 @@
         </button>
       </div>
 
-      <!-- Teacher Bank Settings Panel (Smooth slide & fade) -->
+      
       <div class="teacher-panel" id="teacherPanel">
         <div class="panel-title">
           <i class="fa-solid fa-sliders"></i>
@@ -1354,7 +1469,7 @@
           </a>
         </div>
 
-        <!-- Google Apps Script URL Setting -->
+        
         <div class="gas-config-row">
           <label for="gasUrlInput">
             <i class="fa-solid fa-link"></i>
@@ -1372,7 +1487,7 @@
         </div>
       </div>
 
-      <!-- 1. Student Profile Form Section -->
+      
       <div class="student-info-section fade-item delay-3">
         <div class="section-label" style="display: flex; justify-content: space-between; align-items: center;">
           <div style="display: flex; align-items: center; gap: 6px;">
@@ -1412,7 +1527,7 @@
         </div>
       </div>
 
-      <!-- 2. Legend Explanation Bar -->
+      
       <div class="legend-bar fade-item delay-4">
         <div class="legend-item">
           <i class="fa-regular fa-circle icon-pending"></i>
@@ -1432,7 +1547,7 @@
         </div>
       </div>
 
-      <!-- 3. Target Sentence Display Card -->
+      
       <div class="sentence-card fade-item delay-5">
         <div class="sentence-header">
           <div class="sentence-badge" id="sentenceIndexBadge">
@@ -1443,7 +1558,7 @@
         <div class="sentence-box" id="sentenceBox"></div>
       </div>
 
-      <!-- 4. Interactive Control Buttons -->
+      
       <div class="control-panel fade-item delay-6">
         <button class="btn btn-audio" id="btnAudio">
           <i class="fa-solid fa-volume-high"></i>
@@ -1457,13 +1572,9 @@
           <i class="fa-solid fa-forward-step"></i>
           <span>Next Sentence</span>
         </button>
-        <button class="btn btn-type" id="btnTypeTest" title="Simulate speaking by typing">
-          <i class="fa-regular fa-keyboard"></i>
-          <span>Type Test</span>
-        </button>
       </div>
 
-      <!-- 5. Score & Analytics Board -->
+      
       <div class="score-board fade-item delay-7">
         <div class="score-card">
           <div class="score-label">
@@ -1488,7 +1599,7 @@
         </div>
       </div>
 
-      <!-- 6. Dynamic Live Feedback Message Banner -->
+      
       <div class="feedback-msg fade-item delay-7" id="feedbackMsg">
         <i class="fa-solid fa-circle-info" style="color: var(--primary);"></i>
         <span>Please fill in your student information above before starting the practice.</span>
@@ -1498,10 +1609,15 @@
 
   </div>
 
-  <!-- Toast Container -->
+    <footer class="app-footer fade-item delay-7">
+      <div class="footer-badge">
+        <span>made by <a href="https://github.com/tki3t" target="_blank" rel="noopener noreferrer" class="footer-link"><strong>Justin Vu</strong></a> with luv <i class="fa-solid fa-heart text-rose-500" style="color: #f43f5e;"></i></span>
+      </div>
+    </footer>
+
   <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
-  <!-- Teacher Authorization Modal -->
+  
   <div class="modal-overlay" id="teacherAuthModal" aria-hidden="true">
     <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="teacherAuthTitle">
       <div class="modal-header">
@@ -1519,7 +1635,7 @@
         </button>
       </div>
 
-      <form id="teacherAuthForm" class="modal-body">
+      <form id="teacherAuthForm" class="modal-body" novalidate>
         <p class="modal-desc">
           Please enter the <strong>authorized teacher's email</strong> or <strong>security passcode</strong> to unlock question bank management and settings:
         </p>
@@ -1548,7 +1664,7 @@
     </div>
   </div>
 
-  <!-- Teacher Lock Confirmation Modal -->
+  
   <div class="modal-overlay" id="teacherLockConfirmModal" aria-hidden="true">
     <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="teacherLockTitle">
       <div class="modal-header">
@@ -1582,9 +1698,8 @@
     </div>
   </div>
   <script>
-    // ========================================================
-    // 1. TOAST NOTIFICATION SYSTEM
-    // ========================================================
+
+
     const toastContainer = document.getElementById('toastContainer');
     function showToast(title, message, type = 'info', duration = 3500) {
       if (!toastContainer) return;
@@ -1611,7 +1726,7 @@
         toast.classList.add('toast-hiding');
         setTimeout(() => {
           if (toast.parentNode) toast.parentNode.removeChild(toast);
-        }, 260);
+        }, 300);
       };
 
       toast.querySelector('.toast-close-btn').addEventListener('click', removeToast);
@@ -1622,20 +1737,12 @@
       }
     }
 
-    // ========================================================
-    // 2. CRYPTOGRAPHIC TEACHER AUTHORIZATION (SHA-256 HASHES)
-    // ========================================================
-    // Irreversible SHA-256 hashes of authorized teacher credentials:
-    // 1) "audreyshih32@gm.chihlee.edu.tw"
-    // 2) "echoscore2026" (Teacher Master Key)
-    // 3) "teacher123" (Teacher Fallback Key)
     const AUTHORIZED_TEACHER_HASHES = [
       "172f6303022accff19ef6b63ffdc17e02e6d4a932908efe036cee78da6349880",
       "d9261d1b24816f7030b27e42b245bc381b30375dfbe4f43a6ec77f6bade8088d",
       "cde383eee8ee7a4400adf7a15f716f179a2eb97646b37e089eb8d6d04e663416"
     ];
 
-    // Robust pure JS SHA-256 fallback (works on file://, non-HTTPS, or older webviews)
     function sha256Fallback(ascii) {
       function rightRotate(value, amount) {
         return (value >>> amount) | (value << (32 - amount));
@@ -1720,7 +1827,6 @@
       return sha256Fallback(normalized);
     }
 
-    // Detect In-App Browsers (LINE, Messenger, Teams, etc.)
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
     const isInApp = (ua.indexOf("Line") > -1) || (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) ||
       (ua.indexOf("Instagram") > -1) || (ua.indexOf("Teams") > -1);
@@ -1729,11 +1835,9 @@
       if (inAppElem) inAppElem.style.display = 'block';
     }
 
-    // Google Apps Script Web App Endpoint URL (Connected to EchoScore-Sheet)
     const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwBd663J_QDe_RD6Vw-Uv47D2KLx2iKcvrPu2uo8WdF5j6gCmXmO-fPSUeb5ZDaLHk/exec";
     let GAS_URL = localStorage.getItem('customGasUrl') || DEFAULT_GAS_URL;
 
-    // Daily English Sentences Pool
     const dailyEnglishPool = [
       "How's it going with you today?",
       "Could you give me a quick hand with this?",
@@ -1747,7 +1851,6 @@
       "Thanks a lot for taking the time to help me."
     ];
 
-    // Default Sentence Bank
     let sentenceBank = [
       "Practice makes perfect.",
       "Where there is a will, there is a way.",
@@ -1763,7 +1866,6 @@
     let displayWords = [];
     let attemptCount = 0;
 
-    // DOM Elements
     const studentClass = document.getElementById('studentClass');
     const studentId = document.getElementById('studentId');
     const studentName = document.getElementById('studentName');
@@ -1785,7 +1887,6 @@
     const gasUrlInput = document.getElementById('gasUrlInput');
     const btnSaveGasUrl = document.getElementById('btnSaveGasUrl');
 
-    // Teacher Modal DOM Elements
     const teacherAuthModal = document.getElementById('teacherAuthModal');
     const teacherLockConfirmModal = document.getElementById('teacherLockConfirmModal');
     const teacherAuthForm = document.getElementById('teacherAuthForm');
@@ -1812,7 +1913,6 @@
       });
     }
 
-    // Dynamic Feedback Message with Smooth Fade-out / Fade-in
     function setFeedback(htmlContent, borderColor = 'var(--primary)') {
       feedbackMsg.style.opacity = '0';
       feedbackMsg.style.transform = 'translateY(3px)';
@@ -1824,7 +1924,6 @@
       }, 120);
     }
 
-    // Number Counter with Pulse & Fade Animation
     function animateStat(element, newValue) {
       element.style.opacity = '0.3';
       element.style.transform = 'scale(0.85)';
@@ -1835,7 +1934,6 @@
       }, 100);
     }
 
-    // Sentence Switch with Smooth Fade-out / Fade-in
     function renderSentenceWithTransition(newSentence) {
       sentenceBox.style.opacity = '0';
       sentenceBox.style.transform = 'translateY(4px)';
@@ -1846,9 +1944,6 @@
       }, 150);
     }
 
-    // ========================================================
-    // 3. TEACHER MODAL DIALOGS & VERIFICATION HANDLERS
-    // ========================================================
     function openAuthModal() {
       teacherAuthInput.value = '';
       teacherAuthError.style.display = 'none';
@@ -1872,7 +1967,6 @@
       teacherLockConfirmModal.classList.remove('active');
     }
 
-    // Toggle Eye Password Visibility
     if (btnToggleAuthVisibility) {
       btnToggleAuthVisibility.addEventListener('click', () => {
         if (teacherAuthInput.type === 'password') {
@@ -1885,7 +1979,6 @@
       });
     }
 
-    // Close buttons handlers
     [btnCloseAuthModal, btnCancelAuthModal].forEach(btn => {
       if (btn) btn.addEventListener('click', closeAuthModal);
     });
@@ -1894,7 +1987,6 @@
       if (btn) btn.addEventListener('click', closeLockConfirmModal);
     });
 
-    // Close on clicking backdrop
     [teacherAuthModal, teacherLockConfirmModal].forEach(modal => {
       if (modal) {
         modal.addEventListener('click', (e) => {
@@ -1906,7 +1998,6 @@
       }
     });
 
-    // Escape key to close modals
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeAuthModal();
@@ -1914,13 +2005,11 @@
       }
     });
 
-    // Check teacher unlocked state on initial load
     if (localStorage.getItem('teacherUnlocked') === 'true') {
       teacherPanel.classList.add('is-open');
       btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Teacher Unlocked</span>';
     }
 
-    // Teacher Authorization Button Trigger Event
     btnTeacherLock.addEventListener('click', () => {
       if (teacherPanel.classList.contains('is-open')) {
         openLockConfirmModal();
@@ -1929,7 +2018,6 @@
       }
     });
 
-    // Confirm Lock Action
     if (btnConfirmLock) {
       btnConfirmLock.addEventListener('click', () => {
         closeLockConfirmModal();
@@ -1940,11 +2028,44 @@
       });
     }
 
-    // Teacher Form Submit with SHA-256 Hash Verification
+    teacherAuthInput.addEventListener('input', () => {
+      teacherAuthInput.classList.remove('input-error');
+      teacherAuthError.style.display = 'none';
+    });
+
     teacherAuthForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const enteredValue = teacherAuthInput.value.trim();
-      if (!enteredValue) return;
+
+      if (!enteredValue) {
+        teacherAuthInput.classList.add('input-error');
+        teacherAuthError.style.display = 'flex';
+        teacherAuthErrorText.innerText = "Please enter teacher email or passcode!";
+        const modalBox = teacherAuthModal.querySelector('.modal-box');
+        if (modalBox) {
+          modalBox.classList.remove('modal-shake');
+          void modalBox.offsetWidth;
+          modalBox.classList.add('modal-shake');
+        }
+        teacherAuthInput.focus();
+        showToast("Authorization Required", "Please enter teacher email or passcode to unlock!", "warning");
+        return;
+      }
+
+      if (enteredValue.includes('@') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(enteredValue)) {
+        teacherAuthInput.classList.add('input-error');
+        teacherAuthError.style.display = 'flex';
+        teacherAuthErrorText.innerText = "Invalid email format. Please check your teacher email!";
+        const modalBox = teacherAuthModal.querySelector('.modal-box');
+        if (modalBox) {
+          modalBox.classList.remove('modal-shake');
+          void modalBox.offsetWidth;
+          modalBox.classList.add('modal-shake');
+        }
+        teacherAuthInput.focus();
+        showToast("Invalid Email Format", "Please enter a valid teacher email address (e.g. name@school.edu)!", "warning");
+        return;
+      }
 
       const btnSubmit = document.getElementById('btnSubmitAuthModal');
       btnSubmit.disabled = true;
@@ -1953,22 +2074,23 @@
       try {
         const hash = await computeSHA256(enteredValue);
         if (AUTHORIZED_TEACHER_HASHES.includes(hash)) {
-          // Success
           teacherPanel.classList.add('is-open');
           btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i><span>Teacher Unlocked</span>';
           localStorage.setItem('teacherUnlocked', 'true');
           closeAuthModal();
           showToast("Verification Successful", "Teacher settings panel has been unlocked!", "success");
         } else {
-          // Failed
           teacherAuthInput.classList.add('input-error');
           teacherAuthError.style.display = 'flex';
           teacherAuthErrorText.innerText = "Invalid teacher email or passcode. Please try again!";
           const modalBox = teacherAuthModal.querySelector('.modal-box');
-          modalBox.classList.remove('modal-shake');
-          void modalBox.offsetWidth; // Trigger reflow
-          modalBox.classList.add('modal-shake');
-          showToast("Verification Failed", "Incorrect teacher email or passcode!", "error");
+          if (modalBox) {
+            modalBox.classList.remove('modal-shake');
+            void modalBox.offsetWidth;
+            modalBox.classList.add('modal-shake');
+          }
+          teacherAuthInput.select();
+          showToast("Authorization Failed", "Incorrect teacher credentials. Access denied!", "error");
         }
       } catch (err) {
         showToast("System Error", "Could not complete verification: " + err.message, "error");
@@ -1978,9 +2100,6 @@
       }
     });
 
-    // ========================================================
-    // 4. STUDENT INFORMATION PERSISTENCE (LOCALSTORAGE)
-    // ========================================================
     const STORAGE_KEY_CLASS = 'echo_student_class';
     const STORAGE_KEY_ID = 'echo_student_id';
     const STORAGE_KEY_NAME = 'echo_student_name';
@@ -2054,10 +2173,8 @@
       }
     }
 
-    // Initialize first sentence
     initSentence(targetSentence);
 
-    // Load 5 Random Daily Sentences
     btnRandom5.addEventListener('click', () => {
       const shuffled = [...dailyEnglishPool].sort(() => 0.5 - Math.random());
       sentenceBank = shuffled.slice(0, 5);
@@ -2070,7 +2187,6 @@
       showToast("Random Question Bank", "Loaded 5 random daily conversational sentences.", "info");
     });
 
-    // Upload text.txt custom bank
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -2094,7 +2210,6 @@
       reader.readAsText(file, 'UTF-8');
     });
 
-    // Switch to Next Sentence
     btnNext.addEventListener('click', () => {
       currentSentenceIndex = (currentSentenceIndex + 1) % sentenceBank.length;
       renderSentenceWithTransition(sentenceBank[currentSentenceIndex]);
@@ -2130,10 +2245,8 @@
       });
     });
 
-    // Restore saved student profile from LocalStorage on startup
     loadSavedStudentProfile();
 
-    // Text-to-Speech (TTS) Demo
     btnAudio.addEventListener('click', () => {
       const synth = window.speechSynthesis;
       synth.cancel();
@@ -2148,9 +2261,7 @@
       synth.speak(utterance);
     });
 
-    // Speech-to-Text (STT) Recognition with Robust Continuous Capture & Fresh Instance Per Session
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const btnTypeTest = document.getElementById('btnTypeTest');
 
     function evaluateAndScore(spokenText) {
       if (!spokenText || !spokenText.trim()) return;
@@ -2199,17 +2310,6 @@
       sendDataToGoogleSheet(completionRate, accuracyRate, spokenText, attemptCount, targetSentence);
     }
 
-    // Optional Type to Test simulation
-    if (btnTypeTest) {
-      btnTypeTest.addEventListener('click', () => {
-        if (!checkFormValidity()) return;
-        const simulated = prompt("Enter speech text to test pronunciation scoring:", targetSentence);
-        if (simulated && simulated.trim()) {
-          evaluateAndScore(simulated.trim());
-        }
-      });
-    }
-
     if (!SpeechRecognition) {
       setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i><span>Your browser does not support Speech Recognition. Please use Google Chrome on desktop or Android.</span>`, 'var(--warning)');
       btnMic.disabled = true;
@@ -2240,7 +2340,6 @@
       function startRecording() {
         if (!checkFormValidity()) return;
 
-        // Clean up any lingering previous instance
         if (recognition) {
           try { recognition.abort(); } catch (e) { }
           recognition = null;
@@ -2249,13 +2348,11 @@
         finalTranscript = '';
         interimTranscript = '';
 
-        // Reset word highlights to pending
         for (let i = 0; i < targetWords.length; i++) {
           const el = document.getElementById(`w-${i}`);
           if (el) el.className = "w-unit pending";
         }
 
-        // Create a FRESH SpeechRecognition instance each time to prevent Chrome zombie states
         recognition = new SpeechRecognition();
         recognition.lang = 'en-US';
         recognition.continuous = true;       // Keep listening so the speaker is never prematurely cut off
@@ -2268,7 +2365,6 @@
           btnMic.innerHTML = `<i class="fa-solid fa-stop-circle fa-fade"></i><span>Done Speaking</span>`;
           setFeedback(`<i class="fa-solid fa-microphone text-rose-500 fa-fade"></i><span>Microphone active. Please read the sentence aloud:</span>`, 'var(--danger)');
 
-          // Safety timeout after 20 seconds
           autoStopTimer = setTimeout(() => {
             if (isRecording) {
               stopRecording();
@@ -2304,7 +2400,6 @@
             feedbackMsg.innerHTML = `<i class="fa-solid fa-microphone-lines fa-fade" style="color: var(--primary);"></i><span>Heard: "<strong>${currentSpeech}</strong>"</span>`;
             feedbackMsg.style.borderLeftColor = 'var(--primary)';
 
-            // Real-time highlight matching words in green
             const currentWords = currentSpeech.toLowerCase().match(/\b[\w'-]+\b/g) || [];
             for (let tIdx = 0; tIdx < targetWords.length; tIdx++) {
               const target = targetWords[tIdx];
@@ -2395,8 +2490,10 @@
           setFeedback(`<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i><span>Cloud sync failed. Please check your internet connection.</span>`, 'var(--danger)');
         });
     }
+
+  
   </script>
-  <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>
+  
 </body>
 
 </html>

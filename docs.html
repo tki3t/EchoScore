@@ -1,24 +1,22 @@
 <!DOCTYPE html>
-<html lang="vi" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoScore – Cẩm Nang Triển Khai Hệ Thống Chấm Điểm Phát Âm A-Z</title>
-  <meta name="description" content="Tài liệu kỹ thuật hướng dẫn chi tiết triển khai hệ thống luyện và chấm điểm phát âm tiếng Anh chuẩn Mỹ từ A-Z với Web Speech API, GitHub Pages và Google Sheets hoàn toàn miễn phí.">
+  <title id="pageTitle">EchoScore – A-to-Z Pronunciation Assessment System Deployment Guide</title>
+  <meta id="metaDesc" name="description" content="Comprehensive step-by-step technical guide for deploying an interactive US English pronunciation scoring system with Web Speech API, GitHub Pages, and Google Sheets for free.">
   <meta name="keywords" content="EchoScore, Web Speech API, Google Apps Script, Google Sheets, EdTech, Pronunciation, Speech Recognition, GitHub Pages">
-  <meta property="og:title" content="EchoScore – Cẩm Nang Triển Khai A-Z">
-  <meta property="og:description" content="Hướng dẫn từng bước thiết lập hệ thống chấm điểm phát âm tiếng Anh tương tác miễn phí 100%.">
+  <meta id="ogTitle" property="og:title" content="EchoScore – A-to-Z Deployment Guide">
+  <meta id="ogDesc" property="og:description" content="Step-by-step guide to set up a 100% free interactive English pronunciation scoring system.">
   <meta property="og:type" content="website">
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <script>
+
     tailwind.config = {
       theme: {
         extend: {
@@ -39,12 +37,10 @@
         }
       }
     }
+
   </script>
 
   <style>
-    /* ===================================================================== */
-    /* NEOBRUTALISM GLOBAL DESIGN SYSTEM FOR DOCS & SANDBOX                  */
-    /* ===================================================================== */
     :root {
       --neo-black: #000000;
       --neo-bg: #faf5ee;
@@ -65,14 +61,12 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     }
 
-    /* Chunky Neobrutalist Navbar */
     header {
       background: #ffffff !important;
       border-bottom: 3.5px solid #000000 !important;
       box-shadow: 0 5px 0px #000000 !important;
     }
 
-    /* All Cards, Panels, and Sections */
     .bg-white,
     .bg-slate-50,
     .bg-sky-50\/90,
@@ -82,20 +76,6 @@
       border-radius: 16px !important;
     }
 
-    /* Top interactive quick bar in Tab 1 */
-    .bg-gradient-to-r {
-      background: #ffe600 !important;
-      color: #000000 !important;
-      border: 3.5px solid #000000 !important;
-      box-shadow: 7px 7px 0px #000000 !important;
-      border-radius: 16px !important;
-    }
-    .bg-gradient-to-r h2,
-    .bg-gradient-to-r p {
-      color: #000000 !important;
-    }
-
-    /* All Buttons */
     button,
     .tab-nav-btn,
     label.cursor-pointer,
@@ -122,23 +102,6 @@
       box-shadow: 1px 1px 0px #000000 !important;
     }
 
-    /* Tab navigation bar */
-    nav.bg-slate-100 {
-      background: #ffffff !important;
-      border: 2.5px solid #000000 !important;
-      box-shadow: 3px 3px 0px #000000 !important;
-      border-radius: 12px !important;
-      padding: 4px !important;
-    }
-
-    .tab-nav-btn.bg-white {
-      background: #fde047 !important;
-      color: #000000 !important;
-      border: 2px solid #000000 !important;
-      box-shadow: 2px 2px 0px #000000 !important;
-    }
-
-    /* Badges & Pills */
     .rounded-full,
     .rounded-md,
     span.px-2,
@@ -148,9 +111,9 @@
       font-weight: 800 !important;
     }
 
-    /* Inputs */
     input[type="text"],
     input[type="url"],
+    input[type="email"],
     input[type="password"] {
       border: 2px solid #000000 !important;
       box-shadow: 2.5px 2.5px 0px #000000 !important;
@@ -166,8 +129,7 @@
       background: #fffdf0 !important;
     }
 
-    /* Tables (Sheets simulation & guide tables) */
-    .overflow-x-auto {
+    .overflow-x-auto:not(pre) {
       border: 3px solid #000000 !important;
       box-shadow: 5px 5px 0px #000000 !important;
       border-radius: 14px !important;
@@ -188,7 +150,15 @@
       color: #000000 !important;
     }
 
-    /* Code Blocks */
+    #gasCodeBlock {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+      border: 3px solid #000000 !important;
+      box-shadow: 6px 6px 0px #000000 !important;
+      border-radius: 14px !important;
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+
     pre,
     pre code {
       border: 2.5px solid #000000 !important;
@@ -196,82 +166,136 @@
       border-radius: 10px !important;
     }
 
-    /* Modals in docs */
-    #teacherModal > div,
-    #configModal > div,
-    #codeModal > div {
+    #configModal > div {
       border: 3.5px solid #000000 !important;
       box-shadow: 10px 10px 0px #000000 !important;
       border-radius: 18px !important;
       background: #ffffff !important;
     }
 
-    /* Word Highlight Units */
-    .w-unit {
-      display: inline-block;
-      margin: 3px 2px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-weight: 800;
+    
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
+    @media (max-width: 640px) {
+      .bg-white,
+      .bg-slate-50,
+      .bg-sky-50\/90,
+      section .bg-white {
+        border-radius: 14px !important;
+        border-width: 2.5px !important;
+        box-shadow: 4px 4px 0px #000000 !important;
+      }
+
+      #gasCodeBlock {
+        border-radius: 12px !important;
+        border-width: 2.5px !important;
+        box-shadow: 4px 4px 0px #000000 !important;
+        font-size: 11px !important;
+        padding: 12px !important;
+      }
+
+      .overflow-x-auto:not(pre) {
+        border-radius: 12px !important;
+        border-width: 2.5px !important;
+        box-shadow: 3.5px 3.5px 0px #000000 !important;
+      }
+
+      header {
+        border-bottom-width: 3px !important;
+        box-shadow: 0 4px 0px #000000 !important;
+      }
+
+      #toastContainer {
+        bottom: 12px !important;
+        left: 12px !important;
+        right: 12px !important;
+        max-width: none !important;
+        width: auto !important;
+      }
+
+      button,
+      .tab-nav-btn,
+      label.cursor-pointer,
+      a.p-3 {
+        box-shadow: 2.5px 2.5px 0px #000000 !important;
+      }
+    }
+
+    .footer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: #000000;
       border: 2px solid #000000;
-      box-shadow: 2px 2px 0px #000000;
-      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
+      box-shadow: 3px 3px 0px #000000;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
     }
-    .w-unit:hover {
+    
+    .footer-link {
+      color: #000000;
+      text-decoration: underline !important;
+      text-decoration-color: #000000 !important;
+      text-underline-offset: 2.5px;
+      text-decoration-thickness: 1.5px;
+      font-weight: 900;
+      transition: color 0.15s ease;
+    }
+    .footer-link:hover {
+      text-decoration: underline !important;
+      text-decoration-color: #000000 !important;
+      color: #2563eb;
+    }
+
+    .footer-badge:hover {
       transform: translate(-1.5px, -1.5px);
-      box-shadow: 3.5px 3.5px 0px #000000;
-    }
-    .w-unit.pending {
-      color: #000000;
-      background-color: #f8fafc;
-      border: 2px solid #000000;
-    }
-    .w-unit.correct {
-      color: #000000;
-      background-color: #4ade80;
-      border: 2px solid #000000;
-    }
-    .w-unit.wrong {
-      color: #000000;
-      background-color: #ff6b6b;
-      border: 2px solid #000000;
-    }
-    .w-unit.missing {
-      color: #000000;
-      background-color: #fde047;
-      border: 2px solid #000000;
+      box-shadow: 4px 4px 0px #000000;
+      background: #fef08a;
     }
 
-    /* Live Preview Sentence Box */
-    #sentenceBox {
-      border: 3px solid #000000 !important;
-      box-shadow: 4px 4px 0px #000000 !important;
-      border-radius: 14px !important;
-      background: #ffffff !important;
+    .lang-switcher-pill {
+      display: inline-flex;
+      align-items: center;
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 12px;
+      box-shadow: 3px 3px 0px #000000;
+      padding: 2px;
+      gap: 2px;
     }
-
-    /* Toast in docs.html */
-    #toast {
-      border: 2.5px solid #000000 !important;
-      box-shadow: 5px 5px 0px #000000 !important;
-      border-radius: 12px !important;
-      background: #ffffff !important;
+    .lang-opt-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 8px;
+      border: 1.5px solid transparent;
+      color: #475569;
+      background: transparent;
+      box-shadow: none !important;
+      transform: none !important;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .lang-opt-btn:hover {
+      color: #000000;
+      background: #f1f5f9;
+    }
+    .lang-opt-btn.active {
+      background: #fde047 !important;
       color: #000000 !important;
-      font-weight: 800 !important;
+      border: 1.5px solid #000000 !important;
+      box-shadow: 1.5px 1.5px 0px #000000 !important;
     }
 
-    @keyframes micPulse {
-      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-      70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
-    .recording-pulse {
-      animation: micPulse 1.5s infinite;
-    }
-
-    /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 9px;
       height: 9px;
@@ -290,474 +314,309 @@
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
-  <!-- ===================================================================== -->
-  <!-- CẢNH BÁO TRÌNH DUYỆT TRONG ỨNG DỤNG (IN-APP BROWSER WARNING BANNER)   -->
-  <!-- ===================================================================== -->
   <div id="inAppWarning" class="hidden bg-amber-100 border-b-2 border-black text-amber-950 px-4 py-3 text-sm text-center font-bold">
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>
+      <div id="inAppWarningContent">
         <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1.5"></i>
-        <strong>Phát hiện trình duyệt trong ứng dụng (Zalo / LINE / Messenger):</strong>
-        Vui lòng nhấn nút <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">⋮</span> hoặc <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">Chia sẻ</span> ở góc trên bên phải và chọn <strong>"Mở bằng Chrome / Safari"</strong>.
+        <strong>In-App Browser Detected:</strong>
+        Please tap the <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">⋮</span> or <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">Share</span> icon in the top right corner and choose <strong>"Open in Chrome / Safari"</strong> to allow microphone access.
       </div>
-      <button onclick="toggleInAppWarning(false)" class="text-xs font-black underline hover:text-amber-800 shrink-0">Đóng thông báo</button>
+      <button onclick="toggleInAppWarning(false)" id="inAppDismissBtn" class="text-xs font-black underline hover:text-amber-800 shrink-0">Dismiss notice</button>
     </div>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- THANH ĐIỀU HƯỚNG CHÍNH (TOP NAVBAR)                                   -->
-  <!-- ===================================================================== -->
-  <header class="sticky top-0 z-40 bg-white border-b-[3.5px] border-black shadow-[0_5px_0px_#000]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between py-3 gap-3">
-        <!-- Brand Logo -->
-        <div class="flex items-center justify-between">
-          <a href="docs.html" class="flex items-center gap-3 group">
-            <div class="w-11 h-11 rounded-xl bg-amber-400 border-2 border-black shadow-[2.5px_2.5px_0px_#000] flex items-center justify-center text-black text-xl group-hover:rotate-6 transition-transform">
-              <i class="fa-solid fa-book-bookmark"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span id="navBrandName" class="font-black text-xl tracking-tight text-black">EchoScore</span>
-                <span class="text-[11px] font-black px-2 py-0.5 rounded-full bg-emerald-300 text-black border-2 border-black shadow-[1.5px_1.5px_0px_#000]">Cẩm Nang A-Z</span>
-              </div>
-              <p class="text-[11px] font-bold text-slate-700">Web Speech API • GitHub Pages • Google Sheets</p>
-            </div>
-          </a>
-
-          <!-- Mobile Actions -->
-          <div class="flex items-center gap-2 lg:hidden">
-            <a href="index.html" class="px-3 py-1.5 rounded-lg bg-amber-300 border-2 border-black shadow-[2px_2px_0px_#000] text-black text-xs font-black hover:bg-amber-400 transition flex items-center gap-1">
-              <i class="fa-solid fa-microphone"></i> App
-            </a>
-            <button onclick="downloadStandaloneHTML()" class="px-3 py-1.5 rounded-lg bg-emerald-400 border-2 border-black shadow-[2px_2px_0px_#000] text-black text-xs font-black hover:bg-emerald-500 transition">
-              <i class="fa-solid fa-download mr-1"></i> Tải HTML
-            </button>
+  <header class="sticky top-0 z-40 bg-white border-b-[3px] sm:border-b-[3.5px] border-black shadow-[0_4px_0px_#000] sm:shadow-[0_5px_0px_#000]">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-2 sm:py-3 gap-2">
+        <a href="docs.html" class="flex items-center gap-2 sm:gap-3 group min-w-0 shrink">
+          <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-amber-400 border-2 border-black shadow-[1.5px_1.5px_0px_#000] sm:shadow-[2.5px_2.5px_0px_#000] flex items-center justify-center text-black text-sm sm:text-xl group-hover:rotate-6 transition-transform shrink-0">
+            <i class="fa-solid fa-book-bookmark"></i>
           </div>
-        </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5 flex-nowrap">
+              <span id="navBrandName" class="font-black text-sm sm:text-xl tracking-tight text-black shrink-0">EchoScore</span>
+              <span id="navBrandBadge" class="text-[9px] sm:text-[11px] font-black px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-300 text-black border-[1.5px] border-black shadow-[1px_1px_0px_#000] whitespace-nowrap shrink-0">Deployment Guide</span>
+            </div>
+            <p id="navTagline" class="text-[10px] sm:text-[11px] font-bold text-slate-600 truncate hidden md:block">Web Speech API • GitHub Pages • Google Sheets</p>
+          </div>
+        </a>
 
-        <!-- Guide Section Navigation Pills -->
-        <nav class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border-2 border-black shadow-[2.5px_2.5px_0px_#000] overflow-x-auto text-xs font-black">
-          <a href="#doc-naming" class="px-2.5 py-1.5 rounded-lg text-slate-800 hover:text-black hover:bg-amber-200 whitespace-nowrap transition">
-            1. Thương hiệu
-          </a>
-          <a href="#doc-arch" class="px-2.5 py-1.5 rounded-lg text-slate-800 hover:text-black hover:bg-amber-200 whitespace-nowrap transition">
-            2. Kiến trúc
-          </a>
-          <a href="#doc-step1" class="px-2.5 py-1.5 rounded-lg text-slate-800 hover:text-black hover:bg-amber-200 whitespace-nowrap transition">
-            3. Google Sheets
-          </a>
-          <a href="#doc-step2" class="px-2.5 py-1.5 rounded-lg text-slate-800 hover:text-black hover:bg-amber-200 whitespace-nowrap transition">
-            4. Code.gs
-          </a>
-          <a href="#doc-step3" class="px-2.5 py-1.5 rounded-lg text-slate-800 hover:text-black hover:bg-amber-200 whitespace-nowrap transition">
-            5. pronunciation.html
-          </a>
-          <a href="#doc-step4" class="px-2.5 py-1.5 rounded-lg text-slate-800 hover:text-black hover:bg-amber-200 whitespace-nowrap transition">
-            6. GitHub & Test
-          </a>
-        </nav>
-
-        <!-- Desktop Action Buttons -->
-        <div class="hidden lg:flex items-center gap-2">
-          <a href="index.html" class="px-3.5 py-2 rounded-xl bg-amber-300 hover:bg-amber-400 text-black text-xs font-black transition flex items-center gap-1.5 border-2 border-black shadow-[3px_3px_0px_#000]" title="Mở phòng luyện phát âm">
-            <i class="fa-solid fa-microphone-lines"></i>
-            <span>Vào Phòng Luyện (App)</span>
-          </a>
-          <button onclick="openConfigModal()" class="px-3 py-2 rounded-xl bg-white hover:bg-slate-100 text-black text-xs font-black transition flex items-center gap-1.5 border-2 border-black shadow-[3px_3px_0px_#000]" title="Cấu hình GAS_URL & Email Giáo viên">
-            <i class="fa-solid fa-sliders text-blue-600"></i>
-            <span>Cấu hình API</span>
-          </button>
-          <button onclick="downloadStandaloneHTML()" class="px-3.5 py-2 rounded-xl bg-emerald-400 hover:bg-emerald-500 text-black text-xs font-black transition flex items-center gap-1.5 border-2 border-black shadow-[3px_3px_0px_#000]">
-            <i class="fa-solid fa-file-code"></i>
-            <span>Tải pronunciation.html</span>
-          </button>
+        <div class="flex items-center shrink-0">
+          <div class="lang-switcher-pill !shadow-[2px_2px_0px_#000] sm:!shadow-[3px_3px_0px_#000] !border-[1.5px] sm:!border-2">
+            <button onclick="setLanguage('vi')" id="langOpt-vi" class="lang-opt-btn !px-2 sm:!px-2.5 !py-0.5 sm:!py-1 !text-[10px] sm:!text-xs">VI</button>
+            <button onclick="setLanguage('en')" id="langOpt-en" class="lang-opt-btn !px-2 sm:!px-2.5 !py-0.5 sm:!py-1 !text-[10px] sm:!text-xs">EN</button>
+            <button onclick="setLanguage('zh')" id="langOpt-zh" class="lang-opt-btn !px-2 sm:!px-2.5 !py-0.5 sm:!py-1 !text-[10px] sm:!text-xs">繁中</button>
+          </div>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- ===================================================================== -->
-  <!-- NỘI DUNG CHÍNH: CẨM NANG TRIỂN KHAI A-Z                               -->
-  <!-- ===================================================================== -->
-  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
+  <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-5 sm:space-y-8">
     <section id="tabContent-guide" class="space-y-8">
 
-      <!-- Hero Banner Cẩm nang -->
-      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+      <div class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200 shadow-sm">
         <div class="max-w-3xl">
-          <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold uppercase tracking-wider">Tài liệu Hướng dẫn Kỹ thuật EdTech</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">
-            Cẩm nang Triển khai Hệ thống Chấm điểm Phát âm Tiếng Anh Tương tác
+          <h2 id="heroTitle" class="text-lg sm:text-2xl lg:text-3xl font-black text-slate-900 mt-1 sm:mt-3 leading-snug sm:leading-tight">
+            Interactive English Pronunciation Assessment System Deployment Guide
           </h2>
-          <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
-            Hướng dẫn từng bước từ con số 0 để thiết lập hệ thống kết hợp <strong>Web Speech API</strong>, <strong>GitHub Pages (HTTPS)</strong> và <strong>Google Apps Script + Google Sheets</strong> hoàn toàn miễn phí.
+          <p id="heroDesc" class="text-slate-600 text-xs sm:text-sm lg:text-base mt-2 leading-relaxed">
+            Step-by-step instructions from scratch to deploy a complete system combining <strong>Web Speech API</strong>, <strong>GitHub Pages (HTTPS)</strong>, and <strong>Google Apps Script + Google Sheets</strong> completely free of charge.
           </p>
-        </div>
-
-        <!-- Quick Step Jump -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mt-6 pt-6 border-t border-slate-100">
-          <a href="#doc-naming" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
-            <span class="block text-blue-600 font-bold mb-0.5">Phần 1</span>
-            Tên gọi & Thương hiệu
-          </a>
-          <a href="#doc-arch" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
-            <span class="block text-blue-600 font-bold mb-0.5">Phần 2</span>
-            Kiến trúc & Thiết bị
-          </a>
-          <a href="#doc-step1" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
-            <span class="block text-blue-600 font-bold mb-0.5">Bước 1</span>
-            Tạo Google Sheets
-          </a>
-          <a href="#doc-step2" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
-            <span class="block text-blue-600 font-bold mb-0.5">Bước 2</span>
-            Mã nguồn Code.gs
-          </a>
-          <a href="#doc-step3" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
-            <span class="block text-blue-600 font-bold mb-0.5">Bước 3</span>
-            Tạo pronunciation.html
-          </a>
-          <a href="#doc-step4" class="p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
-            <span class="block text-blue-600 font-bold mb-0.5">Bước 4 & 5</span>
-            GitHub Pages & Kiểm thử
-          </a>
-        </div>
-      </div>
-
-      <!-- PHẦN 1: ĐỀ XUẤT TÊN GỌI & THƯƠNG HIỆU (TƯƠNG TÁC ĐỔI TÊN TRỰC TIẾP) -->
-      <div id="doc-naming" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">1. Đề xuất Tên gọi & Thương hiệu cho Trang web</h3>
-            <p class="text-xs sm:text-sm text-slate-500">Bạn có thể nhấn nút <strong>"Áp dụng tên này"</strong> để đổi ngay thương hiệu trên toàn bộ ứng dụng và tệp HTML tải về.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-slate-200/80">
+            <button onclick="openConfigModal()" id="heroConfigBtn" class="w-full px-3.5 sm:px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-black text-xs font-black transition flex items-center justify-center gap-2 border-2 border-black shadow-[2.5px_2.5px_0px_#000] sm:shadow-[3px_3px_0px_#000]">
+              <i class="fa-solid fa-sliders text-blue-600"></i>
+              <span id="heroConfigText">Configure API</span>
+            </button>
+            <button onclick="downloadStandaloneHTML()" id="heroDownloadBtn" class="w-full px-3.5 sm:px-4 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-500 text-black text-xs font-black transition flex items-center justify-center gap-2 border-2 border-black shadow-[2.5px_2.5px_0px_#000] sm:shadow-[3px_3px_0px_#000]">
+              <i class="fa-solid fa-file-code"></i>
+              <span id="heroDownloadText">Download pronunciation.html</span>
+            </button>
           </div>
         </div>
 
-        <div class="overflow-x-auto rounded-2xl border border-slate-200">
-          <table class="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
-                <th class="py-3 px-4">Tên Thương hiệu</th>
-                <th class="py-3 px-4">Tiêu đề hiển thị (<code>&lt;h1&gt;</code>)</th>
-                <th class="py-3 px-4">Tên GitHub Repo</th>
-                <th class="py-3 px-4">Phong cách & Ý nghĩa</th>
-                <th class="py-3 px-4 text-center">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200">
-              <tr class="hover:bg-blue-50/40">
-                <td class="py-3 px-4 font-bold text-blue-700">🌟 EchoScore</td>
-                <td class="py-3 px-4 font-medium">EchoScore – Luyện Phát âm Chuẩn Mỹ</td>
-                <td class="py-3 px-4 font-mono text-xs">echoscore-app</td>
-                <td class="py-3 px-4 text-slate-600">Hiện đại, ngắn gọn, chuẩn EdTech; kết hợp giữa <em>Echo</em> (đọc nhại giọng mẫu) và <em>Score</em> (chấm điểm).</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="applyBrandName('EchoScore', 'EchoScore – Luyện Phát âm Chuẩn Mỹ')" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition">Áp dụng</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-blue-50/40">
-                <td class="py-3 px-4 font-bold text-slate-800">💬 SpeakUp Lab</td>
-                <td class="py-3 px-4 font-medium">SpeakUp Lab – Phòng Luyện Nói Tiếng Anh</td>
-                <td class="py-3 px-4 font-mono text-xs">speakup-lab</td>
-                <td class="py-3 px-4 text-slate-600">Năng động, thân thiện, khích lệ học sinh tự tin mở lời luyện tập.</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="applyBrandName('SpeakUp Lab', 'SpeakUp Lab – Phòng Luyện Nói Tiếng Anh')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold hover:bg-blue-600 hover:text-white transition">Áp dụng</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-blue-50/40">
-                <td class="py-3 px-4 font-bold text-slate-800">📊 VocaCheck Cloud</td>
-                <td class="py-3 px-4 font-medium">VocaCheck – Hệ thống Đánh giá Phát âm</td>
-                <td class="py-3 px-4 font-mono text-xs">vocacheck-cloud</td>
-                <td class="py-3 px-4 text-slate-600">Học thuật, chuyên nghiệp, nhấn mạnh việc kiểm tra từng từ và lưu trữ đám mây.</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="applyBrandName('VocaCheck', 'VocaCheck – Hệ thống Đánh giá Phát âm')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold hover:bg-blue-600 hover:text-white transition">Áp dụng</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-blue-50/40">
-                <td class="py-3 px-4 font-bold text-slate-800">🎧 NativePulse</td>
-                <td class="py-3 px-4 font-medium">NativePulse – Bắt nhịp Giọng Bản xứ</td>
-                <td class="py-3 px-4 font-mono text-xs">native-pulse</td>
-                <td class="py-3 px-4 text-slate-600">Sang trọng, gợi hình ảnh sóng âm micro và nhịp điệu tiếng Anh bản xứ.</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="applyBrandName('NativePulse', 'NativePulse – Bắt nhịp Giọng Bản xứ')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold hover:bg-blue-600 hover:text-white transition">Áp dụng</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-blue-50/40">
-                <td class="py-3 px-4 font-bold text-slate-800">🤖 EngMic AI</td>
-                <td class="py-3 px-4 font-medium">EngMic – Trợ lý Chấm điểm Phát âm</td>
-                <td class="py-3 px-4 font-mono text-xs">engmic-web</td>
-                <td class="py-3 px-4 text-slate-600">Dễ nhớ, trực quan đối với học sinh phổ thông và sinh viên.</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="applyBrandName('EngMic AI', 'EngMic – Trợ lý Chấm điểm Phát âm')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 text-xs font-semibold hover:bg-blue-600 hover:text-white transition">Áp dụng</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-slate-100">
+          <a href="#doc-arch" id="quickJumpArch" class="p-2 sm:p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Architecture</span>
+            Overview & Devices
+          </a>
+          <a href="#doc-step1" id="quickJumpStep1" class="p-2 sm:p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Step 1</span>
+            Create Google Sheets
+          </a>
+          <a href="#doc-step2" id="quickJumpStep2" class="p-2 sm:p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Step 2</span>
+            Code.gs Backend API
+          </a>
+          <a href="#doc-step3" id="quickJumpStep3" class="p-2 sm:p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Step 3</span>
+            Create pronunciation.html
+          </a>
+          <a href="#doc-step4" id="quickJumpStep4" class="p-2 sm:p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition text-xs font-semibold text-slate-700">
+            <span class="block text-blue-600 font-bold mb-0.5">Step 4</span>
+            Deploy to GitHub Pages
+          </a>
         </div>
       </div>
 
-      <!-- PHẦN 2: KIẾN TRÚC HỆ THỐNG & TƯƠNG THÍCH THIẾT BỊ -->
-      <div id="doc-arch" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
-        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">2. Tổng quan Kiến trúc & Khả năng Tương thích Thiết bị</h3>
+      <div id="doc-arch" class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200 shadow-sm space-y-4 sm:space-y-6">
+        <h3 id="archTitle" class="text-base sm:text-lg lg:text-xl font-extrabold text-slate-900">2. System Architecture & Device Compatibility Overview</h3>
 
-        <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-sm text-blue-950 leading-relaxed">
-          <strong class="text-blue-800"><i class="fa-solid fa-lightbulb mr-1.5"></i>Tại sao phải tách biệt GitHub Pages và Google Apps Script?</strong><br>
-          Nếu đặt trực tiếp tệp HTML bên trong Google Apps Script, Google sẽ bao bọc trang web trong một khung <code>&lt;iframe&gt;</code> bảo mật, khiến trình duyệt chặn quyền truy cập micro và báo lỗi <code>not-allowed</code>. Việc tách giao diện (Frontend) sang <strong>GitHub Pages</strong> cung cấp kết nối <strong>HTTPS gốc</strong>, giải quyết triệt để lỗi chặn micro trên mọi thiết bị.
+        <div id="archCallout" class="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-blue-50 border border-blue-200 text-xs sm:text-sm text-blue-950 leading-relaxed">
+          <strong class="text-blue-800"><i class="fa-solid fa-lightbulb mr-1.5"></i>Why separate GitHub Pages and Google Apps Script?</strong><br>
+          If HTML files are hosted directly inside Google Apps Script, Google wraps the web page in a sandboxed <code>&lt;iframe&gt;</code>, prompting modern browsers to block microphone access with a <code>not-allowed</code> error. Separating the frontend to <strong>GitHub Pages</strong> provides a native <strong>HTTPS origin</strong>, permanently resolving microphone permission restrictions across all modern devices.
         </div>
 
-        <!-- Visual Flow Architecture -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 relative">
-            <div class="text-xs font-bold text-blue-600 uppercase mb-1">1. Giao diện (Frontend)</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+          <div id="archFlow1" class="p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 relative">
+            <div class="text-xs font-bold text-blue-600 uppercase mb-1">1. Frontend (UI)</div>
             <div class="text-base font-extrabold text-slate-900 mb-2">GitHub Pages (HTTPS)</div>
             <p class="text-xs text-slate-600 leading-relaxed">
-              Chạy <code>SpeechSynthesis</code> (đọc mẫu giọng Mỹ) và <code>SpeechRecognition</code> (ghi âm & chấm điểm từng từ không bị lỗi chặn micro).
+              Executes <code>SpeechSynthesis</code> (US English native voice model) and <code>SpeechRecognition</code> (voice recording and per-word analysis without microphone blocks).
             </p>
           </div>
-          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 relative">
-            <div class="text-xs font-bold text-purple-600 uppercase mb-1">2. Cầu nối (Backend API)</div>
+          <div id="archFlow2" class="p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 relative">
+            <div class="text-xs font-bold text-purple-600 uppercase mb-1">2. Backend API</div>
             <div class="text-base font-extrabold text-slate-900 mb-2">Google Apps Script</div>
             <p class="text-xs text-slate-600 leading-relaxed">
-              Nhận gói dữ liệu điểm số định dạng <code>JSON</code> từ trang web gửi về thông qua phương thức <code>POST</code>.
+              Receives score data payloads in <code>JSON</code> format transmitted from the web interface via asynchronous <code>POST</code> requests.
             </p>
           </div>
-          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 relative">
-            <div class="text-xs font-bold text-emerald-600 uppercase mb-1">3. Cơ sở dữ liệu (Database)</div>
-            <div class="text-base font-extrabold text-slate-900 mb-2">Google Sheets (9 Cột)</div>
+          <div id="archFlow3" class="p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 relative">
+            <div class="text-xs font-bold text-emerald-600 uppercase mb-1">3. Cloud Database</div>
+            <div class="text-base font-extrabold text-slate-900 mb-2">Google Sheets (9 Columns)</div>
             <p class="text-xs text-slate-600 leading-relaxed">
-              Tự động ghi nhận thời gian, thông tin học sinh, số lần thử, độ hoàn thành, độ chính xác và câu văn nhận diện thực tế.
+              Automatically records timestamps, student details, cumulative attempts, completion percentages, accuracy scores, and recognized speech transcripts.
             </p>
           </div>
         </div>
 
-        <!-- Compatibility Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
-          <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50">
-            <div class="font-bold text-sm text-emerald-900">💻 Laptop / PC (Chrome)</div>
-            <div class="text-xs text-emerald-700 mt-1">✅ Hoàn hảo 100%. Nhận diện giọng nói nhanh và chính xác nhất.</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 pt-1 sm:pt-2">
+          <div id="compatPc" class="p-3 sm:p-4 rounded-xl border border-emerald-200 bg-emerald-50/50">
+            <div class="font-bold text-sm text-emerald-900"><i class="fa-solid fa-laptop text-emerald-600 mr-2"></i>Laptop / PC (Chrome)</div>
+            <div class="text-xs text-emerald-700 mt-1"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>100% Perfect. Fastest and most accurate speech recognition.</div>
           </div>
-          <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50">
-            <div class="font-bold text-sm text-emerald-900">📱 Điện thoại Android (Chrome)</div>
-            <div class="text-xs text-emerald-700 mt-1">✅ Hoàn hảo 100%. Hoạt động ổn định với Web Speech API.</div>
+          <div id="compatAndroid" class="p-3 sm:p-4 rounded-xl border border-emerald-200 bg-emerald-50/50">
+            <div class="font-bold text-sm text-emerald-900"><i class="fa-solid fa-mobile-screen-button text-emerald-600 mr-2"></i>Android Phone (Chrome)</div>
+            <div class="text-xs text-emerald-700 mt-1"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>100% Perfect. Stable and reliable performance via Web Speech API.</div>
           </div>
-          <div class="p-4 rounded-xl border border-amber-200 bg-amber-50/50">
-            <div class="font-bold text-sm text-amber-900">🍎 iPhone / iPad (Safari)</div>
-            <div class="text-xs text-amber-800 mt-1">⚠️ Tốt trên iOS mới. Trên iOS cũ độ nhạy ngắt câu có thể kém ổn định hơn.</div>
+          <div id="compatIos" class="p-3 sm:p-4 rounded-xl border border-amber-200 bg-amber-50/50">
+            <div class="font-bold text-sm text-amber-900"><i class="fa-brands fa-apple text-amber-600 mr-2"></i>iPhone / iPad (Safari)</div>
+            <div class="text-xs text-amber-800 mt-1"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1.5"></i>Good on modern iOS. Older iOS versions may have less responsive pause sensitivity.</div>
           </div>
-          <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/50">
-            <div class="font-bold text-sm text-rose-900">💬 Zalo / LINE / Messenger</div>
-            <div class="text-xs text-rose-800 mt-1">🚫 Tự động hiện cảnh báo nhắc học sinh bấm "Mở bằng Chrome / Safari".</div>
+          <div id="compatInApp" class="p-3 sm:p-4 rounded-xl border border-rose-200 bg-rose-50/50">
+            <div class="font-bold text-sm text-rose-900"><i class="fa-solid fa-comments text-rose-600 mr-2"></i>In-App (Zalo / LINE / Messenger)</div>
+            <div class="text-xs text-rose-800 mt-1"><i class="fa-solid fa-ban text-rose-600 mr-1.5"></i>Automatically displays an alert prompting students to tap "Open in Chrome / Safari".</div>
           </div>
         </div>
       </div>
 
-      <!-- BƯỚC 1: THIẾT LẬP GOOGLE SHEETS -->
-      <div id="doc-step1" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+      <div id="doc-step1" class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200 shadow-sm space-y-3 sm:space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span class="text-xs font-bold text-blue-600 uppercase">Bước 1</span>
-            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Thiết lập Google Sheets (Cơ sở dữ liệu đám mây)</h3>
-            <p class="text-xs sm:text-sm text-slate-500">Tạo bảng tính mới tên <code>EchoScore-Sheet</code> (hoặc <code>9.54-sheet</code>) và dán 9 tiêu đề cột dưới đây vào Hàng 1 (Row 1).</p>
+            <span id="step1Badge" class="text-xs font-bold text-blue-600 uppercase">Step 1</span>
+            <h3 id="step1Title" class="text-base sm:text-lg lg:text-xl font-extrabold text-slate-900">Set Up Google Sheets (Cloud Database)</h3>
+            <p id="step1Desc" class="text-xs sm:text-sm text-slate-500">Create a new spreadsheet named <code>EchoScore-Sheet</code> (or <code>9.54-sheet</code>) and paste the 9 column headers below into Row 1.</p>
           </div>
-          <button onclick="copySheetHeaders()" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shrink-0 shadow-sm flex items-center gap-2">
+          <button onclick="copySheetHeaders()" id="copyHeadersBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shrink-0 shadow-sm flex items-center justify-center gap-2">
             <i class="fa-regular fa-copy"></i>
-            <span>Sao chép nhanh A1:I1 để dán vào Sheet</span>
+            <span>Quick copy A1:I1 to paste into Sheet</span>
           </button>
         </div>
 
-        <div class="overflow-x-auto rounded-2xl border border-slate-200">
-          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+        <div class="overflow-x-auto rounded-xl sm:rounded-2xl border border-slate-200 -mx-1 sm:mx-0">
+          <table class="w-full text-left border-collapse text-xs whitespace-nowrap sm:whitespace-normal min-w-[560px] sm:min-w-0">
             <thead>
               <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
-                <th class="py-2.5 px-4">Ô (Cell)</th>
-                <th class="py-2.5 px-4">Tên tiêu đề (Header)</th>
-                <th class="py-2.5 px-4">Kiểu dữ liệu</th>
-                <th class="py-2.5 px-4">Ý nghĩa & Mô tả</th>
+                <th id="thCell" class="py-2.5 px-4">Cell</th>
+                <th id="thHeader" class="py-2.5 px-4">Header Name</th>
+                <th id="thType" class="py-2.5 px-4">Data Type</th>
+                <th id="thDesc" class="py-2.5 px-4">Description</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-slate-200">
-              <tr><td class="py-2 px-4 font-bold">A1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">timestamp</td><td class="py-2 px-4">Ngày giờ</td><td class="py-2 px-4">Thời gian nộp bài luyện tập (Hệ thống tự động tạo)</td></tr>
-              <tr><td class="py-2 px-4 font-bold">B1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">className</td><td class="py-2 px-4">Văn bản</td><td class="py-2 px-4">Lớp của học sinh (VD: Anh A1)</td></tr>
-              <tr><td class="py-2 px-4 font-bold">C1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">studentId</td><td class="py-2 px-4">Văn bản / Số</td><td class="py-2 px-4">Mã số học sinh / sinh viên (VD: 1090123)</td></tr>
-              <tr><td class="py-2 px-4 font-bold">D1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">studentName</td><td class="py-2 px-4">Văn bản</td><td class="py-2 px-4">Họ và tên học sinh</td></tr>
-              <tr><td class="py-2 px-4 font-bold">E1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">attemptCount</td><td class="py-2 px-4">Số nguyên</td><td class="py-2 px-4">Số lần luyện tập tích lũy</td></tr>
-              <tr><td class="py-2 px-4 font-bold">F1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">targetSentence</td><td class="py-2 px-4">Văn bản</td><td class="py-2 px-4">Câu tiếng Anh đề bài trong lần luyện tập đó</td></tr>
-              <tr><td class="py-2 px-4 font-bold">G1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">completion</td><td class="py-2 px-4">Phần trăm (%)</td><td class="py-2 px-4">Độ hoàn thành câu (%)</td></tr>
-              <tr><td class="py-2 px-4 font-bold">H1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">accuracy</td><td class="py-2 px-4">Phần trăm (%)</td><td class="py-2 px-4">Độ chính xác phát âm (%)</td></tr>
-              <tr><td class="py-2 px-4 font-bold">I1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">transcript</td><td class="py-2 px-4">Văn bản</td><td class="py-2 px-4">Văn bản giọng nói thực tế được nhận diện của học sinh</td></tr>
+            <tbody id="sheetTableBody" class="divide-y divide-slate-200">
+              <tr><td class="py-2 px-4 font-bold">A1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">timestamp</td><td class="py-2 px-4" id="tdTypeA">Date / Time</td><td class="py-2 px-4" id="tdDescA">Practice submission timestamp (System generated)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">B1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">className</td><td class="py-2 px-4" id="tdTypeB">Text</td><td class="py-2 px-4" id="tdDescB">Student class name (e.g. English A1)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">C1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">studentId</td><td class="py-2 px-4" id="tdTypeC">Text / Number</td><td class="py-2 px-4" id="tdDescC">Student ID number (e.g. 1090123)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">D1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">studentName</td><td class="py-2 px-4" id="tdTypeD">Text</td><td class="py-2 px-4" id="tdDescD">Student full name</td></tr>
+              <tr><td class="py-2 px-4 font-bold">E1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">attemptCount</td><td class="py-2 px-4" id="tdTypeE">Integer</td><td class="py-2 px-4" id="tdDescE">Cumulative practice attempts</td></tr>
+              <tr><td class="py-2 px-4 font-bold">F1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">targetSentence</td><td class="py-2 px-4" id="tdTypeF">Text</td><td class="py-2 px-4" id="tdDescF">Target sentence assigned in that attempt</td></tr>
+              <tr><td class="py-2 px-4 font-bold">G1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">completion</td><td class="py-2 px-4" id="tdTypeG">Percentage (%)</td><td class="py-2 px-4" id="tdDescG">Sentence completion rate (%)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">H1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">accuracy</td><td class="py-2 px-4" id="tdTypeH">Percentage (%)</td><td class="py-2 px-4" id="tdDescH">Pronunciation accuracy rate (%)</td></tr>
+              <tr><td class="py-2 px-4 font-bold">I1</td><td class="py-2 px-4 font-mono font-bold text-blue-700">transcript</td><td class="py-2 px-4" id="tdTypeI">Text</td><td class="py-2 px-4" id="tdDescI">Actual recognized speech transcript spoken by student</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- BƯỚC 2: GOOGLE APPS SCRIPT (BACKEND API) -->
-      <div id="doc-step2" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
+      <div id="doc-step2" class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200 shadow-sm space-y-4 sm:space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span class="text-xs font-bold text-blue-600 uppercase">Bước 2</span>
-            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Tạo và Triển khai Google Apps Script (Backend API)</h3>
-            <p class="text-xs sm:text-sm text-slate-500">Trong Google Sheets, chọn <strong>Tiện ích mở rộng (Extensions) &rarr; Apps Script</strong>, dán mã dưới đây và nhấn <strong>Triển khai (Deploy) &rarr; Ứng dụng web (Web App)</strong>.</p>
+            <span id="step2Badge" class="text-xs font-bold text-blue-600 uppercase">Step 2</span>
+            <h3 id="step2Title" class="text-base sm:text-lg lg:text-xl font-extrabold text-slate-900">Create and Deploy Google Apps Script (Backend API)</h3>
+            <p id="step2Desc" class="text-xs sm:text-sm text-slate-500">In Google Sheets, go to <strong>Extensions &rarr; Apps Script</strong>, paste the code below, and click <strong>Deploy &rarr; New deployment &rarr; Web app</strong>.</p>
           </div>
-          <button onclick="copyCodeBlock('gasCodeBlock', 'Đã sao chép mã nguồn Code.gs!')" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shrink-0 flex items-center gap-2">
+          <button onclick="copyCodeBlock('gasCodeBlock')" id="copyCodeBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shrink-0 flex items-center justify-center gap-2">
             <i class="fa-regular fa-copy"></i>
-            <span>Sao chép Code.gs</span>
+            <span>Copy Code.gs</span>
           </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-            <span class="text-slate-500 block">1. Mô tả (Description):</span>
-            <strong class="text-slate-900">API Hệ thống phát âm EchoScore</strong>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 text-xs">
+          <div class="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <span id="paramDescLabel" class="text-slate-500 block">1. Description:</span>
+            <strong id="paramDescVal" class="text-slate-900">EchoScore Pronunciation Assessment API</strong>
           </div>
-          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-            <span class="text-slate-500 block">2. Thực thi dưới dạng (Execute as):</span>
-            <strong class="text-slate-900">Tôi (Me / Your Account)</strong>
+          <div class="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <span id="paramExecLabel" class="text-slate-500 block">2. Execute as:</span>
+            <strong id="paramExecVal" class="text-slate-900">Me (Your Google Account)</strong>
           </div>
-          <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200">
-            <span class="text-rose-600 block font-semibold">3. Ai có quyền truy cập (Quan trọng!):</span>
-            <strong class="text-rose-900">Bất kỳ ai (Anyone)</strong>
+          <div class="p-3 sm:p-3.5 rounded-xl bg-rose-50 border border-rose-200">
+            <span id="paramAccessLabel" class="text-rose-600 block font-semibold">3. Who has access (Crucial!):</span>
+            <strong id="paramAccessVal" class="text-rose-900">Anyone</strong>
           </div>
         </div>
 
-        <pre id="gasCodeBlock" class="bg-slate-900 text-slate-100 p-5 rounded-2xl text-xs font-mono overflow-x-auto leading-relaxed">// 1. Xử lý khi tải trang web (Yêu cầu GET - Dự phòng)
-function doGet(e) {
-  return ContentService.createTextOutput("Pronunciation API is running.");
+        <pre id="gasCodeBlock" class="p-5 rounded-2xl text-xs font-mono overflow-x-auto leading-relaxed"><span class="text-yellow-300 font-bold">function</span> <span class="text-cyan-300 font-bold">doGet</span>(e) {
+  <span class="text-yellow-300 font-bold">return</span> ContentService.<span class="text-cyan-300">createTextOutput</span>(<span class="text-emerald-400">"Pronunciation API is running."</span>);
 }
 
-// 2. Xử lý ghi dữ liệu điểm số (Yêu cầu POST - Ghi chính xác 9 cột vào Google Sheet)
-function doPost(e) {
-  try {
-    // Phân tích dữ liệu định dạng JSON được gửi từ Frontend
-    var params = JSON.parse(e.postData.contents);
+<span class="text-yellow-300 font-bold">function</span> <span class="text-cyan-300 font-bold">doPost</span>(e) {
+  <span class="text-yellow-300 font-bold">try</span> {
+    <span class="text-purple-300 font-bold">var</span> params = JSON.<span class="text-cyan-300">parse</span>(e.postData.contents);
+    <span class="text-purple-300 font-bold">var</span> sheet = SpreadsheetApp.<span class="text-cyan-300">getActiveSpreadsheet</span>().<span class="text-cyan-300">getActiveSheet</span>();
 
-    // Lấy bảng tính Google Sheet hiện đang được liên kết
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-
-    // Lần lượt ghi 9 cột dữ liệu vào dòng mới trong bảng tính
-    sheet.appendRow([
-      new Date(),                                                           // Cột A: timestamp (Thời gian ghi)
-      params.className || "",                                               // Cột B: className (Lớp)
-      params.studentId || "",                                               // Cột C: studentId (Mã số HS/SV)
-      params.studentName || "",                                             // Cột D: studentName (Họ tên)
-      params.attemptCount || 0,                                             // Cột E: attemptCount (Số lần thử)
-      params.targetSentence || "",                                          // Cột F: targetSentence (Câu đề bài)
-      (params.completion !== undefined ? params.completion + "%" : "0%"),   // Cột G: completion (Độ hoàn thành)
-      (params.accuracy !== undefined ? params.accuracy + "%" : "0%"),       // Cột H: accuracy (Độ chính xác)
-      params.transcript || ""                                               // Cột I: transcript (Văn bản giọng nói)
+    sheet.<span class="text-cyan-300">appendRow</span>([
+      <span class="text-yellow-300 font-bold">new</span> <span class="text-orange-300">Date</span>(),
+      params.className || <span class="text-emerald-400">""</span>,
+      params.studentId || <span class="text-emerald-400">""</span>,
+      params.studentName || <span class="text-emerald-400">""</span>,
+      params.attemptCount || <span class="text-orange-300 font-bold">0</span>,
+      params.targetSentence || <span class="text-emerald-400">""</span>,
+      (params.completion !== <span class="text-orange-300">undefined</span> ? params.completion + <span class="text-emerald-400">"%"</span> : <span class="text-emerald-400">"0%"</span>),
+      (params.accuracy !== <span class="text-orange-300">undefined</span> ? params.accuracy + <span class="text-emerald-400">"%"</span> : <span class="text-emerald-400">"0%"</span>),
+      params.transcript || <span class="text-emerald-400">""</span>
     ]);
 
-    // Trả về thông báo thành công cho Frontend
-    return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
-      .setMimeType(ContentService.MimeType.JSON);
+    <span class="text-yellow-300 font-bold">return</span> ContentService.<span class="text-cyan-300">createTextOutput</span>(JSON.<span class="text-cyan-300">stringify</span>({ <span class="text-emerald-400">"status"</span>: <span class="text-emerald-400">"success"</span> }))
+      .<span class="text-cyan-300">setMimeType</span>(ContentService.MimeType.JSON);
 
-  } catch (error) {
-    // Trả về thông báo lỗi khi có sự cố xảy ra
-    return ContentService.createTextOutput(JSON.stringify({ "status": "error", "message": error.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+  } <span class="text-yellow-300 font-bold">catch</span> (error) {
+    <span class="text-yellow-300 font-bold">return</span> ContentService.<span class="text-cyan-300">createTextOutput</span>(JSON.<span class="text-cyan-300">stringify</span>({ <span class="text-emerald-400">"status"</span>: <span class="text-emerald-400">"error"</span>, <span class="text-emerald-400">"message"</span>: error.<span class="text-cyan-300">toString</span>() }))
+      .<span class="text-cyan-300">setMimeType</span>(ContentService.MimeType.JSON);
   }
 }</pre>
       </div>
 
-      <!-- BƯỚC 3: CÔNG CỤ TÙY CHỈNH & XUẤT TỆP PRONUNCIATION.HTML -->
-      <div id="doc-step3" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
+      <div id="doc-step3" class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200 shadow-sm space-y-4 sm:space-y-5">
         <div>
-          <span class="text-xs font-bold text-blue-600 uppercase">Bước 3</span>
-          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Chuẩn bị Trang web Frontend (<code>pronunciation.html</code>)</h3>
-          <p class="text-xs sm:text-sm text-slate-500">Điền <code>GAS_URL</code> và Email Giáo viên của bạn vào khung bên dưới. Hệ thống sẽ tự động nhúng vào mã nguồn để bạn tải tệp <code>pronunciation.html</code> về máy ngay lập tức!</p>
+          <span id="step3Badge" class="text-xs font-bold text-blue-600 uppercase">Step 3</span>
+          <h3 id="step3Title" class="text-base sm:text-lg lg:text-xl font-extrabold text-slate-900">Prepare Frontend Web App (<code>pronunciation.html</code>)</h3>
+          <p id="step3Desc" class="text-xs sm:text-sm text-slate-500">Enter your <code>GAS_URL</code> and Teacher Email below. The system will dynamically embed them into the source code so you can download the ready-to-deploy <code>pronunciation.html</code> file immediately!</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-blue-50/60 p-5 rounded-2xl border border-blue-200">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 bg-blue-50/60 p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border border-blue-200">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Email Giáo viên (Dùng để mở khóa Ngân hàng câu hỏi):</label>
+            <label id="labelTeacherEmail" class="block text-xs font-bold text-slate-700 mb-1">Teacher Email (Used to unlock Question Bank):</label>
             <input type="email" id="configTeacherEmail" oninput="syncConfigInputs()" value="audreyshih32@gm.chihlee.edu.tw" class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white font-mono">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Đường dẫn Web App URL (<code>GAS_URL</code> từ Bước 2):</label>
+            <label id="labelGasUrl" class="block text-xs font-bold text-slate-700 mb-1">Web App URL (<code>GAS_URL</code> from Step 2):</label>
             <input type="url" id="configGasUrl" oninput="syncConfigInputs()" value="https://script.google.com/macros/s/AKfycbwGKabME3C398ARfyvxRpsLDyJ9jZgcnYAApWy1yN9fU1K13sf1jM5nFNjqQUAfiwO2/exec" class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 bg-white font-mono">
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3">
-          <button onclick="downloadStandaloneHTML()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition shadow-sm flex items-center gap-2">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+          <button onclick="downloadStandaloneHTML()" id="btnDownloadHtml" class="w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition shadow-sm flex items-center justify-center gap-2">
             <i class="fa-solid fa-download"></i>
-            <span>Tải tệp pronunciation.html hoàn chỉnh</span>
+            <span>Download complete pronunciation.html</span>
           </button>
-          <button onclick="copyStandaloneHTML()" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold transition flex items-center gap-2">
+          <button onclick="copyStandaloneHTML()" id="btnCopyHtml" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2">
             <i class="fa-regular fa-copy"></i>
-            <span>Sao chép toàn bộ mã HTML</span>
+            <span>Copy entire HTML code</span>
           </button>
         </div>
       </div>
 
-      <!-- BƯỚC 4 & 5: ĐƯA LÊN GITHUB PAGES & DANH SÁCH KIỂM TRA -->
-      <div id="doc-step4" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Bước 4: GitHub Pages -->
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
-          <span class="text-xs font-bold text-blue-600 uppercase">Bước 4</span>
-          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Đưa Trang web lên GitHub Pages</h3>
-          <ol class="space-y-3 text-xs sm:text-sm text-slate-700">
-            <li class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <strong class="text-slate-900 block mb-0.5">1. Tạo Kho lưu trữ (Repository):</strong>
-              Đăng nhập GitHub &rarr; Nhấn dấu <code>+</code> góc phải &rarr; <strong>New repository</strong>. Đặt tên là <code>echoscore-app</code>, chọn chế độ <strong>Public</strong> rồi nhấn <strong>Create repository</strong>.
-            </li>
-            <li class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <strong class="text-slate-900 block mb-0.5">2. Tải tệp HTML lên:</strong>
-              Nhấn vào dòng <strong>uploading an existing file</strong> &rarr; Kéo thả tệp <code>pronunciation.html</code> vừa tải ở Bước 3 vào &rarr; Nhấn nút xanh <strong>Commit changes</strong>.
-            </li>
-            <li class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <strong class="text-slate-900 block mb-0.5">3. Bật GitHub Pages:</strong>
-              Vào mục <strong>Settings</strong> (Bánh răng) &rarr; Chọn <strong>Pages</strong> ở menu trái &rarr; Tại mục <strong>Branch</strong>, đổi <code>None</code> thành <code>main</code> (thư mục giữ nguyên <code>/(root)</code>) &rarr; Nhấn <strong>Save</strong>.
-            </li>
-            <li class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
-              <strong class="text-emerald-900 block mb-0.5">4. Nhận đường dẫn HTTPS gửi cho học sinh:</strong>
-              Đợi 1 phút và tải lại trang. Đường dẫn đầy đủ của học sinh sẽ là:<br>
-              <code class="font-mono text-xs bg-white px-2 py-0.5 rounded border border-emerald-300 inline-block mt-1">https://&lt;username&gt;.github.io/echoscore-app/pronunciation.html</code>
-            </li>
-          </ol>
-        </div>
-
-        <!-- Bước 5: Interactive Checklist -->
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
-          <span class="text-xs font-bold text-emerald-600 uppercase">Bước 5</span>
-          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Danh sách Kiểm thử Hệ thống (Checklist)</h3>
-          <p class="text-xs sm:text-sm text-slate-500">Đánh dấu vào các bước dưới đây để kiểm tra trước khi gửi đường dẫn cho cả lớp:</p>
-
-          <div class="space-y-2.5 text-xs sm:text-sm">
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
-              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
-              <span>Đã tạo Google Sheets với đúng <strong>9 tiêu đề cột</strong> từ <code>A1</code> đến <code>I1</code>.</span>
-            </label>
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
-              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
-              <span>Đã triển khai Google Apps Script với quyền truy cập <strong>Bất kỳ ai (Anyone)</strong>.</span>
-            </label>
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
-              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
-              <span>Đã dán <code>GAS_URL</code> vào tệp <code>pronunciation.html</code> và tải lên GitHub Pages.</span>
-            </label>
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
-              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
-              <span>Đã mở trang web bằng Chrome, bấm <strong>Nghe đọc mẫu (Giọng Mỹ)</strong> phát âm rõ ràng.</span>
-            </label>
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer transition">
-              <input type="checkbox" class="mt-1 w-4 h-4 accent-blue-600 rounded">
-              <span>Đã đọc thử qua Micro, kiểm tra màu sắc từ (Xanh lá / Đỏ / Vàng) và xác nhận điểm đã nhảy vào Google Sheets.</span>
-            </label>
-          </div>
-        </div>
+      <div id="doc-step4" class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200 shadow-sm space-y-3 sm:space-y-4">
+        <span id="step4Badge" class="text-xs font-bold text-blue-600 uppercase">Step 4</span>
+        <h3 id="step4Title" class="text-base sm:text-lg lg:text-xl font-extrabold text-slate-900">Deploy Web App to GitHub Pages</h3>
+        <ol class="space-y-3 text-xs sm:text-sm text-slate-700">
+          <li id="step4Item1" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <strong class="text-slate-900 block mb-0.5">1. Create Repository:</strong>
+            Sign in to GitHub &rarr; Click the <code>+</code> icon in the top right &rarr; <strong>New repository</strong>. Name it <code>echoscore-app</code>, choose <strong>Public</strong>, and click <strong>Create repository</strong>.
+          </li>
+          <li id="step4Item2" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <strong class="text-slate-900 block mb-0.5">2. Upload HTML File:</strong>
+            Click <strong>uploading an existing file</strong> &rarr; Drag and drop the <code>pronunciation.html</code> file downloaded in Step 3 &rarr; Click the green <strong>Commit changes</strong> button.
+          </li>
+          <li id="step4Item3" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <strong class="text-slate-900 block mb-0.5">3. Enable GitHub Pages:</strong>
+            Navigate to <strong>Settings</strong> &rarr; Select <strong>Pages</strong> in the left menu &rarr; Under <strong>Branch</strong>, switch from <code>None</code> to <code>main</code> (keep directory as <code>/(root)</code>) &rarr; Click <strong>Save</strong>.
+          </li>
+          <li id="step4Item4" class="p-3 sm:p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
+            <strong class="text-emerald-900 block mb-0.5">4. Share Live HTTPS Link with Students:</strong>
+            Wait about 1 minute and refresh the page. The full URL to share with students will be:<br>
+            <code class="font-mono text-[11px] sm:text-xs bg-white px-2 py-1 rounded border border-emerald-300 block sm:inline-block mt-1 break-all">https://&lt;username&gt;.github.io/echoscore-app/pronunciation.html</code>
+          </li>
+        </ol>
       </div>
 
     </section>
+
+    <footer class="text-center py-6">
+      <div class="footer-badge">
+        <span>made by <a href="https://github.com/tki3t" target="_blank" rel="noopener noreferrer" class="footer-link"><strong>Justin Vu</strong></a> with luv <i class="fa-solid fa-heart text-rose-500" style="color: #f43f5e;"></i></span>
+      </div>
+    </footer>
   </main>
 
-  <!-- ===================================================================== -->
-  <!-- MODAL CẤU HÌNH NHANH GAS_URL & EMAIL                                  -->
-  <!-- ===================================================================== -->
   <div id="configModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 border-[3.5px] border-black shadow-[10px_10px_0px_#000] space-y-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-4 sm:p-6 border-[3px] sm:border-[3.5px] border-black shadow-[6px_6px_0px_#000] sm:shadow-[10px_10px_0px_#000] space-y-3 sm:space-y-4 max-h-[92vh] overflow-y-auto mx-2">
       <div class="flex items-center justify-between pb-3 border-b-2 border-black">
-        <h3 class="text-lg font-black text-black flex items-center gap-2">
+        <h3 id="modalTitle" class="text-lg font-black text-black flex items-center gap-2">
           <i class="fa-solid fa-sliders text-blue-600"></i>
-          <span>Cấu hình Kết nối Google Apps Script</span>
+          <span>Configure Google Apps Script Connection</span>
         </h3>
         <button onclick="closeConfigModal()" class="text-black hover:text-slate-600">
           <i class="fa-solid fa-xmark text-lg"></i>
@@ -766,64 +625,357 @@ function doPost(e) {
 
       <div class="space-y-3 text-xs sm:text-sm">
         <div>
-          <label class="block font-bold text-black mb-1">Email Giáo viên được cấp quyền:</label>
+          <label id="modalEmailLabel" class="block font-bold text-black mb-1">Authorized Teacher Email:</label>
           <input type="email" id="modalConfigEmail" class="w-full px-3.5 py-2 rounded-xl border-2 border-black font-mono text-xs shadow-[2px_2px_0px_#000]">
         </div>
         <div>
-          <label class="block font-bold text-black mb-1">Web App URL (<code>GAS_URL</code>):</label>
+          <label id="modalGasLabel" class="block font-bold text-black mb-1">Web App URL (<code>GAS_URL</code>):</label>
           <input type="url" id="modalConfigGasUrl" class="w-full px-3.5 py-2 rounded-xl border-2 border-black font-mono text-xs shadow-[2px_2px_0px_#000]">
         </div>
       </div>
 
       <div class="flex items-center justify-end gap-2 pt-2">
-        <button onclick="closeConfigModal()" class="px-4 py-2 rounded-xl border-2 border-black bg-slate-100 hover:bg-slate-200 text-black text-xs font-black shadow-[2px_2px_0px_#000]">Đóng</button>
-        <button onclick="saveConfigModal()" class="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 border-2 border-black text-black text-xs font-black shadow-[2px_2px_0px_#000]">Lưu cấu hình</button>
+        <button onclick="closeConfigModal()" id="modalCloseBtn" class="px-4 py-2 rounded-xl border-2 border-black bg-slate-100 hover:bg-slate-200 text-black text-xs font-black shadow-[2px_2px_0px_#000]">Close</button>
+        <button onclick="saveConfigModal()" id="modalSaveBtn" class="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 border-2 border-black text-black text-xs font-black shadow-[2px_2px_0px_#000]">Save Settings</button>
       </div>
     </div>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- TOAST NOTIFICATION CONTAINER                                          -->
-  <!-- ===================================================================== -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
 
-  <!-- ===================================================================== -->
-  <!-- CHÂN TRANG (FOOTER)                                                   -->
-  <!-- ===================================================================== -->
-  <footer class="bg-white border-t-[3.5px] border-black shadow-[0_-5px_0px_#000] py-6 mt-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-bold text-slate-800">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-amber-300 border-2 border-black shadow-[1.5px_1.5px_0px_#000] flex items-center justify-center font-black">
-          ⚡
-        </div>
-        <div>
-          <span class="font-extrabold text-sm text-black">EchoScore Cloud EdTech</span> — Cẩm nang Triển khai Hệ thống Chấm điểm Phát âm Tiếng Anh A-Z
-        </div>
-      </div>
-      <div class="flex flex-wrap items-center justify-center gap-3">
-        <a href="index.html" class="px-3 py-1.5 rounded-lg bg-amber-300 border-2 border-black shadow-[2px_2px_0px_#000] text-black font-black hover:bg-amber-400 transition">
-          🎙️ Phòng Luyện Phát Âm (App)
-        </a>
-        <a href="#doc-naming" class="hover:underline">Thương hiệu</a>
-        <a href="#doc-arch" class="hover:underline">Kiến trúc</a>
-        <a href="#doc-step1" class="hover:underline">Google Sheets</a>
-        <a href="#doc-step2" class="hover:underline">Code.gs</a>
-        <a href="#doc-step3" class="hover:underline">pronunciation.html</a>
-        <a href="#doc-step4" class="hover:underline">GitHub Pages</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ===================================================================== -->
-  <!-- MÃ NGUỒN JAVASCRIPT HỖ TRỢ CẨM NANG & TẠO PRONUNCIATION.HTML          -->
-  <!-- ===================================================================== -->
   <script>
-    // 1. BIẾN CẤU HÌNH HỆ THỐNG
+
+    let currentLang = 'en';
     let AUTHORIZED_TEACHER_EMAIL = "audreyshih32@gm.chihlee.edu.tw";
     let GAS_URL = "https://script.google.com/macros/s/AKfycbwGKabME3C398ARfyvxRpsLDyJ9jZgcnYAApWy1yN9fU1K13sf1jM5nFNjqQUAfiwO2/exec";
-    let CURRENT_BRAND_TITLE = "EchoScore – Luyện Phát âm Chuẩn Mỹ";
 
-    // Phát hiện trình duyệt tích hợp trong ứng dụng (LINE, Messenger, Teams, Zalo...)
+    const I18N = {
+      vi: {
+        pageTitle: "EchoScore – Cẩm Nang Triển Khai Hệ Thống Chấm Điểm Phát Âm A-Z",
+        metaDesc: "Tài liệu kỹ thuật hướng dẫn chi tiết triển khai hệ thống luyện và chấm điểm phát âm tiếng Anh chuẩn Mỹ từ A-Z với Web Speech API, GitHub Pages và Google Sheets hoàn toàn miễn phí.",
+        navBrandBadge: "Cẩm Nang A-Z",
+        navTagline: "Web Speech API • GitHub Pages • Google Sheets",
+        heroConfigText: "Cấu hình API",
+        heroDownloadText: "Tải pronunciation.html",
+        inAppWarning: '<i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1.5"></i><strong>Phát hiện trình duyệt trong ứng dụng (Zalo / LINE / Messenger):</strong> Vui lòng nhấn nút <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">⋮</span> hoặc <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">Chia sẻ</span> ở góc trên bên phải và chọn <strong>"Mở bằng Chrome / Safari"</strong> để cấp quyền micro.',
+        inAppDismiss: "Đóng thông báo",
+        heroTitle: "Cẩm nang Triển khai Hệ thống Chấm điểm Phát âm Tiếng Anh Tương tác",
+        heroDesc: "Hướng dẫn từng bước từ con số 0 để thiết lập hệ thống kết hợp <strong>Web Speech API</strong>, <strong>GitHub Pages (HTTPS)</strong> và <strong>Google Apps Script + Google Sheets</strong> hoàn toàn miễn phí.",
+        quickJumpArch: '<span class="block text-blue-600 font-bold mb-0.5">Kiến trúc</span>Tổng quan & Thiết bị',
+        quickJumpStep1: '<span class="block text-blue-600 font-bold mb-0.5">Bước 1</span>Tạo Google Sheets',
+        quickJumpStep2: '<span class="block text-blue-600 font-bold mb-0.5">Bước 2</span>Mã nguồn Code.gs',
+        quickJumpStep3: '<span class="block text-blue-600 font-bold mb-0.5">Bước 3</span>Tạo pronunciation.html',
+        quickJumpStep4: '<span class="block text-blue-600 font-bold mb-0.5">Bước 4</span>Đưa lên GitHub Pages',
+        archTitle: "2. Tổng quan Kiến trúc & Khả năng Tương thích Thiết bị",
+        archCallout: '<strong class="text-blue-800"><i class="fa-solid fa-lightbulb mr-1.5"></i>Tại sao phải tách biệt GitHub Pages và Google Apps Script?</strong><br>Nếu đặt trực tiếp tệp HTML bên trong Google Apps Script, Google sẽ bao bọc trang web trong một khung <code>&lt;iframe&gt;</code> bảo mật, khiến trình duyệt chặn quyền truy cập micro và báo lỗi <code>not-allowed</code>. Việc tách giao diện (Frontend) sang <strong>GitHub Pages</strong> cung cấp kết nối <strong>HTTPS gốc</strong>, giải quyết triệt để lỗi chặn micro trên mọi thiết bị.',
+        archFlow1: '<div class="text-xs font-bold text-blue-600 uppercase mb-1">1. Giao diện (Frontend)</div><div class="text-base font-extrabold text-slate-900 mb-2">GitHub Pages (HTTPS)</div><p class="text-xs text-slate-600 leading-relaxed">Chạy <code>SpeechSynthesis</code> (đọc mẫu giọng Mỹ) và <code>SpeechRecognition</code> (ghi âm & chấm điểm từng từ không bị lỗi chặn micro).</p>',
+        archFlow2: '<div class="text-xs font-bold text-purple-600 uppercase mb-1">2. Cầu nối (Backend API)</div><div class="text-base font-extrabold text-slate-900 mb-2">Google Apps Script</div><p class="text-xs text-slate-600 leading-relaxed">Nhận gói dữ liệu điểm số định dạng <code>JSON</code> từ trang web gửi về thông qua phương thức <code>POST</code>.</p>',
+        archFlow3: '<div class="text-xs font-bold text-emerald-600 uppercase mb-1">3. Cơ sở dữ liệu (Database)</div><div class="text-base font-extrabold text-slate-900 mb-2">Google Sheets (9 Cột)</div><p class="text-xs text-slate-600 leading-relaxed">Tự động ghi nhận thời gian, thông tin học sinh, số lần thử, độ hoàn thành, độ chính xác và câu văn nhận diện thực tế.</p>',
+        compatPc: '<div class="font-bold text-sm text-emerald-900"><i class="fa-solid fa-laptop text-emerald-600 mr-2"></i>Laptop / PC (Chrome)</div><div class="text-xs text-emerald-700 mt-1"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>Hoàn hảo 100%. Nhận diện giọng nói nhanh và chính xác nhất.</div>',
+        compatAndroid: '<div class="font-bold text-sm text-emerald-900"><i class="fa-solid fa-mobile-screen-button text-emerald-600 mr-2"></i>Điện thoại Android (Chrome)</div><div class="text-xs text-emerald-700 mt-1"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>Hoàn hảo 100%. Hoạt động ổn định với Web Speech API.</div>',
+        compatIos: '<div class="font-bold text-sm text-amber-900"><i class="fa-brands fa-apple text-amber-600 mr-2"></i>iPhone / iPad (Safari)</div><div class="text-xs text-amber-800 mt-1"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1.5"></i>Tốt trên iOS mới. Trên iOS cũ độ nhạy ngắt câu có thể kém ổn định hơn.</div>',
+        compatInApp: '<div class="font-bold text-sm text-rose-900"><i class="fa-solid fa-comments text-rose-600 mr-2"></i>Zalo / LINE / Messenger</div><div class="text-xs text-rose-800 mt-1"><i class="fa-solid fa-ban text-rose-600 mr-1.5"></i>Tự động hiện cảnh báo nhắc học sinh bấm "Mở bằng Chrome / Safari".</div>',
+        step1Badge: "Bước 1",
+        step1Title: "Thiết lập Google Sheets (Cơ sở dữ liệu đám mây)",
+        step1Desc: "Tạo bảng tính mới tên <code>EchoScore-Sheet</code> (hoặc <code>9.54-sheet</code>) và dán 9 tiêu đề cột dưới đây vào Hàng 1 (Row 1).",
+        copyHeadersBtn: '<i class="fa-regular fa-copy"></i><span>Sao chép nhanh A1:I1 để dán vào Sheet</span>',
+        thCell: "Ô (Cell)",
+        thHeader: "Tên tiêu đề",
+        thType: "Kiểu dữ liệu",
+        thDesc: "Ý nghĩa & Mô tả",
+        tdTypeA: "Ngày giờ", tdDescA: "Thời gian nộp bài luyện tập (Hệ thống tự động tạo)",
+        tdTypeB: "Văn bản", tdDescB: "Lớp của học sinh (VD: Anh A1)",
+        tdTypeC: "Văn bản / Số", tdDescC: "Mã số học sinh / sinh viên (VD: 1090123)",
+        tdTypeD: "Văn bản", tdDescD: "Họ và tên học sinh",
+        tdTypeE: "Số nguyên", tdDescE: "Số lần luyện tập tích lũy",
+        tdTypeF: "Văn bản", tdDescF: "Câu tiếng Anh đề bài trong lần luyện tập đó",
+        tdTypeG: "Phần trăm (%)", tdDescG: "Độ hoàn thành câu (%)",
+        tdTypeH: "Phần trăm (%)", tdDescH: "Độ chính xác phát âm (%)",
+        tdTypeI: "Văn bản", tdDescI: "Văn bản giọng nói thực tế được nhận diện của học sinh",
+        step2Badge: "Bước 2",
+        step2Title: "Tạo và Triển khai Google Apps Script (Backend API)",
+        step2Desc: "Trong Google Sheets, chọn <strong>Tiện ích mở rộng &rarr; Apps Script</strong>, dán mã dưới đây và nhấn <strong>Triển khai &rarr; Triển khai mới &rarr; Ứng dụng web</strong>.",
+        copyCodeBtn: '<i class="fa-regular fa-copy"></i><span>Sao chép Code.gs</span>',
+        paramDescLabel: "1. Mô tả (Description):", paramDescVal: "API Hệ thống phát âm EchoScore",
+        paramExecLabel: "2. Thực thi dưới dạng (Execute as):", paramExecVal: "Tôi (Me / Tài khoản của bạn)",
+        paramAccessLabel: "3. Ai có quyền truy cập (Quan trọng!):", paramAccessVal: "Bất kỳ ai (Anyone)",
+        step3Badge: "Bước 3",
+        step3Title: "Chuẩn bị Trang web Frontend (pronunciation.html)",
+        step3Desc: "Điền <code>GAS_URL</code> và Email Giáo viên của bạn vào khung bên dưới. Hệ thống sẽ tự động nhúng vào mã nguồn để bạn tải tệp <code>pronunciation.html</code> về máy ngay lập tức!",
+        labelTeacherEmail: "Email Giáo viên (Dùng để mở khóa Ngân hàng câu hỏi):",
+        labelGasUrl: "Đường dẫn Web App URL (GAS_URL từ Bước 2):",
+        btnDownloadHtml: '<i class="fa-solid fa-download"></i><span>Tải tệp pronunciation.html hoàn chỉnh</span>',
+        btnCopyHtml: '<i class="fa-regular fa-copy"></i><span>Sao chép toàn bộ mã HTML</span>',
+        step4Badge: "Bước 4",
+        step4Title: "Đưa Trang web lên GitHub Pages",
+        step4Item1: '<strong class="text-slate-900 block mb-0.5">1. Tạo Kho lưu trữ (Repository):</strong> Đăng nhập GitHub &rarr; Nhấn dấu <code>+</code> góc phải &rarr; <strong>New repository</strong>. Đặt tên là <code>echoscore-app</code>, chọn chế độ <strong>Public</strong> rồi nhấn <strong>Create repository</strong>.',
+        step4Item2: '<strong class="text-slate-900 block mb-0.5">2. Tải tệp HTML lên:</strong> Nhấn vào dòng <strong>uploading an existing file</strong> &rarr; Kéo thả tệp <code>pronunciation.html</code> vừa tải ở Bước 3 vào &rarr; Nhấn nút xanh <strong>Commit changes</strong>.',
+        step4Item3: '<strong class="text-slate-900 block mb-0.5">3. Bật GitHub Pages:</strong> Vào mục <strong>Settings</strong> &rarr; Chọn <strong>Pages</strong> ở menu trái &rarr; Tại mục <strong>Branch</strong>, đổi <code>None</code> thành <code>main</code> (thư mục giữ nguyên <code>/(root)</code>) &rarr; Nhấn <strong>Save</strong>.',
+        step4Item4: '<strong class="text-emerald-900 block mb-0.5">4. Nhận đường dẫn HTTPS gửi cho học sinh:</strong> Đợi 1 phút và tải lại trang. Đường dẫn đầy đủ của học sinh sẽ là:<br><code class="font-mono text-xs bg-white px-2 py-0.5 rounded border border-emerald-300 inline-block mt-1">https://&lt;username&gt;.github.io/echoscore-app/pronunciation.html</code>',
+        modalTitle: '<i class="fa-solid fa-sliders text-blue-600"></i><span>Cấu hình Kết nối Google Apps Script</span>',
+        modalEmailLabel: "Email Giáo viên được cấp quyền:",
+        modalGasLabel: "Web App URL (GAS_URL):",
+        modalCloseBtn: "Đóng",
+        modalSaveBtn: "Lưu cấu hình",
+        toastCopiedHeaders: "Đã sao chép 9 tiêu đề cột! Hãy bấm vào ô A1 trên Google Sheets và nhấn Ctrl+V.",
+        toastCopiedCode: "Đã sao chép mã nguồn Code.gs!",
+        toastSavedConfig: "Đã cập nhật cấu hình GAS_URL và Email Giáo viên!",
+        toastDownloadedHtml: "Đã tải xuống tệp pronunciation.html sẵn sàng đưa lên GitHub Pages!",
+        toastCopiedHtml: "Đã sao chép toàn bộ mã nguồn pronunciation.html!",
+        toastCopyError: "Không thể sao chép tự động, vui lòng bôi đen để sao chép.",
+        toastLangSwitched: "Đã chuyển giao diện sang Tiếng Việt"
+      },
+      en: {
+        pageTitle: "EchoScore – A-to-Z Pronunciation Assessment System Deployment Guide",
+        metaDesc: "Comprehensive step-by-step technical guide for deploying an interactive US English pronunciation scoring system with Web Speech API, GitHub Pages, and Google Sheets for free.",
+        navBrandBadge: "Deployment Guide",
+        navTagline: "Web Speech API • GitHub Pages • Google Sheets",
+        heroConfigText: "Configure API",
+        heroDownloadText: "Download pronunciation.html",
+        inAppWarning: '<i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1.5"></i><strong>In-App Browser Detected:</strong> Please tap the <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">⋮</span> or <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">Share</span> icon in the top right corner and choose <strong>"Open in Chrome / Safari"</strong> to allow microphone access.',
+        inAppDismiss: "Dismiss notice",
+        heroTitle: "Interactive English Pronunciation Assessment System Deployment Guide",
+        heroDesc: "Step-by-step instructions from scratch to deploy a complete system combining <strong>Web Speech API</strong>, <strong>GitHub Pages (HTTPS)</strong>, and <strong>Google Apps Script + Google Sheets</strong> completely free of charge.",
+        quickJumpArch: '<span class="block text-blue-600 font-bold mb-0.5">Architecture</span>Overview & Devices',
+        quickJumpStep1: '<span class="block text-blue-600 font-bold mb-0.5">Step 1</span>Create Google Sheets',
+        quickJumpStep2: '<span class="block text-blue-600 font-bold mb-0.5">Step 2</span>Code.gs Backend API',
+        quickJumpStep3: '<span class="block text-blue-600 font-bold mb-0.5">Step 3</span>Create pronunciation.html',
+        quickJumpStep4: '<span class="block text-blue-600 font-bold mb-0.5">Step 4</span>Deploy to GitHub Pages',
+        archTitle: "2. System Architecture & Device Compatibility Overview",
+        archCallout: '<strong class="text-blue-800"><i class="fa-solid fa-lightbulb mr-1.5"></i>Why separate GitHub Pages and Google Apps Script?</strong><br>If HTML files are hosted directly inside Google Apps Script, Google wraps the web page in a sandboxed <code>&lt;iframe&gt;</code>, prompting modern browsers to block microphone access with a <code>not-allowed</code> error. Separating the frontend to <strong>GitHub Pages</strong> provides a native <strong>HTTPS origin</strong>, permanently resolving microphone permission restrictions across all modern devices.',
+        archFlow1: '<div class="text-xs font-bold text-blue-600 uppercase mb-1">1. Frontend (UI)</div><div class="text-base font-extrabold text-slate-900 mb-2">GitHub Pages (HTTPS)</div><p class="text-xs text-slate-600 leading-relaxed">Executes <code>SpeechSynthesis</code> (US English native voice model) and <code>SpeechRecognition</code> (voice recording and per-word analysis without microphone blocks).</p>',
+        archFlow2: '<div class="text-xs font-bold text-purple-600 uppercase mb-1">2. Backend API</div><div class="text-base font-extrabold text-slate-900 mb-2">Google Apps Script</div><p class="text-xs text-slate-600 leading-relaxed">Receives score data payloads in <code>JSON</code> format transmitted from the web interface via asynchronous <code>POST</code> requests.</p>',
+        archFlow3: '<div class="text-xs font-bold text-emerald-600 uppercase mb-1">3. Cloud Database</div><div class="text-base font-extrabold text-slate-900 mb-2">Google Sheets (9 Columns)</div><p class="text-xs text-slate-600 leading-relaxed">Automatically records timestamps, student details, cumulative attempts, completion percentages, accuracy scores, and recognized speech transcripts.</p>',
+        compatPc: '<div class="font-bold text-sm text-emerald-900"><i class="fa-solid fa-laptop text-emerald-600 mr-2"></i>Laptop / PC (Chrome)</div><div class="text-xs text-emerald-700 mt-1"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>100% Perfect. Fastest and most accurate speech recognition.</div>',
+        compatAndroid: '<div class="font-bold text-sm text-emerald-900"><i class="fa-solid fa-mobile-screen-button text-emerald-600 mr-2"></i>Android Phone (Chrome)</div><div class="text-xs text-emerald-700 mt-1"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>100% Perfect. Stable and reliable performance via Web Speech API.</div>',
+        compatIos: '<div class="font-bold text-sm text-amber-900"><i class="fa-brands fa-apple text-amber-600 mr-2"></i>iPhone / iPad (Safari)</div><div class="text-xs text-amber-800 mt-1"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1.5"></i>Good on modern iOS. Older iOS versions may have less responsive pause sensitivity.</div>',
+        compatInApp: '<div class="font-bold text-sm text-rose-900"><i class="fa-solid fa-comments text-rose-600 mr-2"></i>In-App (Zalo / LINE / Messenger)</div><div class="text-xs text-rose-800 mt-1"><i class="fa-solid fa-ban text-rose-600 mr-1.5"></i>Automatically displays an alert prompting students to tap "Open in Chrome / Safari".</div>',
+        step1Badge: "Step 1",
+        step1Title: "Set Up Google Sheets (Cloud Database)",
+        step1Desc: "Create a new spreadsheet named <code>EchoScore-Sheet</code> (or <code>9.54-sheet</code>) and paste the 9 column headers below into Row 1.",
+        copyHeadersBtn: '<i class="fa-regular fa-copy"></i><span>Quick copy A1:I1 to paste into Sheet</span>',
+        thCell: "Cell",
+        thHeader: "Header Name",
+        thType: "Data Type",
+        thDesc: "Description",
+        tdTypeA: "Date / Time", tdDescA: "Practice submission timestamp (System generated)",
+        tdTypeB: "Text", tdDescB: "Student class name (e.g. English A1)",
+        tdTypeC: "Text / Number", tdDescC: "Student ID number (e.g. 1090123)",
+        tdTypeD: "Text", tdDescD: "Student full name",
+        tdTypeE: "Integer", tdDescE: "Cumulative practice attempts",
+        tdTypeF: "Text", tdDescF: "Target sentence assigned in that attempt",
+        tdTypeG: "Percentage (%)", tdDescG: "Sentence completion rate (%)",
+        tdTypeH: "Percentage (%)", tdDescH: "Pronunciation accuracy rate (%)",
+        tdTypeI: "Text", tdDescI: "Actual recognized speech transcript spoken by student",
+        step2Badge: "Step 2",
+        step2Title: "Create and Deploy Google Apps Script (Backend API)",
+        step2Desc: "In Google Sheets, go to <strong>Extensions &rarr; Apps Script</strong>, paste the code below, and click <strong>Deploy &rarr; New deployment &rarr; Web app</strong>.",
+        copyCodeBtn: '<i class="fa-regular fa-copy"></i><span>Copy Code.gs</span>',
+        paramDescLabel: "1. Description:", paramDescVal: "EchoScore Pronunciation Assessment API",
+        paramExecLabel: "2. Execute as:", paramExecVal: "Me (Your Google Account)",
+        paramAccessLabel: "3. Who has access (Crucial!):", paramAccessVal: "Anyone",
+        step3Badge: "Step 3",
+        step3Title: "Prepare Frontend Web App (pronunciation.html)",
+        step3Desc: "Enter your <code>GAS_URL</code> and Teacher Email below. The system will dynamically embed them into the source code so you can download the ready-to-deploy <code>pronunciation.html</code> file immediately!",
+        labelTeacherEmail: "Teacher Email (Used to unlock Question Bank):",
+        labelGasUrl: "Web App URL (GAS_URL from Step 2):",
+        btnDownloadHtml: '<i class="fa-solid fa-download"></i><span>Download complete pronunciation.html</span>',
+        btnCopyHtml: '<i class="fa-regular fa-copy"></i><span>Copy entire HTML code</span>',
+        step4Badge: "Step 4",
+        step4Title: "Deploy Web App to GitHub Pages",
+        step4Item1: '<strong class="text-slate-900 block mb-0.5">1. Create Repository:</strong> Sign in to GitHub &rarr; Click the <code>+</code> icon in the top right &rarr; <strong>New repository</strong>. Name it <code>echoscore-app</code>, choose <strong>Public</strong>, and click <strong>Create repository</strong>.',
+        step4Item2: '<strong class="text-slate-900 block mb-0.5">2. Upload HTML File:</strong> Click <strong>uploading an existing file</strong> &rarr; Drag and drop the <code>pronunciation.html</code> file downloaded in Step 3 &rarr; Click the green <strong>Commit changes</strong> button.',
+        step4Item3: '<strong class="text-slate-900 block mb-0.5">3. Enable GitHub Pages:</strong> Navigate to <strong>Settings</strong> &rarr; Select <strong>Pages</strong> in the left menu &rarr; Under <strong>Branch</strong>, switch from <code>None</code> to <code>main</code> (keep directory as <code>/(root)</code>) &rarr; Click <strong>Save</strong>.',
+        step4Item4: '<strong class="text-emerald-900 block mb-0.5">4. Share Live HTTPS Link with Students:</strong> Wait about 1 minute and refresh the page. The full URL to share with students will be:<br><code class="font-mono text-xs bg-white px-2 py-0.5 rounded border border-emerald-300 inline-block mt-1">https://&lt;username&gt;.github.io/echoscore-app/pronunciation.html</code>',
+        modalTitle: '<i class="fa-solid fa-sliders text-blue-600"></i><span>Configure Google Apps Script Connection</span>',
+        modalEmailLabel: "Authorized Teacher Email:",
+        modalGasLabel: "Web App URL (GAS_URL):",
+        modalCloseBtn: "Close",
+        modalSaveBtn: "Save Settings",
+        toastCopiedHeaders: "Copied 9 column headers! Click cell A1 in Google Sheets and press Ctrl+V.",
+        toastCopiedCode: "Copied Code.gs source code!",
+        toastSavedConfig: "Updated GAS_URL and Teacher Email settings!",
+        toastDownloadedHtml: "Downloaded pronunciation.html ready for GitHub Pages!",
+        toastCopiedHtml: "Copied entire pronunciation.html source code!",
+        toastCopyError: "Unable to copy automatically. Please select text manually to copy.",
+        toastLangSwitched: "Switched language to English"
+      },
+      zh: {
+        pageTitle: "EchoScore – 英語發音評分系統 A-Z 完整部署指南",
+        metaDesc: "從零開始一步步搭建結合 Web Speech API、GitHub Pages (HTTPS) 與 Google Apps Script + Google Sheets 的完全免費互動式英語發音評分系統技術指南。",
+        navBrandBadge: "A-Z 部署指南",
+        navTagline: "Web Speech API • GitHub Pages • Google Sheets",
+        heroConfigText: "設定 API 連線",
+        heroDownloadText: "下載 pronunciation.html",
+        inAppWarning: '<i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1.5"></i><strong>偵測到應用程式內建瀏覽器（LINE / Messenger / Zalo）：</strong>請點擊右上角的 <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">⋮</span> 或 <span class="px-1.5 py-0.5 bg-amber-200 border border-black rounded font-black">分享</span> 圖示，並選擇<strong>「以 Chrome / Safari 開啟」</strong>以授權麥克風存取權限。',
+        inAppDismiss: "關閉提示",
+        heroTitle: "互動式英語發音評分系統完整部署指南",
+        heroDesc: "從零開始一步步搭建結合 <strong>Web Speech API</strong>、<strong>GitHub Pages (HTTPS)</strong> 與 <strong>Google Apps Script + Google Sheets</strong> 的完全免費英語發音評分系統。",
+        quickJumpArch: '<span class="block text-blue-600 font-bold mb-0.5">系統架構</span>總覽與裝置相容性',
+        quickJumpStep1: '<span class="block text-blue-600 font-bold mb-0.5">步驟 1</span>建立 Google 試算表',
+        quickJumpStep2: '<span class="block text-blue-600 font-bold mb-0.5">步驟 2</span>Code.gs 後端 API',
+        quickJumpStep3: '<span class="block text-blue-600 font-bold mb-0.5">步驟 3</span>製作 pronunciation.html',
+        quickJumpStep4: '<span class="block text-blue-600 font-bold mb-0.5">步驟 4</span>部署至 GitHub Pages',
+        archTitle: "2. 系統架構與裝置相容性總覽",
+        archCallout: '<strong class="text-blue-800"><i class="fa-solid fa-lightbulb mr-1.5"></i>為什麼要將 GitHub Pages 與 Google Apps Script 分開？</strong><br>若直接在 Google Apps Script 內嵌 HTML 檔案，Google 會將網頁置於沙盒 <code>&lt;iframe&gt;</code> 中，導致現代瀏覽器封鎖麥克風權限並回報 <code>not-allowed</code> 錯誤。將前端分離至 <strong>GitHub Pages</strong> 可提供原生 <strong>HTTPS 來源</strong>，徹底解決所有設備上的麥克風封鎖問題。',
+        archFlow1: '<div class="text-xs font-bold text-blue-600 uppercase mb-1">1. 前端介面 (Frontend)</div><div class="text-base font-extrabold text-slate-900 mb-2">GitHub Pages (HTTPS)</div><p class="text-xs text-slate-600 leading-relaxed">執行 <code>SpeechSynthesis</code> (美式英語標準朗讀) 與 <code>SpeechRecognition</code> (即時錄音與逐字發音分析，徹底解決麥克風權限封鎖)。</p>',
+        archFlow2: '<div class="text-xs font-bold text-purple-600 uppercase mb-1">2. 後端橋樑 (Backend API)</div><div class="text-base font-extrabold text-slate-900 mb-2">Google Apps Script</div><p class="text-xs text-slate-600 leading-relaxed">透過非同步 <code>POST</code> 請求接收前端網頁傳送的 <code>JSON</code> 格式發音評分數據。</p>',
+        archFlow3: '<div class="text-xs font-bold text-emerald-600 uppercase mb-1">3. 雲端資料庫 (Database)</div><div class="text-base font-extrabold text-slate-900 mb-2">Google 試算表 (9 欄)</div><p class="text-xs text-slate-600 leading-relaxed">自動即時記錄時間戳記、學生身分資訊、練習次數、完成度、發音準確率及辨識出的語音文字。</p>',
+        compatPc: '<div class="font-bold text-sm text-emerald-900"><i class="fa-solid fa-laptop text-emerald-600 mr-2"></i>桌上型電腦 / 筆電 (Chrome)</div><div class="text-xs text-emerald-700 mt-1"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>100% 完美支援。語音辨識反應極速且精準度最高。</div>',
+        compatAndroid: '<div class="font-bold text-sm text-emerald-900"><i class="fa-solid fa-mobile-screen-button text-emerald-600 mr-2"></i>Android 手機 (Chrome)</div><div class="text-xs text-emerald-700 mt-1"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>100% 完美支援。透過 Web Speech API 穩定順暢運行。</div>',
+        compatIos: '<div class="font-bold text-sm text-amber-900"><i class="fa-brands fa-apple text-amber-600 mr-2"></i>iPhone / iPad (Safari)</div><div class="text-xs text-amber-800 mt-1"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1.5"></i>新版 iOS 支援良好。舊版 iOS 的斷句停頓感應可能略為延遲。</div>',
+        compatInApp: '<div class="font-bold text-sm text-rose-900"><i class="fa-solid fa-comments text-rose-600 mr-2"></i>通訊軟體內建瀏覽器 (LINE / Messenger / Zalo)</div><div class="text-xs text-rose-800 mt-1"><i class="fa-solid fa-ban text-rose-600 mr-1.5"></i>自動彈出全螢幕警示，提醒學生點擊「以 Chrome / Safari 開啟」。</div>',
+        step1Badge: "步驟 1",
+        step1Title: "設定 Google 試算表（雲端資料庫）",
+        step1Desc: "建立名為 <code>EchoScore-Sheet</code>（或 <code>9.54-sheet</code>）的新試算表，並將以下 9 個欄位標題貼入第 1 列（Row 1）。",
+        copyHeadersBtn: '<i class="fa-regular fa-copy"></i><span>快速複製 A1:I1 標題貼至試算表</span>',
+        thCell: "儲存格",
+        thHeader: "欄位名稱",
+        thType: "資料類型",
+        thDesc: "說明與含義",
+        tdTypeA: "日期 / 時間", tdDescA: "練習繳交時間戳記（系統自動生成）",
+        tdTypeB: "文字", tdDescB: "學生班級（例如：英語 A1）",
+        tdTypeC: "文字 / 數字", tdDescC: "學號（例如：1090123）",
+        tdTypeD: "文字", tdDescD: "學生姓名",
+        tdTypeE: "整數", tdDescE: "累計練習次數",
+        tdTypeF: "文字", tdDescF: "該次練習指定的英語目標句子",
+        tdTypeG: "百分比 (%)", tdDescG: "句子朗讀完成度 (%)",
+        tdTypeH: "百分比 (%)", tdDescH: "發音準確度分數 (%)",
+        tdTypeI: "文字", tdDescI: "學生實際被辨識出的語音文字內容",
+        step2Badge: "步驟 2",
+        step2Title: "建立並部署 Google Apps Script（後端 API）",
+        step2Desc: "在 Google 試算表中，點選 <strong>擴充功能 &rarr; Apps Script</strong>，貼上下方代碼，然後點擊 <strong>部署 &rarr; 新增部署作業 &rarr; 網頁應用程式</strong>。",
+        copyCodeBtn: '<i class="fa-regular fa-copy"></i><span>複製 Code.gs 程式碼</span>',
+        paramDescLabel: "1. 說明 (Description):", paramDescVal: "EchoScore 英語發音評分系統 API",
+        paramExecLabel: "2. 執行身分 (Execute as):", paramExecVal: "我 (您的 Google 帳戶)",
+        paramAccessLabel: "3. 誰有存取權 (關鍵!):", paramAccessVal: "所有人 (Anyone)",
+        step3Badge: "步驟 3",
+        step3Title: "自訂前端網頁 (pronunciation.html)",
+        step3Desc: "在下方填入您的 <code>GAS_URL</code> 與教師信箱。系統會自動將其嵌入原始碼中，讓您立即下載可直接部署的 <code>pronunciation.html</code> 檔案！",
+        labelTeacherEmail: "教師電子郵件（用於解鎖題庫權限）：",
+        labelGasUrl: "網頁應用程式網址（步驟 2 之 GAS_URL）：",
+        btnDownloadHtml: '<i class="fa-solid fa-download"></i><span>下載完整 pronunciation.html</span>',
+        btnCopyHtml: '<i class="fa-regular fa-copy"></i><span>複製完整 HTML 原始碼</span>',
+        step4Badge: "步驟 4",
+        step4Title: "將網頁部署至 GitHub Pages",
+        step4Item1: '<strong class="text-slate-900 block mb-0.5">1. 建立存放庫 (Repository)：</strong> 登入 GitHub &rarr; 點擊右上角 <code>+</code> 圖示 &rarr; <strong>New repository</strong>。命名為 <code>echoscore-app</code>，選擇 <strong>Public</strong>，然後點擊 <strong>Create repository</strong>。',
+        step4Item2: '<strong class="text-slate-900 block mb-0.5">2. 上傳 HTML 檔案：</strong> 點擊 <strong>uploading an existing file</strong> &rarr; 拖放步驟 3 下載的 <code>pronunciation.html</code> 檔案 &rarr; 點擊綠色 <strong>Commit changes</strong> 按鈕。',
+        step4Item3: '<strong class="text-slate-900 block mb-0.5">3. 啟用 GitHub Pages：</strong> 進入 <strong>Settings</strong> &rarr; 點選左側選單的 <strong>Pages</strong> &rarr; 在 <strong>Branch</strong> 下方將 <code>None</code> 改為 <code>main</code>（目錄維持 <code>/(root)</code>）&rarr; 點擊 <strong>Save</strong>。',
+        step4Item4: '<strong class="text-emerald-900 block mb-0.5">4. 取得 HTTPS 連結分享給學生：</strong> 等待約 1 分鐘後重新整理頁面。提供給學生的完整網址將為：<br><code class="font-mono text-xs bg-white px-2 py-0.5 rounded border border-emerald-300 inline-block mt-1">https://&lt;username&gt;.github.io/echoscore-app/pronunciation.html</code>',
+        modalTitle: '<i class="fa-solid fa-sliders text-blue-600"></i><span>設定 Google Apps Script 連線</span>',
+        modalEmailLabel: "授權教師電子郵件：",
+        modalGasLabel: "網頁應用程式網址 (GAS_URL)：",
+        modalCloseBtn: "關閉",
+        modalSaveBtn: "儲存設定",
+        toastCopiedHeaders: "已複製 9 個欄位標題！請點選 Google 試算表 A1 儲存格並按 Ctrl+V 貼上。",
+        toastCopiedCode: "已複製 Code.gs 程式碼！",
+        toastSavedConfig: "已更新 GAS_URL 與教師電子郵件設定！",
+        toastDownloadedHtml: "已下載 pronunciation.html，隨時可部署至 GitHub Pages！",
+        toastCopiedHtml: "已複製 pronunciation.html 完整原始碼！",
+        toastCopyError: "無法自動複製，請手動選取文字以進行複製。",
+        toastLangSwitched: "已切換介面語言為繁體中文"
+      }
+    };
+
+    function setLanguage(lang, silent = false) {
+      if (!I18N[lang]) lang = 'en';
+      currentLang = lang;
+      localStorage.setItem('echoscore_docs_lang', lang);
+      document.documentElement.lang = (lang === 'zh') ? 'zh-Hant' : lang;
+
+      ['vi', 'en', 'zh'].forEach(l => {
+        const btn = document.getElementById('langOpt-' + l);
+        if (btn) {
+          if (l === lang) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+
+      const t = I18N[lang];
+      if (document.getElementById('pageTitle')) document.getElementById('pageTitle').innerText = t.pageTitle;
+      if (document.getElementById('metaDesc')) document.getElementById('metaDesc').setAttribute('content', t.metaDesc);
+      if (document.getElementById('navBrandBadge')) document.getElementById('navBrandBadge').innerText = t.navBrandBadge;
+      if (document.getElementById('navTagline')) document.getElementById('navTagline').innerText = t.navTagline;
+      if (document.getElementById('heroConfigText')) document.getElementById('heroConfigText').innerText = t.heroConfigText;
+      if (document.getElementById('heroDownloadText')) document.getElementById('heroDownloadText').innerText = t.heroDownloadText;
+      if (document.getElementById('inAppWarningContent')) document.getElementById('inAppWarningContent').innerHTML = t.inAppWarning;
+      if (document.getElementById('inAppDismissBtn')) document.getElementById('inAppDismissBtn').innerText = t.inAppDismiss;
+      if (document.getElementById('heroTitle')) document.getElementById('heroTitle').innerText = t.heroTitle;
+      if (document.getElementById('heroDesc')) document.getElementById('heroDesc').innerHTML = t.heroDesc;
+      if (document.getElementById('quickJumpArch')) document.getElementById('quickJumpArch').innerHTML = t.quickJumpArch;
+      if (document.getElementById('quickJumpStep1')) document.getElementById('quickJumpStep1').innerHTML = t.quickJumpStep1;
+      if (document.getElementById('quickJumpStep2')) document.getElementById('quickJumpStep2').innerHTML = t.quickJumpStep2;
+      if (document.getElementById('quickJumpStep3')) document.getElementById('quickJumpStep3').innerHTML = t.quickJumpStep3;
+      if (document.getElementById('quickJumpStep4')) document.getElementById('quickJumpStep4').innerHTML = t.quickJumpStep4;
+      if (document.getElementById('archTitle')) document.getElementById('archTitle').innerText = t.archTitle;
+      if (document.getElementById('archCallout')) document.getElementById('archCallout').innerHTML = t.archCallout;
+      if (document.getElementById('archFlow1')) document.getElementById('archFlow1').innerHTML = t.archFlow1;
+      if (document.getElementById('archFlow2')) document.getElementById('archFlow2').innerHTML = t.archFlow2;
+      if (document.getElementById('archFlow3')) document.getElementById('archFlow3').innerHTML = t.archFlow3;
+      if (document.getElementById('compatPc')) document.getElementById('compatPc').innerHTML = t.compatPc;
+      if (document.getElementById('compatAndroid')) document.getElementById('compatAndroid').innerHTML = t.compatAndroid;
+      if (document.getElementById('compatIos')) document.getElementById('compatIos').innerHTML = t.compatIos;
+      if (document.getElementById('compatInApp')) document.getElementById('compatInApp').innerHTML = t.compatInApp;
+      if (document.getElementById('step1Badge')) document.getElementById('step1Badge').innerText = t.step1Badge;
+      if (document.getElementById('step1Title')) document.getElementById('step1Title').innerText = t.step1Title;
+      if (document.getElementById('step1Desc')) document.getElementById('step1Desc').innerHTML = t.step1Desc;
+      if (document.getElementById('copyHeadersBtn')) document.getElementById('copyHeadersBtn').innerHTML = t.copyHeadersBtn;
+      if (document.getElementById('thCell')) document.getElementById('thCell').innerText = t.thCell;
+      if (document.getElementById('thHeader')) document.getElementById('thHeader').innerText = t.thHeader;
+      if (document.getElementById('thType')) document.getElementById('thType').innerText = t.thType;
+      if (document.getElementById('thDesc')) document.getElementById('thDesc').innerText = t.thDesc;
+      if (document.getElementById('tdTypeA')) document.getElementById('tdTypeA').innerText = t.tdTypeA;
+      if (document.getElementById('tdDescA')) document.getElementById('tdDescA').innerText = t.tdDescA;
+      if (document.getElementById('tdTypeB')) document.getElementById('tdTypeB').innerText = t.tdTypeB;
+      if (document.getElementById('tdDescB')) document.getElementById('tdDescB').innerText = t.tdDescB;
+      if (document.getElementById('tdTypeC')) document.getElementById('tdTypeC').innerText = t.tdTypeC;
+      if (document.getElementById('tdDescC')) document.getElementById('tdDescC').innerText = t.tdDescC;
+      if (document.getElementById('tdTypeD')) document.getElementById('tdTypeD').innerText = t.tdTypeD;
+      if (document.getElementById('tdDescD')) document.getElementById('tdDescD').innerText = t.tdDescD;
+      if (document.getElementById('tdTypeE')) document.getElementById('tdTypeE').innerText = t.tdTypeE;
+      if (document.getElementById('tdDescE')) document.getElementById('tdDescE').innerText = t.tdDescE;
+      if (document.getElementById('tdTypeF')) document.getElementById('tdTypeF').innerText = t.tdTypeF;
+      if (document.getElementById('tdDescF')) document.getElementById('tdDescF').innerText = t.tdDescF;
+      if (document.getElementById('tdTypeG')) document.getElementById('tdTypeG').innerText = t.tdTypeG;
+      if (document.getElementById('tdDescG')) document.getElementById('tdDescG').innerText = t.tdDescG;
+      if (document.getElementById('tdTypeH')) document.getElementById('tdTypeH').innerText = t.tdTypeH;
+      if (document.getElementById('tdDescH')) document.getElementById('tdDescH').innerText = t.tdDescH;
+      if (document.getElementById('tdTypeI')) document.getElementById('tdTypeI').innerText = t.tdTypeI;
+      if (document.getElementById('tdDescI')) document.getElementById('tdDescI').innerText = t.tdDescI;
+      if (document.getElementById('step2Badge')) document.getElementById('step2Badge').innerText = t.step2Badge;
+      if (document.getElementById('step2Title')) document.getElementById('step2Title').innerText = t.step2Title;
+      if (document.getElementById('step2Desc')) document.getElementById('step2Desc').innerHTML = t.step2Desc;
+      if (document.getElementById('copyCodeBtn')) document.getElementById('copyCodeBtn').innerHTML = t.copyCodeBtn;
+      if (document.getElementById('paramDescLabel')) document.getElementById('paramDescLabel').innerText = t.paramDescLabel;
+      if (document.getElementById('paramDescVal')) document.getElementById('paramDescVal').innerText = t.paramDescVal;
+      if (document.getElementById('paramExecLabel')) document.getElementById('paramExecLabel').innerText = t.paramExecLabel;
+      if (document.getElementById('paramExecVal')) document.getElementById('paramExecVal').innerText = t.paramExecVal;
+      if (document.getElementById('paramAccessLabel')) document.getElementById('paramAccessLabel').innerText = t.paramAccessLabel;
+      if (document.getElementById('paramAccessVal')) document.getElementById('paramAccessVal').innerText = t.paramAccessVal;
+      if (document.getElementById('step3Badge')) document.getElementById('step3Badge').innerText = t.step3Badge;
+      if (document.getElementById('step3Title')) document.getElementById('step3Title').innerText = t.step3Title;
+      if (document.getElementById('step3Desc')) document.getElementById('step3Desc').innerHTML = t.step3Desc;
+      if (document.getElementById('labelTeacherEmail')) document.getElementById('labelTeacherEmail').innerText = t.labelTeacherEmail;
+      if (document.getElementById('labelGasUrl')) document.getElementById('labelGasUrl').innerHTML = t.labelGasUrl;
+      if (document.getElementById('btnDownloadHtml')) document.getElementById('btnDownloadHtml').innerHTML = t.btnDownloadHtml;
+      if (document.getElementById('btnCopyHtml')) document.getElementById('btnCopyHtml').innerHTML = t.btnCopyHtml;
+      if (document.getElementById('step4Badge')) document.getElementById('step4Badge').innerText = t.step4Badge;
+      if (document.getElementById('step4Title')) document.getElementById('step4Title').innerText = t.step4Title;
+      if (document.getElementById('step4Item1')) document.getElementById('step4Item1').innerHTML = t.step4Item1;
+      if (document.getElementById('step4Item2')) document.getElementById('step4Item2').innerHTML = t.step4Item2;
+      if (document.getElementById('step4Item3')) document.getElementById('step4Item3').innerHTML = t.step4Item3;
+      if (document.getElementById('step4Item4')) document.getElementById('step4Item4').innerHTML = t.step4Item4;
+      if (document.getElementById('modalTitle')) document.getElementById('modalTitle').innerHTML = t.modalTitle;
+      if (document.getElementById('modalEmailLabel')) document.getElementById('modalEmailLabel').innerText = t.modalEmailLabel;
+      if (document.getElementById('modalGasLabel')) document.getElementById('modalGasLabel').innerHTML = t.modalGasLabel;
+      if (document.getElementById('modalCloseBtn')) document.getElementById('modalCloseBtn').innerText = t.modalCloseBtn;
+      if (document.getElementById('modalSaveBtn')) document.getElementById('modalSaveBtn').innerText = t.modalSaveBtn;
+
+      if (!silent) {
+        showToast(t.toastLangSwitched, "success");
+      }
+    }
+
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
     const isInApp = (ua.indexOf("Line") > -1) || (ua.indexOf("FBAN") > -1) ||
                     (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1) ||
@@ -841,7 +993,6 @@ function doPost(e) {
       }
     }
 
-    // 2. TOAST NOTIFICATION (THAY THẾ ALERT)
     function showToast(message, type = "info") {
       const container = document.getElementById('toastContainer');
       if (!container) return;
@@ -859,21 +1010,28 @@ function doPost(e) {
         info: "fa-circle-info"
       };
 
-      toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-xl text-xs sm:text-sm font-black flex items-center gap-2.5 pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0`;
-      toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.info} text-base shrink-0"></i><span>${message}</span>`;
+      toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-xl text-xs sm:text-sm font-black flex items-center justify-between gap-3 pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0`;
+      toast.innerHTML = `<div class="flex items-center gap-2.5 min-w-0"><i class="fa-solid ${icons[type] || icons.info} text-base shrink-0"></i><span class="break-words">${message}</span></div><button type="button" class="text-base font-black hover:scale-125 transition-transform leading-none shrink-0" aria-label="Close">&times;</button>`;
       container.appendChild(toast);
 
       requestAnimationFrame(() => {
         toast.classList.remove('translate-y-2', 'opacity-0');
       });
 
-      setTimeout(() => {
+      const removeToast = () => {
+        if (toast.classList.contains('opacity-0')) return;
         toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-      }, 3500);
+        setTimeout(() => {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 300);
+      };
+
+      const closeBtn = toast.querySelector('button');
+      if (closeBtn) closeBtn.addEventListener('click', removeToast);
+
+      setTimeout(removeToast, 3500);
     }
 
-    // 3. SAO CHÉP VÀO BỘ NHỚ TẠM (CLIPBOARD)
     function copyTextToClipboard(text, successMsg) {
       const textarea = document.createElement('textarea');
       textarea.value = text;
@@ -885,30 +1043,20 @@ function doPost(e) {
         document.execCommand('copy');
         showToast(successMsg, "success");
       } catch (err) {
-        showToast("Không thể sao chép tự động, vui lòng bôi đen để sao chép.", "error");
+        showToast(I18N[currentLang].toastCopyError, "error");
       }
       document.body.removeChild(textarea);
     }
 
     function copySheetHeaders() {
       const headers = "timestamp\tclassName\tstudentId\tstudentName\tattemptCount\ttargetSentence\tcompletion\taccuracy\ttranscript";
-      copyTextToClipboard(headers, "Đã sao chép 9 tiêu đề cột! Hãy bấm vào ô A1 trên Google Sheets và nhấn Ctrl+V.");
+      copyTextToClipboard(headers, I18N[currentLang].toastCopiedHeaders);
     }
 
-    function copyCodeBlock(elementId, msg) {
+    function copyCodeBlock(elementId) {
       const el = document.getElementById(elementId);
       if (!el) return;
-      copyTextToClipboard(el.innerText, msg);
-    }
-
-    // 4. ĐỔI TÊN THƯƠNG HIỆU & CẤU HÌNH ĐỘNG
-    function applyBrandName(shortName, fullTitle) {
-      CURRENT_BRAND_TITLE = fullTitle;
-      const navBrand = document.getElementById('navBrandName');
-      if (navBrand) navBrand.innerText = shortName;
-      const heroTitle = document.getElementById('heroBrandTitle');
-      if (heroTitle) heroTitle.innerText = fullTitle;
-      showToast(`Đã đổi tên hệ thống thành "${fullTitle}"!`, "success");
+      copyTextToClipboard(el.innerText, I18N[currentLang].toastCopiedCode);
     }
 
     function syncConfigInputs() {
@@ -944,17 +1092,24 @@ function doPost(e) {
       if (configGas) configGas.value = GAS_URL;
 
       closeConfigModal();
-      showToast("Đã cập nhật cấu hình GAS_URL và Email Giáo viên!", "success");
+      showToast(I18N[currentLang].toastSavedConfig, "success");
     }
 
-    // 5. TẠO & TẢI XUỐNG TỆP PRONUNCIATION.HTML ĐỘC LẬP CHO GITHUB PAGES
     function generateStandaloneHTMLContent() {
+      const brandTitles = {
+        vi: "EchoScore – Luyện Phát âm Chuẩn Mỹ",
+        en: "EchoScore – American English Pronunciation Practice",
+        zh: "EchoScore – 美式英語發音精準評分"
+      };
+      const title = brandTitles[currentLang] || brandTitles.en;
+
       return `<!DOCTYPE html>
-<html lang="vi">
+<html lang="${(currentLang === 'zh') ? 'zh-Hant' : currentLang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${CURRENT_BRAND_TITLE}</title>
+  <title>${title}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     :root {
@@ -1042,6 +1197,8 @@ function doPost(e) {
     @media (max-width: 500px) {
       .sentence-box { font-size: 19px; padding: 14px 16px; }
       .student-info-form { grid-template-columns: 1fr; }
+      .legend, .legend-bar { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; width: 100% !important; }
+      .legend-item { justify-content: center !important; }
       .score-board { grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 8px 6px; }
       .score-card { padding: 4px 2px; }
       .score-num { font-size: 16px; }
@@ -1051,52 +1208,52 @@ function doPost(e) {
 </head>
 <body>
   <div class="inapp-warning" id="inAppWarning">
-    Phát hiện bạn đang sử dụng trình duyệt trong ứng dụng.<br>
-    Vui lòng nhấn <strong>"⋮"</strong> hoặc <strong>"Chia sẻ"</strong> ở góc trên bên phải, chọn <strong>"Mở bằng Chrome / Safari"</strong> để cấp quyền micro.
+    In-App Browser Detected.<br>
+    Please tap <strong>"⋮"</strong> or <strong>"Share"</strong> in the top right corner and select <strong>"Open in Chrome / Safari"</strong> to allow microphone access.
   </div>
   <div class="instructor-card">
     <div class="header-container">
-      <h1>🎙️ ${CURRENT_BRAND_TITLE}</h1>
-      <button class="btn-teacher-lock" id="btnTeacherLock">🔒 Mở khóa GV</button>
+      <h1><i class="fa-solid fa-microphone-lines"></i> ${title}</h1>
+      <button class="btn-teacher-lock" id="btnTeacherLock"><i class="fa-solid fa-lock"></i> Teacher Unlock</button>
     </div>
     <div class="teacher-panel" id="teacherPanel">
-      <div class="panel-title">⚙️ Chuyển đổi & Tùy chỉnh Ngân hàng câu hỏi</div>
+      <div class="panel-title"><i class="fa-solid fa-sliders"></i> Question Bank Settings & Customization</div>
       <div style="margin-bottom: 10px; display: flex; gap: 6px;">
-        <input type="email" id="teacherEmailInput" placeholder="Nhập Email Giáo viên..." style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; flex: 1;">
-        <button id="btnVerifyEmail" style="padding: 6px 12px; background: #2563eb; color: #fff; font-size: 12px;">Xác thực</button>
+        <input type="email" id="teacherEmailInput" placeholder="Enter Teacher Email..." style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; flex: 1;">
+        <button id="btnVerifyEmail" style="padding: 6px 12px; background: #2563eb; color: #fff; font-size: 12px;">Verify</button>
       </div>
       <div class="teacher-actions" id="teacherActionsBox" style="display: none;">
-        <button class="btn-random" id="btnRandom5">🎲 Tải ngẫu nhiên 5 câu giao tiếp</button>
-        <label class="btn-file-label" for="fileInput">📂 Tải lên text.txt tùy chỉnh</label>
+        <button class="btn-random" id="btnRandom5"><i class="fa-solid fa-dice"></i> Load 5 Random Daily Sentences</button>
+        <label class="btn-file-label" for="fileInput"><i class="fa-solid fa-file-arrow-up"></i> Upload custom text.txt</label>
         <input type="file" id="fileInput" accept=".txt" style="display: none;">
       </div>
-      <div class="bank-status" id="bankStatus">Ngân hàng câu hiện tại: Ngân hàng châm ngôn mặc định (6 câu)</div>
+      <div class="bank-status" id="bankStatus">Current question bank: Default Proverbs (6 sentences)</div>
     </div>
     <div class="student-info-form">
-      <div class="form-group"><label for="studentClass">Lớp</label><input type="text" id="studentClass" placeholder="VD: Anh A1" required></div>
-      <div class="form-group"><label for="studentId">Mã số HS/SV</label><input type="text" id="studentId" placeholder="VD: 1090123" required></div>
-      <div class="form-group"><label for="studentName">Họ và tên</label><input type="text" id="studentName" placeholder="VD: Nguyễn Văn A" required></div>
+      <div class="form-group"><label for="studentClass">Class</label><input type="text" id="studentClass" placeholder="e.g. English A1" required></div>
+      <div class="form-group"><label for="studentId">Student ID</label><input type="text" id="studentId" placeholder="e.g. 1090123" required></div>
+      <div class="form-group"><label for="studentName">Full Name</label><input type="text" id="studentName" placeholder="e.g. Alex Johnson" required></div>
     </div>
     <div class="legend">
-      <div class="legend-item"><span class="dot" style="background: #7f8c8d"></span> Chưa luyện tập</div>
-      <div class="legend-item"><span class="dot" style="background: var(--success)"></span> Phát âm đúng</div>
-      <div class="legend-item"><span class="dot" style="background: var(--danger)"></span> Phát âm sai</div>
-      <div class="legend-item"><span class="dot" style="background: var(--warning)"></span> Đọc thiếu từ</div>
+      <div class="legend-item"><span class="dot" style="background: #7f8c8d"></span> Unattempted</div>
+      <div class="legend-item"><span class="dot" style="background: var(--success)"></span> Correct</div>
+      <div class="legend-item"><span class="dot" style="background: var(--danger)"></span> Incorrect</div>
+      <div class="legend-item"><span class="dot" style="background: var(--warning)"></span> Missed word</div>
     </div>
     <div class="sentence-box" id="sentenceBox"></div>
     <div class="control-panel">
-      <button class="btn-audio" id="btnAudio">🔊 Nghe đọc mẫu (Giọng Mỹ)</button>
-      <button class="btn-mic" id="btnMic">🎤 Bắt đầu ghi âm luyện tập</button>
-      <button class="btn-next" id="btnNext">⏭️ Câu tiếp theo</button>
+      <button class="btn-audio" id="btnAudio"><i class="fa-solid fa-volume-high"></i> Listen Sample (US Accent)</button>
+      <button class="btn-mic" id="btnMic"><i class="fa-solid fa-microphone"></i> Start Recording</button>
+      <button class="btn-next" id="btnNext"><i class="fa-solid fa-forward-step"></i> Next Sentence</button>
     </div>
     <div class="score-board">
-      <div class="score-card"><div>Số lần đã thử</div><div class="score-num count" id="attemptCountDisplay">0 lần</div></div>
-      <div class="score-card"><div>Độ hoàn thành câu</div><div class="score-num complete" id="completionScore">0%</div></div>
-      <div class="score-card"><div>Độ chính xác phát âm</div><div class="score-num total" id="accuracyScore">0%</div></div>
-      <div class="feedback-msg" id="feedbackMsg">Vui lòng điền thông tin học sinh ở phía trên trước khi bắt đầu luyện tập.</div>
+      <div class="score-card"><div>Attempts</div><div class="score-num count" id="attemptCountDisplay">0 times</div></div>
+      <div class="score-card"><div>Sentence Completion</div><div class="score-num complete" id="completionScore">0%</div></div>
+      <div class="score-card"><div>Pronunciation Accuracy</div><div class="score-num total" id="accuracyScore">0%</div></div>
+      <div class="feedback-msg" id="feedbackMsg">Please fill in student information above before practicing.</div>
     </div>
   </div>
-  <script>
+  ${'<'}script>
     const AUTHORIZED_TEACHER_EMAIL = "${AUTHORIZED_TEACHER_EMAIL}";
     const GAS_URL = "${GAS_URL}";
     const ua = navigator.userAgent || navigator.vendor || window.opera;
@@ -1144,10 +1301,10 @@ function doPost(e) {
     btnVerifyEmail.addEventListener('click', () => {
       if (teacherEmailInput.value.trim().toLowerCase() === AUTHORIZED_TEACHER_EMAIL.toLowerCase()) {
         teacherActionsBox.style.display = 'flex';
-        btnTeacherLock.innerText = "🔓 GV đã mở khóa";
-        feedbackMsg.innerText = "Đã mở khóa chức năng tùy chỉnh ngân hàng câu hỏi của Giáo viên.";
+        btnTeacherLock.innerHTML = '<i class="fa-solid fa-lock-open"></i> Teacher Unlocked';
+        feedbackMsg.innerText = "Teacher question bank customization unlocked.";
       } else {
-        feedbackMsg.innerText = "Email xác thực không đúng!";
+        feedbackMsg.innerText = "Invalid verification email!";
       }
     });
     function initSentence(sentenceText) {
@@ -1170,12 +1327,12 @@ function doPost(e) {
       completionScore.innerText = "0%";
       accuracyScore.innerText = "0%";
       attemptCount = 0;
-      attemptCountDisplay.innerText = "0 lần";
+      attemptCountDisplay.innerText = "0 times";
     }
     initSentence(targetSentence);
     btnRandom5.addEventListener('click', () => {
       sentenceBank = [...dailyEnglishPool].sort(() => 0.5 - Math.random()).slice(0, 5);
-      bankStatus.innerText = "Ngân hàng câu hiện tại: Tiếng Anh giao tiếp ngẫu nhiên (5 câu)";
+      bankStatus.innerText = "Current question bank: Random Daily English (5 sentences)";
       resetScoresAndLoadFirst();
     });
     fileInput.addEventListener('change', (e) => {
@@ -1186,7 +1343,7 @@ function doPost(e) {
         const lines = ev.target.result.split(/\\r?\\n/).map(l => l.trim()).filter(l => l.length > 0);
         if (lines.length > 0) {
           sentenceBank = lines;
-          bankStatus.innerText = \`Ngân hàng câu: \${file.name} (\${lines.length} câu)\`;
+          bankStatus.innerText = \`Question bank: \${file.name} (\${lines.length} sentences)\`;
           resetScoresAndLoadFirst();
         }
       };
@@ -1218,7 +1375,7 @@ function doPost(e) {
     });
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      feedbackMsg.innerText = "Trình duyệt không hỗ trợ nhận diện giọng nói, vui lòng mở bằng Chrome hoặc Safari.";
+      feedbackMsg.innerText = "Voice recognition is not supported in this browser. Please open in Chrome or Safari.";
       btnMic.disabled = true;
     } else {
       const recognition = new SpeechRecognition();
@@ -1230,15 +1387,15 @@ function doPost(e) {
       });
       recognition.onstart = () => {
         btnMic.classList.add('recording');
-        btnMic.innerText = "🛑 Đang ghi âm...";
+        btnMic.innerHTML = '<i class="fa-solid fa-circle-stop"></i> Recording...';
       };
       recognition.onend = () => {
         btnMic.classList.remove('recording');
-        btnMic.innerText = "🎤 Bắt đầu ghi âm luyện tập";
+        btnMic.innerHTML = '<i class="fa-solid fa-microphone"></i> Start Recording';
       };
       recognition.onresult = (event) => {
         attemptCount++;
-        attemptCountDisplay.innerText = \`\${attemptCount} lần\`;
+        attemptCountDisplay.innerText = \`\${attemptCount} times\`;
         const studentSpeech = event.results[0][0].transcript;
         const studentWords = studentSpeech.toLowerCase().match(/\\b[\\w'-]+\\b/g) || [];
         let sIdx = 0, correctCount = 0, missingCount = 0, wrongCount = 0;
@@ -1276,13 +1433,13 @@ function doPost(e) {
             accuracy: accuracyRate, transcript: studentSpeech
           })
         }).then(() => {
-          feedbackMsg.innerHTML = \`<span style="color:var(--success)">✅ Đã đồng bộ lần thử thứ \${attemptCount}!</span><br>Bạn đã nói: "\${studentSpeech}"\`;
+          feedbackMsg.innerHTML = \`<span style="color:var(--success)"><i class="fa-solid fa-circle-check"></i> Synced attempt #\${attemptCount}!</span><br>You said: "\${studentSpeech}"\`;
         });
       };
     }
-  <\/script>
-</body>
-</html>`;
+  ${'<'}/script>
+${'<'}/body>
+${'<'}/html>`;
     }
 
     function downloadStandaloneHTML() {
@@ -1295,22 +1452,27 @@ function doPost(e) {
       a.download = "pronunciation.html";
       a.click();
       URL.revokeObjectURL(url);
-      showToast("Đã tải xuống tệp pronunciation.html sẵn sàng đưa lên GitHub Pages!", "success");
+      showToast(I18N[currentLang].toastDownloadedHtml, "success");
     }
 
     function copyStandaloneHTML() {
       syncConfigInputs();
       const htmlContent = generateStandaloneHTMLContent();
-      copyTextToClipboard(htmlContent, "Đã sao chép toàn bộ mã nguồn pronunciation.html!");
+      copyTextToClipboard(htmlContent, I18N[currentLang].toastCopiedHtml);
     }
 
-    // 6. KHỞI CHẠY LẦN ĐẦU KHI TẢI TRANG
     window.onload = function () {
       const configEmail = document.getElementById('configTeacherEmail');
       const configGas = document.getElementById('configGasUrl');
       if (configEmail) configEmail.value = AUTHORIZED_TEACHER_EMAIL;
       if (configGas) configGas.value = GAS_URL;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const langParam = urlParams.get('lang');
+      const savedLang = langParam || localStorage.getItem('echoscore_docs_lang') || 'vi';
+      setLanguage(savedLang, true);
     };
+
   </script>
 </body>
 </html>
