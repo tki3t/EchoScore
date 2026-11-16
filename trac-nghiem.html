@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thi Trắc Nghiệm: Khoa Học Dữ Liệu, Python & NumPy (資料科學概論)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    code.inline-code {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.375rem;
+      font-size: 0.875em;
+      border: 1px solid #e2e8f0;
+      font-weight: 500;
+    }
+    .option-card:hover:not(.disabled-option) {
+      transform: translateY(-1px);
+    }
+    /* Custom scrollbar for question palette */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+  <!-- Font Awesome 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .footer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      background-color: #ffffff;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 2px solid #000000;
+      box-shadow: 2.5px 2.5px 0px 0px #000000;
+    }
+    .footer-link {
+      text-decoration: underline !important;
+      text-decoration-color: #000000 !important;
+    }
+    .footer-link:hover {
+      text-decoration: underline !important;
+      text-decoration-color: #000000 !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-800 selection:bg-indigo-600 selection:text-white">
+
+  <!-- TOP HEADER & STICKY PROGRESS BAR -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <!-- Title & Document Info -->
+        <div class="flex items-start sm:items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold shadow-sm shrink-0">
+            DS
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                資料科學概論 • 50 Câu Hỏi
+              </span>
+              <span id="examStatusBadge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                Đang làm bài
+              </span>
+            </div>
+            <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-snug mt-0.5">
+              HỆ THỐNG THI TRẮC NGHIỆM: KHOA HỌC DỮ LIỆU, PYTHON &amp; NUMPY
+            </h1>
+          </div>
+        </div>
+
+        <!-- Timer & Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between md:justify-end gap-2 sm:gap-3">
+          <!-- Timer -->
+          <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl text-sm font-mono font-semibold text-slate-700" title="Thời gian làm bài">
+            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span id="timerDisplay">00:00</span>
+          </div>
+
+          <!-- Reset Button -->
+          <button id="btnOpenResetModal" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition shadow-sm">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <span>Làm lại</span>
+          </button>
+
+          <!-- Submit Button -->
+          <button id="btnOpenSubmitModal" type="button" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 transition shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Nộp bài</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar & Live Counters -->
+      <div class="mt-3 pt-2.5 border-t border-slate-100">
+        <div class="flex flex-wrap items-center justify-between text-xs text-slate-600 mb-1.5 gap-2">
+          <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+            <span class="font-medium">Tiến độ: <strong id="progressPercentText" class="text-indigo-600">0%</strong></span>
+            <span class="inline-flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+              Đã làm: <strong id="statAnsweredCount" class="text-slate-900">0</strong>/50
+            </span>
+            <span class="inline-flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+              Chưa làm: <strong id="statUnansweredCount" class="text-slate-900">50</strong>
+            </span>
+            <span class="inline-flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              Đánh dấu: <strong id="statFlaggedCount" class="text-amber-700">0</strong>
+            </span>
+          </div>
+          <div class="text-slate-400 hidden sm:block">
+            Phím tắt: <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px] font-mono text-slate-600">←</kbd> <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px] font-mono text-slate-600">→</kbd> chuyển câu, <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px] font-mono text-slate-600">A-D</kbd> chọn đáp án, <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px] font-mono text-slate-600">F</kbd> đánh dấu
+          </div>
+        </div>
+        <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+          <div id="progressBarFill" class="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all duration-300 rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- RESULT DASHBOARD (HIDDEN UNTIL SUBMITTED) -->
+    <section id="resultDashboard" class="hidden mb-8 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-gradient-to-r from-indigo-600 via-indigo-700 to-slate-900 px-6 py-5 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/15 text-indigo-100 mb-2">
+            Kết quả bài kiểm tra
+          </span>
+          <h2 class="text-xl sm:text-2xl font-bold">Bảng Tổng Kết &amp; Phân Tích Chi Tiết</h2>
+          <p class="text-xs sm:text-sm text-indigo-100 mt-0.5">
+            Dựa trên nội dung 3 tài liệu: Week 2 (Khoa học dữ liệu), Week 3 (Python) &amp; Week 4 (NumPy)
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="btnJumpToReviewList" type="button" class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-semibold transition border border-white/20">
+            Xem toàn bộ giải thích ↓
+          </button>
+          <button id="btnRetryFromResult" type="button" class="px-4 py-2 rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 text-xs sm:text-sm font-bold transition shadow-sm">
+            Làm lại bài thi
+          </button>
+        </div>
+      </div>
+
+      <!-- Score Cards Grid -->
+      <div class="p-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <!-- Thang điểm 10 -->
+          <div class="col-span-2 sm:col-span-1 bg-indigo-50/70 border border-indigo-200 rounded-2xl p-4 text-center flex flex-col justify-center">
+            <span class="text-xs font-semibold uppercase tracking-wider text-indigo-600">Điểm Thang 10</span>
+            <div class="text-3xl sm:text-4xl font-extrabold text-indigo-700 mt-1" id="resScore10">0.0</div>
+            <span class="text-xs text-indigo-600/80 mt-0.5">trên 10.0 điểm</span>
+          </div>
+
+          <!-- Tỷ lệ phần trăm -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center flex flex-col justify-center">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tỷ Lệ Đúng</span>
+            <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1" id="resAccuracy">0%</div>
+            <span class="text-xs text-slate-500 mt-0.5" id="resRankLabel">Chưa xếp loại</span>
+          </div>
+
+          <!-- Số câu đúng -->
+          <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 text-center flex flex-col justify-center">
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-700">Câu Trả Lời Đúng</span>
+            <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-1" id="resCorrectCount">0</div>
+            <span class="text-xs text-emerald-700/80 mt-0.5">/ 50 câu hỏi</span>
+          </div>
+
+          <!-- Số câu sai -->
+          <div class="bg-rose-50/70 border border-rose-200 rounded-2xl p-4 text-center flex flex-col justify-center">
+            <span class="text-xs font-semibold uppercase tracking-wider text-rose-700">Câu Trả Lời Sai</span>
+            <div class="text-2xl sm:text-3xl font-extrabold text-rose-600 mt-1" id="resWrongCount">0</div>
+            <span class="text-xs text-rose-700/80 mt-0.5">cần xem kỹ giải thích</span>
+          </div>
+
+          <!-- Số câu chưa trả lời -->
+          <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 text-center flex flex-col justify-center">
+            <span class="text-xs font-semibold uppercase tracking-wider text-amber-700">Chưa Trả Lời</span>
+            <div class="text-2xl sm:text-3xl font-extrabold text-amber-600 mt-1" id="resSkippedCount">0</div>
+            <span class="text-xs text-amber-700/80 mt-0.5" id="resTimeTaken">Thời gian: 00:00</span>
+          </div>
+        </div>
+
+        <!-- Breakdown by Document/Week -->
+        <div class="mt-6 pt-5 border-t border-slate-200">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+            Thống kê kết quả theo từng tài liệu PDF
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="topicBreakdownContainer">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN 2-COLUMN WORKSPACE -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- LEFT/MAIN COLUMN: ACTIVE QUESTION CARD (8 cols on lg) -->
+      <div class="lg:col-span-8 space-y-6">
+
+        <!-- SINGLE QUESTION CARD -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <!-- Question Card Header -->
+          <div class="px-5 sm:px-6 py-4 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="qNumberBadge" class="inline-flex items-center px-3 py-1 rounded-lg text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-sm">
+                Câu 1 / 50
+              </span>
+              <span id="qTopicBadge" class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700">
+                Week 2: Khoa học dữ liệu
+              </span>
+              <span id="qDifficultyBadge" class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-100 text-emerald-800">
+                Dễ
+              </span>
+            </div>
+
+            <!-- Bookmark / Flag Button -->
+            <button id="btnToggleFlag" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+              </svg>
+              <span id="flagButtonText">Đánh dấu xem lại</span>
+            </button>
+          </div>
+
+          <!-- Question Body -->
+          <div class="p-5 sm:p-6">
+            <!-- Question Text -->
+            <div id="qTextContainer" class="text-base sm:text-lg font-semibold text-slate-900 leading-relaxed mb-6">
+              <!-- Question text rendered here -->
+            </div>
+
+            <!-- Options List (A, B, C, D) -->
+            <div id="qOptionsContainer" class="space-y-3" role="radiogroup" aria-label="Các phương án trả lời">
+              <!-- 4 options rendered here -->
+            </div>
+
+            <!-- Clear selection button (only visible before submit if question has an answer) -->
+            <div id="clearSelectionWrapper" class="mt-4 flex justify-end hidden">
+              <button id="btnClearCurrentAnswer" type="button" class="text-xs font-medium text-slate-500 hover:text-rose-600 transition inline-flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Xóa lựa chọn câu này
+              </button>
+            </div>
+
+            <!-- Post-submit Explanation Box for Current Question -->
+            <div id="currentQExplanationBox" class="hidden mt-6 rounded-2xl border p-4 sm:p-5">
+              <div class="flex items-start gap-3">
+                <div id="currentQResultIcon" class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5"></div>
+                <div class="flex-1 text-sm">
+                  <div id="currentQResultTitle" class="font-bold text-base mb-1"></div>
+                  <div id="currentQExplanationText" class="text-slate-700 leading-relaxed"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question Card Footer: Navigation Buttons -->
+          <div class="px-5 sm:px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3">
+            <button id="btnPrevQuestion" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:pointer-events-none transition shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+              <span>Câu trước</span>
+            </button>
+
+            <div class="text-xs font-medium text-slate-500 text-center" id="qSelectionStatusText">
+              Chưa chọn đáp án
+            </div>
+
+            <button id="btnNextQuestion" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:pointer-events-none transition shadow-sm">
+              <span>Câu tiếp theo</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- FULL REVIEW SECTION (VISIBLE AFTER SUBMISSION) -->
+        <section id="fullReviewSection" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-5 sm:p-6 border-b border-slate-200 bg-slate-50/70">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <h3 class="text-lg font-bold text-slate-900">
+                  Xem Lại Toàn Bộ Bài Làm &amp; Giải Thích Đáp Án
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+                  Đối chiếu đáp án đã chọn với đáp án đúng và giải thích trích xuất từ 3 file PDF
+                </p>
+              </div>
+              <!-- Filter Buttons for Review -->
+              <div class="flex flex-wrap items-center gap-1.5" id="reviewFilterButtons">
+                <button type="button" data-review-filter="all" class="review-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white">
+                  Tất cả (50)
+                </button>
+                <button type="button" data-review-filter="wrong" class="review-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100">
+                  Câu sai
+                </button>
+                <button type="button" data-review-filter="unanswered" class="review-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100">
+                  Chưa làm
+                </button>
+                <button type="button" data-review-filter="correct" class="review-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100">
+                  Câu đúng
+                </button>
+                <button type="button" data-review-filter="flagged" class="review-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100">
+                  Đã đánh dấu
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="fullReviewListContainer" class="divide-y divide-slate-200">
+            <!-- Populated via JS upon submission -->
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN: QUESTION PALETTE & FILTERS (4 cols on lg) -->
+      <aside class="lg:col-span-4 lg:sticky lg:top-28 space-y-5">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">
+              Danh Sách 50 Câu Hỏi
+            </h2>
+            <span id="paletteCountSummary" class="text-xs font-semibold text-indigo-600">
+              Hiển thị: 50 câu
+            </span>
+          </div>
+
+          <!-- Palette Filter by Topic/Status -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 mb-4" id="paletteFilterContainer">
+            <button type="button" data-palette-filter="all" class="palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition">
+              Tất cả (50)
+            </button>
+            <button type="button" data-palette-filter="week2" class="palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+              Week 2 (15)
+            </button>
+            <button type="button" data-palette-filter="week3" class="palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+              Week 3 (15)
+            </button>
+            <button type="button" data-palette-filter="week4" class="palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+              Week 4 (20)
+            </button>
+            <button type="button" data-palette-filter="unanswered" class="palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+              Chưa làm
+            </button>
+            <button type="button" data-palette-filter="flagged" class="palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+              Đánh dấu
+            </button>
+          </div>
+
+          <!-- 50 Question Number Buttons Grid -->
+          <div id="questionPaletteGrid" class="grid grid-cols-5 sm:grid-cols-10 lg:grid-cols-5 gap-2 max-h-80 overflow-y-auto custom-scrollbar p-1">
+            <!-- 1 to 50 buttons rendered via JS -->
+          </div>
+
+          <!-- Legend -->
+          <div class="mt-4 pt-4 border-t border-slate-100">
+            <div id="legendPreSubmit" class="grid grid-cols-2 gap-2 text-xs text-slate-600">
+              <div class="flex items-center gap-2">
+                <span class="w-4 h-4 rounded bg-indigo-600 inline-block shrink-0"></span>
+                <span>Đã trả lời</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-4 h-4 rounded bg-slate-100 border border-slate-300 inline-block shrink-0"></span>
+                <span>Chưa trả lời</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-4 h-4 rounded bg-white border-2 border-indigo-600 inline-block shrink-0"></span>
+                <span>Câu hiện tại</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-4 h-4 rounded bg-amber-50 border border-amber-400 relative inline-block shrink-0">
+                  <span class="w-2 h-2 rounded-full bg-amber-500 absolute -top-0.5 -right-0.5"></span>
+                </span>
+                <span>Đánh dấu xem lại</span>
+              </div>
+            </div>
+
+            <div id="legendPostSubmit" class="hidden grid grid-cols-3 gap-2 text-xs text-slate-600">
+              <div class="flex items-center gap-1.5">
+                <span class="w-4 h-4 rounded bg-emerald-600 inline-block shrink-0"></span>
+                <span>Đúng</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="w-4 h-4 rounded bg-rose-600 inline-block shrink-0"></span>
+                <span>Sai</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="w-4 h-4 rounded bg-amber-500 inline-block shrink-0"></span>
+                <span>Chưa làm</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Submit CTA in Sidebar -->
+          <div id="sidebarSubmitWrapper" class="mt-4 pt-4 border-t border-slate-100">
+            <button id="btnSidebarSubmit" type="button" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-sm flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span>Hoàn thành &amp; Nộp bài</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 mt-12 py-5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
+      <div>
+        Tổng hợp 100% từ tài liệu bài giảng: <strong>Week 2 (資料科學概論)</strong>, <strong>Week 3 (Python 入門)</strong> &amp; <strong>Week 4 (NumPy 入門)</strong>.
+      </div>
+      <div class="footer-badge">
+        <span>made by <a href="https://github.com/tki3t" target="_blank" rel="noopener noreferrer" class="footer-link"><strong>Justin Vu</strong></a> with luv <i class="fa-solid fa-heart text-rose-500" style="color: #f43f5e;"></i></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL XÁC NHẬN NỘP BÀI -->
+  <div id="submitModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-xl overflow-hidden animate-fade-in">
+      <div class="p-6">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900">Xác nhận nộp bài kiểm tra?</h3>
+        <p class="text-sm text-slate-600 mt-1">
+          Hãy kiểm tra lại thống kê trạng thái bài làm của bạn trước khi hệ thống chấm điểm:
+        </p>
+
+        <div class="mt-4 bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 text-sm">
+          <div class="flex justify-between">
+            <span class="text-slate-600">Số câu đã trả lời:</span>
+            <strong id="modalAnsweredCount" class="text-indigo-600">0 / 50</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-600">Số câu chưa trả lời:</span>
+            <strong id="modalUnansweredCount" class="text-rose-600">50</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-600">Số câu đánh dấu xem lại:</span>
+            <strong id="modalFlaggedCount" class="text-amber-600">0</strong>
+          </div>
+        </div>
+
+        <div id="modalUnansweredWarning" class="mt-3 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-start gap-2">
+          <svg class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+          <div>
+            Bạn vẫn còn câu hỏi chưa chọn đáp án. Các câu chưa trả lời sẽ được tính là 0 điểm.
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-3">
+        <button id="btnCancelSubmit" type="button" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition">
+          Quay lại làm tiếp
+        </button>
+        <button id="btnConfirmSubmit" type="button" class="px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-sm">
+          Nộp bài &amp; Chấm điểm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL XÁC NHẬN LÀM LẠI TỪ ĐẦU -->
+  <div id="resetModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-xl overflow-hidden">
+      <div class="p-6">
+        <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mb-4">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900">Đặt lại bài thi từ đầu?</h3>
+        <p class="text-sm text-slate-600 mt-1">
+          Toàn bộ đáp án đã chọn, các đánh dấu câu hỏi và bộ đếm thời gian hiện tại sẽ bị xóa để bạn bắt đầu lượt làm bài mới.
+        </p>
+      </div>
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-3">
+        <button id="btnCancelReset" type="button" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition">
+          Hủy bỏ
+        </button>
+        <button id="btnConfirmReset" type="button" class="px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 transition shadow-sm">
+          Đồng ý làm lại
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- PHẦN 1: DỮ LIỆU 50 CÂU HỎI TRẮC NGHIỆM (TÁCH BIỆT RÕ RÀNG)            -->
+  <!-- ===================================================================== -->
+  <script>
+    const questionsData = [
+      {
+        id: 1,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Dễ",
+        question: "Theo định nghĩa cốt lõi trong tài liệu Tuần 2, Khoa học dữ liệu (資料科學) là gì?",
+        options: [
+          "Ngành học chỉ tập trung vẽ các con số thành những biểu đồ trực quan đẹp mắt.",
+          "Ngành học tìm ra câu trả lời cụ thể từ dữ liệu hỗn độn, kết hợp tư duy thống kê, công cụ lập trình và kiến thức nghiệp vụ để dẫn dắt hành động.",
+          "Ngành học chỉ chuyên viết phần mềm hệ thống và lắp đặt phần cứng máy chủ.",
+          "Ngành học thay thế hoàn toàn con người trong mọi quyết định quản trị mà không cần kiểm chứng."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 5, 19), khoa học dữ liệu là ngành tìm ra câu trả lời cụ thể từ dữ liệu hỗn độn, kết hợp tư duy thống kê, công cụ lập trình và kiến thức nghiệp vụ để biến dữ liệu thô thành hiểu biết dẫn dắt hành động."
+      },
+      {
+        id: 2,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Dễ",
+        question: "Trong biểu đồ Venn kinh điển, ba trụ cột của khoa học dữ liệu (資料科學的三大支柱) bao gồm những gì?",
+        options: [
+          "Thống kê và toán học, Lập trình và kỹ thuật thông tin (Khoa học máy tính), Kiến thức chuyên môn lĩnh vực.",
+          "Phần cứng máy tính, Thiết kế đồ họa, Quản trị nhân sự.",
+          "Toán sơ cấp, Bảo mật mạng nội bộ, Tiếp thị truyền thống.",
+          "Thu thập dữ liệu, Lưu trữ đám mây, Thiết kế giao diện người dùng."
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 6, 20), ba trụ cột của khoa học dữ liệu là: Thống kê và toán học (統計與數學), Lập trình và kỹ thuật thông tin (程式與資訊工程), và Kiến thức chuyên môn lĩnh vực (領域專業知識)."
+      },
+      {
+        id: 3,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Trung bình",
+        question: "Trong ba trụ cột của khoa học dữ liệu, vai trò chính của trụ cột \"Thống kê và toán học\" (統計與數學) là gì?",
+        options: [
+          "Giúp máy tính tự động làm sạch và tính toán hàng loạt hàng trăm nghìn bản ghi.",
+          "Biết nên đặt những câu hỏi hay nào dựa trên hiểu biết về y khoa, kinh doanh hay thể thao.",
+          "Đánh giá số liệu có đáng tin không, phân biệt sự trùng hợp với xu hướng thật và tránh bị giá trị cực đoan (極端值) đánh lừa.",
+          "Xây dựng đường ống dữ liệu và đưa mô hình học máy vào vận hành thực tế."
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 6), trụ cột Thống kê và toán học giúp đánh giá số liệu có đáng tin không (判斷數字是否可信), phân biệt trùng hợp với xu hướng thật và tránh bị giá trị cực đoan đánh lừa."
+      },
+      {
+        id: 4,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Trung bình",
+        question: "Tại cửa hàng tiện lợi có 3 cấp độ: (1) Bản ghi quét mã vạch \"2026-10-11 12:30 1 hộp cơm\"; (2) \"Trưa thứ Sáu, doanh số cơm hộp quanh tòa văn phòng tăng vọt 30%\"; (3) \"Mỗi sáng thứ Sáu nhập thêm 50 hộp cơm cho khu thương mại để giảm thiệt hại hết hàng\". Thứ tự đúng theo cấp độ tiến hóa từ thấp đến cao là gì?",
+        options: [
+          "Thông tin (Information) → Dữ liệu (Data) → Tri thức và quyết định (Knowledge).",
+          "Dữ liệu (Data) → Tri thức và quyết định (Knowledge) → Thông tin (Information).",
+          "Tri thức và quyết định (Knowledge) → Thông tin (Information) → Dữ liệu (Data).",
+          "Dữ liệu (Data) → Thông tin (Information) → Tri thức và quyết định (Knowledge)."
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 7, 21), bản ghi thô chưa gia công là Dữ liệu (Data); cấu trúc có ngữ cảnh sau khi làm sạch và thống kê là Thông tin (Information); phán đoán hành động nhập thêm 50 hộp cơm là Tri thức và quyết định (Knowledge)."
+      },
+      {
+        id: 5,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Trung bình",
+        question: "Quy trình hoàn chỉnh của khoa học dữ liệu (資料科學的完整流程) gồm 6 bước lặp đi lặp lại theo thứ tự nào sau đây?",
+        options: [
+          "Xác định vấn đề → Thu thập dữ liệu → Làm sạch và sắp xếp → Phân tích mô hình hóa → Giao tiếp trực quan hóa → Ra quyết định và hành động.",
+          "Thu thập dữ liệu → Làm sạch và sắp xếp → Xác định vấn đề → Xây dựng mô hình → Trực quan hóa → Ra quyết định.",
+          "Xác định vấn đề → Phân tích mô hình hóa → Thu thập dữ liệu → Làm sạch dữ liệu → Ra quyết định → Trực quan hóa.",
+          "Thu thập dữ liệu → Trực quan hóa → Làm sạch dữ liệu → Xác định vấn đề → Phân tích mô hình hóa → Ra quyết định."
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 8, 22), 6 bước theo thứ tự là: 1. 定義問題 (Xác định vấn đề) → 2. 蒐集資料 (Thu thập dữ liệu) → 3. 清理整理 (Làm sạch) → 4. 分析建模 (Phân tích mô hình hóa) → 5. 視覺化溝通 (Giao tiếp trực quan hóa) → 6. 決策行動 (Ra quyết định hành động)."
+      },
+      {
+        id: 6,
+        topicKey: "week2",
+        topicLabel: "Week 2 & 3: Quy trình KHDL",
+        difficulty: "Dễ",
+        question: "Trong quy trình khoa học dữ liệu, việc xử lý các giá trị bị thiếu (缺漏), trùng lặp (重複), giá trị cực đoan (極端值) và lỗi định dạng (格式問題) thuộc bước nào?",
+        options: [
+          "Xác định vấn đề (定義問題).",
+          "Thu thập dữ liệu (蒐集資料).",
+          "Làm sạch và sắp xếp dữ liệu (清理整理 / 清理資料).",
+          "Giao tiếp trực quan hóa (視覺化溝通)."
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 8) và Week3-Python.pdf (Trang 3), xử lý dữ liệu thiếu, trùng lặp, giá trị cực đoan và lỗi định dạng thuộc bước Làm sạch dữ liệu (清理整理 / 清理資料)."
+      },
+      {
+        id: 7,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Trung bình",
+        question: "Trong nghiên cứu tình huống về Y tế thông minh (智慧醫療與精準照護), khoa học dữ liệu đóng vai trò gì đối với đội ngũ y bác sĩ?",
+        options: [
+          "Thay thế hoàn toàn bác sĩ trong việc chẩn đoán và điều trị bệnh.",
+          "Là \"trợ lý kỹ thuật số tốc độ cao\" (高速數位副駕駛) hỗ trợ sàng lọc sớm tổn thương nhỏ qua ảnh X-quang/đáy mắt và dự báo điều phối giường cấp cứu, lịch trực y tá.",
+          "Chỉ dùng để lưu trữ văn bản hành chính mà không thể phân tích hình ảnh y tế độ phân giải cao.",
+          "Tự động từ chối tiếp nhận bệnh nhân khi mùa cúm đến cao điểm."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 9), giá trị thể hiện của y tế thông minh là không thay thế bác sĩ mà đóng vai trò trợ lý kỹ thuật số tốc độ cao, hỗ trợ sàng lọc sớm bằng hình ảnh và dự đoán nhu cầu giường cấp cứu, nhân lực."
+      },
+      {
+        id: 8,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Trung bình",
+        question: "Trong ứng dụng Thành phố thông minh (交通網絡與城市治理), hệ thống quản lý xe đạp công cộng YouBike giải quyết tình trạng người dân ra khỏi ga MRT không có xe để đi bằng cách nào?",
+        options: [
+          "Tăng giá thuê xe gấp 3 lần vào buổi sáng và buổi tối.",
+          "Cắt giảm số lượng trạm xe ở gần các ga tàu điện ngầm.",
+          "Dùng cảm biến từ trường để khóa bánh xe tự động vào giờ cao điểm.",
+          "Phân tích mô hình lưu lượng người ra ga MRT sáng tối để bổ sung xe trước tại các điểm nóng có tỷ lệ trống xe cao."
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 10), hệ thống phân tích lưu lượng người ra ga sáng tối (分析捷運站早晚出站人流模式) để bổ sung xe trước tại các điểm thiếu xe, giúp người dân không phải đi tay không."
+      },
+      {
+        id: 9,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Khó",
+        question: "Trên nền tảng Spotify và Netflix, nếu bạn và Nhóm A cùng xem 5 bộ phim đầu tiên và đều đánh giá tốt, hệ thống sẽ ưu tiên gợi ý bộ phim thứ 6 mà Nhóm A thích cho bạn. Kỹ thuật này được gọi là gì?",
+        options: [
+          "Lọc cộng tác (協同過濾 - Collaborative Filtering).",
+          "Cắt ngắn trục tọa độ (截斷縱座標).",
+          "Sai lệch mẫu (樣本偏誤 - Selection Bias).",
+          "Ẩn danh hóa dữ liệu (匿名化處理)."
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 11), kỹ thuật tìm những người dùng có sở thích tương đồng để gợi ý chéo nội dung được gọi là Lọc cộng tác (協同過濾)."
+      },
+      {
+        id: 10,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Trung bình",
+        question: "Mùa hè doanh số bán kem tăng và số người đuối nước cũng tăng. Nếu kết luận \"ăn kem là nguyên nhân gây đuối nước\" mà bỏ qua yếu tố chung là \"thời tiết nắng nóng\", người phân tích đã mắc phải cạm bẫy nào?",
+        options: [
+          "Sai lệch mẫu (樣本偏誤 - Selection Bias).",
+          "Cạm bẫy biểu đồ trực quan (視覺化圖表的陷阱).",
+          "Tương quan không có nghĩa là nhân quả (相關不等於因果 - Correlation ≠ Causation).",
+          "Thiên kiến thuật toán (演算法偏見 - Algorithmic Bias)."
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 14, 24), đây là cạm bẫy số 1: Tương quan không có nghĩa là nhân quả (相關不等於因果); yếu tố chung đứng sau cả hai hiện tượng là thời tiết nóng (炎熱天氣)."
+      },
+      {
+        id: 11,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Trung bình",
+        question: "Nếu chỉ phát bảng khảo sát trên mạng Internet, kết quả thu được thường chỉ phản ánh ý kiến của nhóm người dùng công nghệ thường xuyên và bỏ sót hoàn toàn tiếng nói của nhóm ít lên mạng. Hiện tượng này thuộc cạm bẫy nào?",
+        options: [
+          "Tương quan không có nghĩa là nhân quả (相關不等於因果).",
+          "Sai lệch mẫu dẫn đến kết luận sai (樣本偏誤 - Selection Bias).",
+          "Cạm bẫy biểu đồ trực quan (視覺化圖表的陷阱).",
+          "Vòng phản hồi gợi ý (回饋閉環)."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 14), việc thu thập mẫu không mang tính đại diện (chỉ khảo sát trên mạng) gây ra Sai lệch mẫu (樣本偏誤 - Selection Bias)."
+      },
+      {
+        id: 12,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Dễ",
+        question: "Việc cố tình cắt ngắn điểm bắt đầu của trục tung (截斷縱座標起點) hoặc phóng to một khoảng cục bộ nhằm làm cho biến động dữ liệu rất nhỏ trông như đang tăng vọt thuộc cạm bẫy nào?",
+        options: [
+          "Sai lệch mẫu (樣本偏誤).",
+          "Thiên kiến lịch sử (歷史偏見).",
+          "Lọc cộng tác (協同過濾).",
+          "Cạm bẫy của biểu đồ trực quan gây hiểu lầm (視覺化圖表的陷阱 - Misleading Charts)."
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 14), cắt ngắn trục tung hoặc phóng to khoảng cục bộ để đánh lừa phán đoán của công chúng là Cạm bẫy của biểu đồ trực quan (視覺化圖表的陷阱)."
+      },
+      {
+        id: 13,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Trung bình",
+        question: "Trong các vai trò liên quan đến khoa học dữ liệu, ai là người phụ trách \"Xây dựng đường ống dữ liệu\" (建立資料管線) và ai phụ trách \"Đưa mô hình vào vận hành\" (把模型上線)?",
+        options: [
+          "Chuyên viên phân tích dữ liệu (資料分析師) và Nhà khoa học dữ liệu (資料科學家).",
+          "Kỹ sư dữ liệu (資料工程師) và Kỹ sư học máy (機器學習工程師).",
+          "Nhà khoa học dữ liệu (資料科學家) và Kỹ sư dữ liệu (資料工程師).",
+          "Kỹ sư học máy (機器學習工程師) và Chuyên viên phân tích dữ liệu (資料分析師)."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 15), Kỹ sư dữ liệu (資料工程師) xây dựng đường ống dữ liệu; Kỹ sư học máy (機器學習工程師) đưa mô hình vào vận hành; Chuyên viên phân tích dữ liệu diễn giải và báo cáo; Nhà khoa học dữ liệu xây dựng mô hình và dự đoán."
+      },
+      {
+        id: 14,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Khó",
+        question: "Nếu dữ liệu lịch sử vốn tồn tại định kiến về giới tính hoặc sắc tộc, hệ thống tuyển dụng tự động hoặc mô hình xét duyệt vay vốn sẽ tự động khuếch đại và hợp pháp hóa định kiến đó. Đây là vấn đề đạo đức nào?",
+        options: [
+          "Quyền được lãng quên (被遺忘權).",
+          "Thiên kiến thuật toán và bất công hệ thống (演算法偏見與系統性不公 - Algorithmic Bias).",
+          "Quyền sở hữu dữ liệu thương mại (資料所有權).",
+          "Sự đồng ý có thông tin (知情同意)."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 16), đây là vấn đề đạo đức số 2: Thiên kiến thuật toán và bất công hệ thống (演算法偏見與系統性不公 - Algorithmic Bias)."
+      },
+      {
+        id: 15,
+        topicKey: "week2",
+        topicLabel: "Week 2: Khoa học dữ liệu",
+        difficulty: "Trung bình",
+        question: "Trong vấn đề \"Bảo vệ thông tin cá nhân và quyền được lãng quên\" (個資保護與被遺忘權), vì sao việc ẩn danh hóa dữ liệu (匿名化處理) vẫn tiềm ẩn rủi ro?",
+        options: [
+          "Vì dữ liệu ẩn danh chiếm dung lượng lớn gấp 10 lần dữ liệu thường.",
+          "Vì pháp luật cấm sử dụng kỹ thuật ẩn danh hóa trong mọi trường hợp.",
+          "Vì thông qua việc đối chiếu chéo (交叉比對), người dùng vẫn rất có khả năng bị nhận diện lại (重新識別).",
+          "Vì dữ liệu sau khi ẩn danh sẽ tự động bị xóa khỏi máy chủ sau 24 giờ."
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week2-資料科學概論.pdf (Trang 16), dù đã ẩn danh hóa nhưng thông qua đối chiếu chéo (交叉比對), người dùng vẫn rất có khả năng bị nhận diện lại."
+      },
+      {
+        id: 16,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Dễ",
+        question: "Theo tài liệu Tuần 3, mô hình là công cụ học quy luật từ dữ liệu; khi kết quả của mô hình không hợp lý (結果不合理時), chúng ta cần làm gì?",
+        options: [
+          "Thay đổi số liệu đầu ra thủ công để khớp với kỳ vọng.",
+          "Quay lại kiểm tra dữ liệu và phương pháp đã sử dụng (回頭檢查資料與方法).",
+          "Bỏ qua bước kiểm tra và xuất bản báo cáo ngay lập tức.",
+          "Chuyển sang sử dụng ngôn ngữ lập trình khác."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week3-Python.pdf (Trang 3), mô hình là công cụ học quy luật từ dữ liệu; khi kết quả vô lý, phải quay lại kiểm tra dữ liệu và phương pháp."
+      },
+      {
+        id: 17,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Dễ",
+        question: "Trong hệ sinh thái Python phục vụ khoa học dữ liệu, vai trò của các gói thư viện `NumPy`, `pandas`, `Matplotlib / seaborn` và `scikit-learn` lần lượt là gì?",
+        options: [
+          "NumPy vẽ biểu đồ; pandas học máy; Matplotlib tính toán số; scikit-learn xử lý bảng.",
+          "NumPy quản lý môi trường; pandas cài đặt gói; seaborn tạo giao diện web; scikit-learn đọc tệp văn bản.",
+          "NumPy xử lý bảng; pandas tính toán ma trận; Matplotlib học máy; scikit-learn vẽ biểu đồ.",
+          "NumPy xử lý tính toán số; pandas xử lý dữ liệu dạng bảng; Matplotlib & seaborn vẽ biểu đồ; scikit-learn cung cấp công cụ học máy."
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week3-Python.pdf (Trang 6), NumPy xử lý tính toán số (處理數值計算); pandas xử lý dữ liệu dạng bảng (整理表格資料); Matplotlib & seaborn vẽ biểu đồ; scikit-learn cung cấp công cụ học máy (提供機器學習工具)."
+      },
+      {
+        id: 18,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Trung bình",
+        question: "Khi chuẩn bị môi trường chạy Python, điểm khác biệt chính giữa bản \"Python chính thức\" (官方 Python) và \"Anaconda\" là gì?",
+        options: [
+          "Python chính thức gọn nhẹ, cài Python trước rồi tự cài thêm gói cần thiết sau; còn Anaconda tích hợp sẵn các gói khoa học dữ liệu thường dùng, Jupyter và công cụ quản lý môi trường conda.",
+          "Python chính thức có dung lượng tải về lớn hơn rất nhiều so với Anaconda.",
+          "Anaconda không hỗ trợ Jupyter Notebook, còn Python chính thức đã cài sẵn Jupyter.",
+          "Python chính thức chỉ dành cho hệ điều hành Linux, còn Anaconda chỉ dành cho Windows."
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week3-Python.pdf (Trang 9, 11), Python chính thức gọn nhẹ, tự lắp ghép thêm công cụ; Anaconda tích hợp sẵn các gói khoa học dữ liệu thường dùng, Jupyter, Navigator và công cụ conda (lựa chọn hàng đầu cho người mới nhưng dung lượng tải lớn hơn)."
+      },
+      {
+        id: 19,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Dễ",
+        question: "Khi cài đặt Python trên Windows, thiết lập `Add Python to PATH` có tác dụng gì?",
+        options: [
+          "Giúp tăng tốc độ xử lý của CPU khi chạy vòng lặp.",
+          "Tự động cập nhật Windows lên phiên bản mới nhất.",
+          "Giúp hệ thống biết tìm Python ở đâu để có thể gõ lệnh thực thi trực tiếp trong cửa sổ Terminal / Command Prompt.",
+          "Tự động xóa các phiên bản Python cũ trên ổ cứng."
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week3-Python.pdf (Trang 10, 12), PATH giúp hệ thống biết tìm Python ở đâu để gõ lệnh trực tiếp. Nếu báo không tìm thấy lệnh, cần mở lại terminal và kiểm tra PATH."
+      },
+      {
+        id: 20,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Dễ",
+        question: "Trong bộ công cụ Anaconda, công cụ `conda` dùng để làm gì?",
+        options: [
+          "Dùng để soạn thảo văn bản thay cho Microsoft Word.",
+          "Là công cụ cài đặt gói và quản lý môi trường, giúp tách biệt các gói của những dự án khác nhau để giảm xung đột phiên bản.",
+          "Là lệnh dùng để tắt máy tính từ xa.",
+          "Là thư viện chuyên dùng để cắt ghép video."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week3-Python.pdf (Trang 11), `conda` là công cụ cài gói và quản lý môi trường (安裝套件與管理環境的工具), giúp tách gói của các dự án khác nhau để giảm xung đột phiên bản."
+      },
+      {
+        id: 21,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Dễ",
+        question: "Để xác nhận cài đặt thành công Python và công cụ cài gói `pip` trong cửa sổ dòng lệnh (Terminal / Command Prompt), ta nhập lần lượt hai lệnh nào?",
+        options: [
+          "`python -check` và `pip -check`",
+          "`verify python` và `verify pip`",
+          "`python --status` và `pip --status`",
+          "`python --version` và `pip --version`"
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week3-Python.pdf (Trang 12), ta gõ lần lượt `python --version` (trên macOS/Linux có thể dùng `python3`, Windows có thể thử `py --version`) và `pip --version`."
+      },
+      {
+        id: 22,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Dễ",
+        question: "Để cài đặt Jupyter Notebook bằng `pip` (nếu chưa dùng Anaconda), khởi động dịch vụ từ terminal và chạy một ô lệnh (cell), ta lần lượt thao tác như thế nào?",
+        options: [
+          "Cài bằng `pip install notebook`, khởi động bằng `jupyter notebook`, chạy ô lệnh bằng `Shift + Enter`.",
+          "Cài bằng `pip get jupyter`, khởi động bằng `run notebook`, chạy ô lệnh bằng `Ctrl + S`.",
+          "Cài bằng `python install jupyter`, khởi động bằng `start jupyter`, chạy ô lệnh bằng `Alt + Enter`.",
+          "Cài bằng `pip notebook`, khởi động bằng `open ipynb`, chạy ô lệnh bằng `Tab + Enter`."
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week3-Python.pdf (Trang 15), cài đặt bằng `pip install notebook`, khởi động dịch vụ bằng `jupyter notebook`, và chạy ô lệnh (儲存格) bằng phím tắt `Shift + Enter`."
+      },
+      {
+        id: 23,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Dễ",
+        question: "Trong một tài liệu Jupyter Notebook, ba khu vực chức năng giúp giữ mã nguồn, ghi chú và kết quả ở cùng một nơi là gì?",
+        options: [
+          "Thanh công cụ hệ thống, Cửa sổ Registry và Trình quản lý tác vụ.",
+          "Ô mã lệnh (程式儲存格), Ô văn bản (文字儲存格) và Vùng kết quả đầu ra (輸出區).",
+          "Bảng điều khiển mạng, Trình biên dịch mã máy và Khu vực lưu trữ đám mây.",
+          "Chỉ có Ô mã lệnh và Cửa sổ dòng lệnh Command Prompt."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week3-Python.pdf (Trang 14), Jupyter Notebook gồm: Ô mã lệnh (chứa mã Python), Ô văn bản (ghi lại câu hỏi và giải thích) và Vùng kết quả (hiển thị chữ, bảng và biểu đồ)."
+      },
+      {
+        id: 24,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Dễ",
+        question: "Trong Python, các giá trị `20`, `3.14`, `\"小明\"`, `True` lần lượt thuộc các kiểu dữ liệu cơ bản nào?",
+        options: [
+          "`float`, `int`, `bool`, `str`",
+          "`int`, `str`, `float`, `bool`",
+          "`int`, `float`, `str`, `bool`",
+          "`str`, `float`, `int`, `bool`"
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week3-Python.pdf (Trang 17), `20` là số nguyên (`int`), `3.14` là số thập phân (`float`), `\"小明\"` là chuỗi (`str`), và `True` là kiểu logic (`bool` - chỉ có `True` và `False`)."
+      },
+      {
+        id: 25,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Trung bình",
+        question: "Cho `name = \"小明\"` và `age = 20`. Câu lệnh nào in ra `\"小明今年20歲\"` mà không bị lỗi kiểu dữ liệu, và kết quả của `print(type(age))` là gì?",
+        options: [
+          "`print(name + \"今年\" + age + \"歲\")` và `<type 'number'>`",
+          "`print(name + \"今年\" + float(age) + \"歲\")` và `<class 'float'>`",
+          "`print(str(name) + 20 + \"歲\")` và `<class 'str'>`",
+          "`print(name + \"今年\" + str(age) + \"歲\")` và `<class 'int'>`"
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Bài tập 1 trong Week3-Python.pdf (Trang 18), cần dùng `str(age)` để chuyển số nguyên 20 thành chuỗi khi nối bằng dấu `+`, và `print(type(age))` sẽ hiển thị `<class 'int'>`."
+      },
+      {
+        id: 26,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Trung bình",
+        question: "Cho danh sách `scores = [80, 92, 75]` và từ điển `student = {\"name\": \"小明\", \"age\": 20}`. Phát biểu nào sau đây là ĐÚNG về cách lấy giá trị từ hai cấu trúc này?",
+        options: [
+          "Danh sách (`list`) lấy giá trị bằng chỉ số bắt đầu từ `0` (ví dụ `scores[0]` là `80`); Từ điển (`dict`) lấy giá trị bằng khóa (ví dụ `student[\"name\"]` là `\"小明\"`).",
+          "Danh sách (`list`) lấy giá trị bằng chỉ số bắt đầu từ `1` (ví dụ `scores[1]` là `80`); Từ điển (`dict`) lấy giá trị bằng chỉ số `student[0]`.",
+          "Cả `list` và `dict` đều bắt buộc phải truy cập phần tử thông qua tên khóa dạng chuỗi.",
+          "Từ điển (`dict`) sắp xếp dữ liệu theo vị trí thứ tự, còn Danh sách (`list`) ghép dữ liệu theo cặp khóa - giá trị."
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week3-Python.pdf (Trang 19, 20), `list` sắp xếp dữ liệu theo vị trí và lấy giá trị bằng chỉ số bắt đầu từ `0`; `dict` ghép dữ liệu với tên khóa và lấy giá trị bằng khóa như `student[\"name\"]`."
+      },
+      {
+        id: 27,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Trung bình",
+        question: "Trong Bài tập 2 (Tuần 3), với danh sách `scores = [80, 92, 75]`, đoạn mã nào tính đúng điểm trung bình và làm tròn đến 2 chữ số thập phân để in ra `82.33`?",
+        options: [
+          "`average = avg(scores)` rồi `print(round(average, 2))`",
+          "`average = sum(scores) / len(scores)` rồi `print(round(average, 2))`",
+          "`average = sum(scores) / count(scores)` rồi `print(format(average, 2))`",
+          "`average = scores.sum() / scores.len()` rồi `print(int(average))`"
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week3-Python.pdf (Trang 20), hàm `sum(scores)` tính tổng, `len(scores)` lấy số lượng phần tử, và `round(average, 2)` làm tròn đến 2 chữ số thập phân (kết quả `82.33`)."
+      },
+      {
+        id: 28,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Trung bình",
+        question: "Trong Bài tập 3 (Tuần 3), để dùng vòng lặp `for` duyệt các số nguyên từ 1 đến 5 và kiểm tra số chẵn (偶數), ta viết câu lệnh nào?",
+        options: [
+          "`for i in range(1, 5):` và `if i % 2 == 1:`",
+          "`for i in range(0, 5):` và `if i / 2 == 0:`",
+          "`for i in range(1, 6):` và `if i % 2 == 0:`",
+          "`for i in range(1, 6):` và `if i % 2 = 0:`"
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week3-Python.pdf (Trang 22), `range(1, 6)` bắt đầu từ 1 và dừng trước 6 (tức là 1, 2, 3, 4, 5); toán tử `%` lấy số dư và `==` so sánh hai vế có bằng nhau không (`i % 2 == 0` là số chẵn)."
+      },
+      {
+        id: 29,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Dễ",
+        question: "Trong Python, quy tắc nào được sử dụng để biểu thị một khối lệnh (程式區塊) bên trong câu lệnh điều kiện `if/elif/else` hoặc vòng lặp `for`?",
+        options: [
+          "Đặt khối lệnh trong cặp dấu ngoặc nhọn `{ }`.",
+          "Đặt khối lệnh trong cặp dấu ngoặc vuông `[ ]`.",
+          "Kết thúc mỗi dòng lệnh bằng dấu chấm phẩy `;`.",
+          "Sử dụng thụt đầu dòng (縮排 - indentation), thông thường là 4 dấu cách (四個空格)."
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week3-Python.pdf (Trang 21, 22), Python dùng thụt đầu dòng (縮排) để biểu thị khối lệnh, thường là 4 dấu cách; lệnh `if` nằm trong vòng lặp `for` phải thụt vào thêm một cấp so với `for`."
+      },
+      {
+        id: 30,
+        topicKey: "week3",
+        topicLabel: "Week 3: Python cơ bản",
+        difficulty: "Trung bình",
+        question: "Khi định nghĩa hàm bằng `def` và nạp thư viện trong Python, phát biểu nào sau đây là ĐÚNG?",
+        options: [
+          "Lệnh `return` trả kết quả tính toán về nơi gọi hàm (khác với `print()` chỉ hiển thị ra màn hình); câu lệnh `import pandas as pd` nạp thư viện pandas và `pd.read_csv(\"data.csv\")` dùng để đọc tệp CSV.",
+          "Lệnh `return` và hàm `print()` có chức năng hoàn toàn giống nhau trong mọi hàm.",
+          "Tệp CSV là tệp hình ảnh nhị phân, phải đọc bằng lệnh `pd.read_image(\"data.csv\")`.",
+          "Để định nghĩa hàm trong Python bắt buộc phải dùng từ khóa `function` thay vì `def`."
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week3-Python.pdf (Trang 23, 24), dùng `def` để định nghĩa hàm; `return` trả dữ liệu về nơi gọi trong khi `print()` chỉ hiển thị dữ liệu ra màn hình; CSV là tệp văn bản các cột ngăn cách bằng dấu phẩy và được đọc bằng `pd.read_csv(\"data.csv\")`."
+      },
+      {
+        id: 31,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Dễ",
+        question: "Theo tài liệu Tuần 4, vì sao khoa học dữ liệu đều sử dụng NumPy thay vì chỉ dùng `list` của Python?",
+        options: [
+          "Vì NumPy chỉ hoạt động khi có kết nối mạng, giúp bảo mật dữ liệu tốt hơn.",
+          "Vì NumPy hỗ trợ tính toán vector hóa (向量化運算) không cần viết vòng lặp nên nhanh hơn hẳn `list`, có kiểu dữ liệu cố định và bộ nhớ liên tục giúp tiết kiệm không gian, đồng thời là nền tảng tầng dưới của `pandas` và `scikit-learn`.",
+          "Vì NumPy cho phép mỗi phần tử trong cùng một mảng có một kiểu dữ liệu khác nhau tùy ý mà không tốn bộ nhớ.",
+          "Vì mảng NumPy tự động vẽ biểu đồ mà không cần gọi bất kỳ hàm nào."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week4-NumPy.pdf (Trang 3), 3 ưu điểm cốt lõi của NumPy là: (1) Tính toán vector hóa, không cần viết vòng lặp, nhanh hơn hẳn list; (2) Kiểu dữ liệu cố định, bộ nhớ liên tục tiết kiệm không gian; (3) Nền tảng tầng dưới của pandas và scikit-learn."
+      },
+      {
+        id: 32,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Dễ",
+        question: "Khi chạy câu lệnh `np.zeros((2, 3))`, mảng kết quả có đặc điểm gì?",
+        options: [
+          "Mảng gồm 3 hàng 2 cột toàn số 0, kiểu dữ liệu mặc định là `int` (hiển thị `0`).",
+          "Mảng 1 chiều gồm 6 số 0, kiểu dữ liệu mặc định là `bool`.",
+          "Mảng gồm 2 hàng 3 cột (shape `(2, 3)`) toàn số 0, kiểu dữ liệu mặc định là `float64` nên hiển thị là `0.` (có thể dùng `dtype=int` để chỉ định số nguyên).",
+          "Ma trận đơn vị 2×3 có đường chéo bằng 1."
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week4-NumPy.pdf (Trang 5, 8), `np.zeros((2, 3))` tạo mảng 2 hàng 3 cột toàn số 0, shape truyền vào dưới dạng tuple `(2, 3)`, mặc định `dtype` là `float64` nên hiển thị `0.`."
+      },
+      {
+        id: 33,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Trong Bài tập 1-1 (Tuần 4), để tạo mảng các số chẵn từ 1 đến 20 (tức `[2, 4, ..., 20]`) bằng `np.arange` và tạo mảng từ 0 đến 100 gồm 11 điểm cách đều nhau bằng `np.linspace`, ta dùng cặp câu lệnh nào?",
+        options: [
+          "`np.arange(2, 20, 2)` và `np.linspace(0, 100, 10)`",
+          "`np.arange(1, 20, 2)` và `np.linspace(0, 100, 11)`",
+          "`np.arange(2, 21, 1)` và `np.linspace(0, 101, 11)`",
+          "`np.arange(2, 21, 2)` và `np.linspace(0, 100, 11)`"
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week4-NumPy.pdf (Trang 6, 7, 9, 10), `arange(start, stop, step)` không bao gồm cận trên `stop` nên cần đặt `stop=21` để lấy được số 20 (`np.arange(2, 21, 2)`); còn `linspace(start, stop, num)` bao gồm cả hai đầu nên dùng `np.linspace(0, 100, 11)`."
+      },
+      {
+        id: 34,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Trong Bài tập 1-2 (Tuần 4), để tạo mảng 4×4 toàn số `7` (bàn cờ) và mô phỏng tung xúc xắc 10 lần (các mặt từ 1 đến 6), ta dùng cặp câu lệnh nào?",
+        options: [
+          "`np.full((4, 4), 7)` và `np.random.randint(1, 7, 10)`",
+          "`np.full((4, 4), 7)` và `np.random.randint(1, 6, 10)`",
+          "`np.ones((4, 4)) + 7` và `np.random.rand(1, 7, 10)`",
+          "`np.eye(4, 7)` và `np.random.randint(0, 7, 10)`"
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week4-NumPy.pdf (Trang 11, 12), `np.full((4, 4), 7)` tạo mảng 4×4 có mọi phần tử là 7; `np.random.randint(1, 7, 10)` lấy 10 số nguyên ngẫu nhiên từ 1 đến 6 vì cận trên 7 không được bao gồm."
+      },
+      {
+        id: 35,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Dễ",
+        question: "Câu lệnh `np.eye(3)` và `np.random.seed(42)` có ý nghĩa gì trong NumPy?",
+        options: [
+          "`np.eye(3)` tạo mảng 3×3 toàn số 3; `seed(42)` tạo ra 42 số thực ngẫu nhiên.",
+          "`np.eye(3)` tạo ma trận đơn vị 3×3 có đường chéo chính bằng 1 và các vị trí khác bằng 0; `seed(42)` cố định hạt giống ngẫu nhiên để mỗi lần thực thi đều cho cùng một kết quả ngẫu nhiên.",
+          "`np.eye(3)` lấy 3 phần tử ở giữa mảng; `seed(42)` cộng thêm 42 vào mọi phần tử.",
+          "`np.eye(3)` tạo mảng 1 chiều gồm 3 số 0; `seed(42)` xóa các số ngẫu nhiên lớn hơn 42."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week4-NumPy.pdf (Trang 5, 6, 7, 8), `np.eye(3)` tạo ma trận đơn vị 3×3 (單位矩陣, đường chéo bằng 1, còn lại bằng 0); `np.random.seed(42)` cố định hạt giống ngẫu nhiên (固定亂數種子)."
+      },
+      {
+        id: 36,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Khi làm phẳng mảng đa chiều thành mảng 1 chiều trong NumPy, sự khác biệt giữa `flatten()` và `ravel()` cùng ý nghĩa tham số `order` là gì?",
+        options: [
+          "`flatten()` trả về view, còn `ravel()` trả về bản sao; `order='C'` là dọc trước ngang sau.",
+          "`flatten()` làm tăng số chiều, còn `ravel()` làm giảm số chiều.",
+          "`flatten()` trả về bản sao (複製 - copy), còn `ravel()` cố gắng trả về khung nhìn (view); tham số `order` mặc định là `'C'` (ngang trước dọc sau), nếu đặt `'F'` là dọc trước ngang sau.",
+          "Cả hai chỉ dùng được cho mảng 1 chiều và không có tham số `order`."
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week4-NumPy.pdf (Trang 14, 16), `flatten()` trả về bản sao (複製), `ravel()` cố gắng trả về view; cả hai có thể chỉnh tham số `order` với mặc định `'C'` (先水平再垂直 - ngang trước dọc sau) và `'F'` (先垂直再水平 - dọc trước ngang sau)."
+      },
+      {
+        id: 37,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Cho mảng 1 chiều `v = np.arange(5)`. Khi gọi `v.reshape(-1, 1)`, quy tắc của `reshape` và ý nghĩa của giá trị `-1` là gì?",
+        options: [
+          "`reshape` cho phép thay đổi tổng số phần tử tùy ý; `-1` nghĩa là bỏ đi phần tử cuối cùng.",
+          "`reshape` giữ nguyên tổng số phần tử; `-1` biến mảng thành mảng rỗng.",
+          "`-1` dùng để chuyển toàn bộ các phần tử trong mảng `v` thành số âm.",
+          "`reshape` yêu cầu tổng số phần tử của hình dạng mới phải bằng mảng gốc; `-1` giúp NumPy tự động tính toán số hàng tương ứng, tạo ra mảng có shape `(5, 1)` (vector cột)."
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week4-NumPy.pdf (Trang 14, 15, 20, 21), khi dùng `reshape()`, tổng số phần tử phải bằng mảng ban đầu; nếu không chắc một chiều có bao nhiêu phần tử thì dùng `-1` để NumPy tự động tính (ở đây `v.reshape(-1, 1)` cho shape `(5, 1)`)."
+      },
+      {
+        id: 38,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Cho mảng `a = np.arange(6).reshape(2, 3)` (có shape `(2, 3)`). Kết quả `.shape` của các biểu thức `a.T`, `a[np.newaxis]`, `np.vstack([a, a])` và `np.hstack([a, a])` lần lượt là gì?",
+        options: [
+          "`(3, 2)`, `(1, 2, 3)`, `(4, 3)`, `(2, 6)`",
+          "`(2, 3)`, `(2, 3, 1)`, `(2, 6)`, `(4, 3)`",
+          "`(3, 2)`, `(2, 1, 3)`, `(4, 6)`, `(2, 3)`",
+          "`(6,)`, `(1, 6)`, `(4, 3)`, `(2, 6)`"
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week4-NumPy.pdf (Trang 16, 17, 21): `a.T` chuyển vị đổi hàng và cột thành `(3, 2)`; `a[np.newaxis]` thêm chiều độ dài 1 ở phía trước thành `(1, 2, 3)`; `vstack` xếp chồng dọc theo `axis=0` làm gấp đôi số hàng thành `(4, 3)`; `hstack` ghép ngang theo `axis=1` làm gấp đôi số cột thành `(2, 6)`."
+      },
+      {
+        id: 39,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Khó",
+        question: "Cho mảng `a = np.arange(10)`. Nếu ta thực hiện cắt lát cơ bản `v = a[1:4]` rồi gán `v[0] = 50`, sau đó thực hiện `b = a[1:4].copy()` rồi gán `b[0] = 99`, thì phần tử `a[1]` của mảng gốc `a` sẽ có giá trị là bao nhiêu?",
+        options: [
+          "`1` (không bị thay đổi bởi cả `v` và `b`).",
+          "`50` (vì cắt lát cơ bản `a[1:4]` trả về một view nên sửa `v` sẽ làm thay đổi `a`, còn `b` dùng `.copy()` tạo bản sao độc lập nên sửa `b` không ảnh hưởng `a`).",
+          "`99` (vì cả `v` và `b` đều làm thay đổi mảng gốc `a`).",
+          "Chương trình báo lỗi vì không được phép gán giá trị cho mảng đã cắt lát."
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week4-NumPy.pdf (Trang 23, 24, 25, 47), cắt lát cơ bản (basic slicing) là một view (視圖) nên sửa đổi sẽ ảnh hưởng trực tiếp dữ liệu gốc (`a[1]` thành `50`); khi thêm `.copy()` sẽ tạo ra bản sao độc lập (獨立副本) nên sửa `b` không làm ảnh hưởng đến `a`."
+      },
+      {
+        id: 40,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Trong Bài tập 3-1 (Tuần 4), cho ma trận 5×5: `b = np.arange(25).reshape(5, 5)`. Để lấy ra ma trận con 3×3 ở chính giữa, hàng cuối cùng và cột đầu tiên, ta lần lượt dùng các biểu thức nào?",
+        options: [
+          "`b[1:3, 1:3]`, `b[5, :]`, `b[:, 1]`",
+          "`b[2:5, 2:5]`, `b[-1, 0]`, `b[0, :]`",
+          "`b[1:4, 1:4]`, `b[-1, :]` (hoặc `b[-1]`), `b[:, 0]`",
+          "`b[0:3, 0:3]`, `b[:, -1]`, `b[0, :]`"
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week4-NumPy.pdf (Trang 26, 27), vì chỉ số bắt đầu từ 0 và `stop` của cắt lát không được bao gồm, vùng 3×3 ở giữa ứng với chỉ số hàng 1..3 và cột 1..3 nên viết là `b[1:4, 1:4]`; hàng cuối cùng là `b[-1, :]` (hoặc `b[-1]`); cột đầu tiên là `b[:, 0]`."
+      },
+      {
+        id: 41,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Cho mảng `a = np.arange(10)`. Để lọc các phần tử lớn hơn 2 VÀ nhỏ hơn 8 bằng mặt nạ Boolean, đồng thời lấy các phần tử ở vị trí chỉ số 0, 2, 4 bằng Fancy Indexing (花式索引), ta viết như thế nào?",
+        options: [
+          "`a[a > 2 and a < 8]` và `a(0, 2, 4)`",
+          "`a[(a > 2) and (a < 8)]` và `a[0, 2, 4]`",
+          "`a[a > 2 & a < 8]` và `a[[0:4:2]]`",
+          "`a[(a > 2) & (a < 8)]` và `a[[0, 2, 4]]`"
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week4-NumPy.pdf (Trang 24, 25), kết hợp nhiều điều kiện trong NumPy bắt buộc phải dùng `&` kèm dấu ngoặc đơn `a[(a > 2) & (a < 8)]` (không được dùng `and` của Python); Fancy Indexing truyền một danh sách các vị trí `a[[0, 2, 4]]`."
+      },
+      {
+        id: 42,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Dễ",
+        question: "Trong Bài tập 3-2 (Tuần 4), cho mảng điểm `g = np.array([55, 72, 88, 47, 60, 91, 39])`. Để lọc ra các điểm từ 60 trở lên và đổi các điểm dưới 60 trên bản sao `h = g.copy()` thành 60, ta dùng cặp câu lệnh nào?",
+        options: [
+          "`g[g >= 60]` và `h[h < 60] = 60`",
+          "`g[g > 60]` và `h[h <= 60] == 60`",
+          "`g(g >= 60)` và `h.where(h < 60, 60)`",
+          "`g[g == 60]` và `h[h < 60] = 0`"
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week4-NumPy.pdf (Trang 28, 29), `g[g >= 60]` lọc ra các điểm từ 60 trở lên (`[72 88 60 91]`), và `h[h < 60] = 60` gán lại toàn bộ các điểm dưới 60 thành 60 (`[60 72 88 60 60 91 60]`)."
+      },
+      {
+        id: 43,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Cho ma trận `A = np.array([[1., 2.], [0., 1.]])`. Khi thực hiện phép nhân ma trận `A @ A` (hoặc `np.dot(A, A)`) và tìm ma trận nghịch đảo `np.linalg.inv(A)`, kết quả thu được lần lượt là gì?",
+        options: [
+          "`[[1., 2.], [0., 1.]]` và `[[1., 2.], [0., 1.]]`",
+          "`[[1., 4.], [0., 1.]]` và `[[1., -2.], [0., 1.]]`",
+          "`[[2., 4.], [0., 2.]]` và `[[-1., 2.], [0., -1.]]`",
+          "`[[1., 0.], [2., 1.]]` và `[[0., 1.], [1., 0.]]`"
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week4-NumPy.pdf (Trang 33, 34), với `A = [[1., 2.], [0., 1.]]`: phép nhân ma trận `A @ A` cho kết quả `[[1., 4.], [0., 1.]]` (khác với nhân từng phần tử `A * A`); ma trận nghịch đảo `np.linalg.inv(A)` cho kết quả `[[1., -2.], [0., 1.]]`."
+      },
+      {
+        id: 44,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Khó",
+        question: "Trong Bài tập 4-1 (Tuần 4), cho bảng giá `p` có shape `(3, 3)` và mảng tỷ lệ giảm giá cho 3 hàng là `r = np.array([0.9, 0.8, 0.95])`. Để nhân mỗi hàng của `p` với tỷ lệ giảm giá riêng của hàng đó thông qua Broadcasting (廣播), ta phải viết như thế nào và quy tắc kiểm tra Broadcasting là gì?",
+        options: [
+          "Viết `p * r` trực tiếp không cần reshape; quy tắc là so sánh shape từ trục đầu tiên sang trục cuối.",
+          "Viết `p @ r`; quy tắc là tổng số phần tử của hai mảng phải bằng nhau.",
+          "Đổi `r` thành `r = np.array([0.9, 0.8, 0.95]).reshape(3, 1)` rồi tính `p * r`; quy tắc Broadcasting là so sánh từng trục từ cuối về đầu (尾端逐軸比對), kích thước phải bằng nhau hoặc bằng 1.",
+          "Đổi `p` thành mảng 1 chiều rồi cộng với `r`."
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week4-NumPy.pdf (Trang 31, 35, 36, 47), quy tắc Broadcasting kiểm tra shape từ cuối về đầu (tương ứng bằng nhau hoặc bằng 1). Để廣播 dọc theo hướng cột cho từng hàng của bảng `(3, 3)`, mảng giảm giá `r` phải được `reshape(3, 1)` thành vector cột."
+      },
+      {
+        id: 45,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Phát biểu nào sau đây là ĐÚNG về điều kiện thực hiện phép nhân ma trận `A @ B` và điều kiện để ma trận `A` có ma trận nghịch đảo `np.linalg.inv(A)`?",
+        options: [
+          "Nhân ma trận yêu cầu hai ma trận phải có cùng shape; mọi ma trận chữ nhật đều có ma trận nghịch đảo.",
+          "Nhân ma trận yêu cầu số hàng của A bằng số hàng của B; chỉ ma trận có định thức bằng 0 mới có ma trận nghịch đảo.",
+          "Nhân ma trận không có điều kiện về chiều; ma trận nghịch đảo tính bằng `A.T`.",
+          "Nhân ma trận `A @ B` yêu cầu chiều bên trong phải bằng nhau (số cột của A bằng số hàng của B); chỉ ma trận vuông khả nghịch (方陣) có định thức `np.linalg.det(A)` khác 0 mới có ma trận nghịch đảo."
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week4-NumPy.pdf (Trang 33, 34), phép nhân ma trận yêu cầu chiều bên trong phải bằng nhau (內側維度須相等); chỉ có ma trận vuông mà định thức (`np.linalg.det(A)`) khác 0 mới khả nghịch và tìm được `np.linalg.inv(A)`."
+      },
+      {
+        id: 46,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Trong Bài tập 4-2 (Tuần 4), để giải hệ phương trình tuyến tính `2x + y = 5` và `x + 3y = 10` (viết dưới dạng `Ax = b` với `A = np.array([[2., 1.], [1., 3.]])`, `b = np.array([5., 10.])`), ta dùng hàm nào để giải và hàm nào để kiểm chứng `A @ x` bằng `b`?",
+        options: [
+          "Giải bằng `x = np.linalg.solve(A, b)` (nghiệm `[1. 3.]`) và kiểm chứng bằng `np.allclose(A @ x, b)`.",
+          "Giải bằng `x = np.linalg.inv(b)` và kiểm chứng bằng `np.array_equal(A * x, b)`.",
+          "Giải bằng `x = A @ b` và kiểm chứng bằng `np.all(A == b)`.",
+          "Giải bằng `x = np.linalg.det(A)` và kiểm chứng bằng `np.isclose(A, b)`."
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week4-NumPy.pdf (Trang 37, 38), dùng `x = np.linalg.solve(A, b)` để giải hệ phương trình tuyến tính thu được nghiệm `[1. 3.]`, sau đó dùng `np.allclose(A @ x, b)` để xác minh (trả về `True`)."
+      },
+      {
+        id: 47,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Cho mảng `a = np.array([[1, 2, 3], [4, 5, 6]])`. Kết quả của `np.percentile(a, 50)`, `np.cumsum([1, 2, 3])`, `a.sum(axis=0)` và `a.sum(axis=1)` lần lượt là gì?",
+        options: [
+          "`3.0`, `[1, 2, 3]`, `[6, 15]`, `[5, 7, 9]`",
+          "`3.5`, `[1, 3, 6]`, `[5, 7, 9]`, `[6, 15]`",
+          "`5.0`, `[6]`, `[5, 7, 9]`, `[6, 15]`",
+          "`3.5`, `[1, 3, 6]`, `[6, 15]`, `[5, 7, 9]`"
+        ],
+        correctAnswer: 1,
+        explanation: "Theo Week4-NumPy.pdf (Trang 40): `np.percentile(a, 50)` tính phân vị thứ 50 của `a` là `3.5`; `np.cumsum([1, 2, 3])` cộng dồn phần tử trước đó ra `[1 3 6]`; `a.sum(axis=0)` tính dọc theo hàng cho từng cột ra `[5 7 9]`; `a.sum(axis=1)` tính cho từng hàng ra `[6 15]`."
+      },
+      {
+        id: 48,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Trung bình",
+        question: "Cho bảng điểm `scores` có shape `(5, 3)` gồm 5 học sinh (5 hàng) và 3 môn học (3 cột). Để tính \"điểm trung bình của mỗi môn\" và \"tổng điểm của mỗi học sinh\", ta sử dụng cặp câu lệnh nào?",
+        options: [
+          "`scores.mean(axis=1)` (shape `(5,)`) và `scores.sum(axis=0)` (shape `(3,)`)",
+          "`scores.mean()` và `scores.sum()`",
+          "`scores.mean(axis=0)` (shape `(3,)`) và `scores.sum(axis=1)` (shape `(5,)`)",
+          "`scores.median(axis=1)` và `scores.max(axis=0)`"
+        ],
+        correctAnswer: 2,
+        explanation: "Theo Week4-NumPy.pdf (Trang 41, 42), `axis=0` tính dọc theo hướng hàng để ra kết quả cho từng cột (mỗi môn học): `scores.mean(axis=0)` có shape `(3,)`; `axis=1` tính dọc theo hướng cột để ra kết quả cho từng hàng (mỗi học sinh): `scores.sum(axis=1)` có shape `(5,)`."
+      },
+      {
+        id: 49,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Khó",
+        question: "Với bảng điểm `scores` (5×3): hàng 0 là `[78, 85, 90]`, hàng 1 là `[66, 72, 58]`, hàng 2 là `[90, 95, 88]`, hàng 3 là `[55, 62, 70]`, hàng 4 là `[81, 79, 84]`. Kết quả của `np.argmin(scores, axis=0)` và `np.argmax(scores, axis=0)` lần lượt là gì?",
+        options: [
+          "`[55, 62, 58]` và `[90, 95, 90]`",
+          "`[1, 3, 2]` và `[0, 2, 4]`",
+          "`[2, 2, 0]` và `[3, 3, 1]`",
+          "`[3, 3, 1]` và `[2, 2, 0]`"
+        ],
+        correctAnswer: 3,
+        explanation: "Theo Week4-NumPy.pdf (Trang 42, 43, 44), `argmin` và `argmax` theo `axis=0` trả về chỉ số hàng (từ 0) của học sinh có điểm thấp nhất và cao nhất ở mỗi môn: Điểm thấp nhất môn 1 là 55 (hàng 3), môn 2 là 62 (hàng 3), môn 3 là 58 (hàng 1) → `[3 3 1]`; Điểm cao nhất môn 1 là 90 (hàng 2), môn 2 là 95 (hàng 2), môn 3 là 90 (hàng 0) → `[2 2 0]`."
+      },
+      {
+        id: 50,
+        topicKey: "week4",
+        topicLabel: "Week 4: NumPy",
+        difficulty: "Khó",
+        question: "Trong Bài tập 5-2 (Tuần 4), để chuẩn hóa điểm số `z-score` theo từng môn học cho bảng điểm `scores` (5×3) theo công thức `z = (x - trung bình môn) / độ lệch chuẩn môn`, ta viết câu lệnh nào?",
+        options: [
+          "`z = (scores - scores.mean(axis=0)) / scores.std(axis=0)`",
+          "`z = (scores - scores.mean(axis=1)) / scores.std(axis=1)`",
+          "`z = (scores - scores.var(axis=0)) / scores.mean(axis=0)`",
+          "`z = (scores - np.median(scores)) / np.std(scores)`"
+        ],
+        correctAnswer: 0,
+        explanation: "Theo Week4-NumPy.pdf (Trang 45, 46), trung bình và độ lệch chuẩn của từng môn được lấy theo `axis=0` (`scores.mean(axis=0)` và `scores.std(axis=0)`), kết hợp với Broadcasting để tính toàn bộ bảng `z-score` trong một biểu thức."
+      }
+    ];
+  </script>
+
+  <!-- ===================================================================== -->
+  <!-- PHẦN 2: LOGIC ỨNG DỤNG & XỬ LÝ GIAO DIỆN (VANILLA JAVASCRIPT)          -->
+  <!-- ===================================================================== -->
+  <script>
+    (function () {
+      const TOTAL_QUESTIONS = questionsData.length;
+      const OPTION_LETTERS = ["A", "B", "C", "D"];
+
+      // Trạng thái bài thi
+      let currentIndex = 0;
+      let userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+      let flaggedQuestions = new Array(TOTAL_QUESTIONS).fill(false);
+      let isSubmitted = false;
+      let paletteFilter = "all";
+      let reviewFilter = "all";
+
+      // Bộ đếm thời gian
+      let elapsedSeconds = 0;
+      let timerInterval = null;
+
+      // DOM Elements
+      const timerDisplay = document.getElementById("timerDisplay");
+      const examStatusBadge = document.getElementById("examStatusBadge");
+      const progressPercentText = document.getElementById("progressPercentText");
+      const statAnsweredCount = document.getElementById("statAnsweredCount");
+      const statUnansweredCount = document.getElementById("statUnansweredCount");
+      const statFlaggedCount = document.getElementById("statFlaggedCount");
+      const progressBarFill = document.getElementById("progressBarFill");
+
+      const qNumberBadge = document.getElementById("qNumberBadge");
+      const qTopicBadge = document.getElementById("qTopicBadge");
+      const qDifficultyBadge = document.getElementById("qDifficultyBadge");
+      const btnToggleFlag = document.getElementById("btnToggleFlag");
+      const flagButtonText = document.getElementById("flagButtonText");
+      const qTextContainer = document.getElementById("qTextContainer");
+      const qOptionsContainer = document.getElementById("qOptionsContainer");
+      const clearSelectionWrapper = document.getElementById("clearSelectionWrapper");
+      const btnClearCurrentAnswer = document.getElementById("btnClearCurrentAnswer");
+      const currentQExplanationBox = document.getElementById("currentQExplanationBox");
+      const currentQResultIcon = document.getElementById("currentQResultIcon");
+      const currentQResultTitle = document.getElementById("currentQResultTitle");
+      const currentQExplanationText = document.getElementById("currentQExplanationText");
+
+      const btnPrevQuestion = document.getElementById("btnPrevQuestion");
+      const btnNextQuestion = document.getElementById("btnNextQuestion");
+      const qSelectionStatusText = document.getElementById("qSelectionStatusText");
+
+      const questionPaletteGrid = document.getElementById("questionPaletteGrid");
+      const paletteCountSummary = document.getElementById("paletteCountSummary");
+      const paletteFilterContainer = document.getElementById("paletteFilterContainer");
+      const legendPreSubmit = document.getElementById("legendPreSubmit");
+      const legendPostSubmit = document.getElementById("legendPostSubmit");
+      const sidebarSubmitWrapper = document.getElementById("sidebarSubmitWrapper");
+
+      // Result & Review DOM
+      const resultDashboard = document.getElementById("resultDashboard");
+      const resScore10 = document.getElementById("resScore10");
+      const resAccuracy = document.getElementById("resAccuracy");
+      const resRankLabel = document.getElementById("resRankLabel");
+      const resCorrectCount = document.getElementById("resCorrectCount");
+      const resWrongCount = document.getElementById("resWrongCount");
+      const resSkippedCount = document.getElementById("resSkippedCount");
+      const resTimeTaken = document.getElementById("resTimeTaken");
+      const topicBreakdownContainer = document.getElementById("topicBreakdownContainer");
+
+      const fullReviewSection = document.getElementById("fullReviewSection");
+      const fullReviewListContainer = document.getElementById("fullReviewListContainer");
+      const reviewFilterButtons = document.getElementById("reviewFilterButtons");
+
+      // Modals DOM
+      const submitModal = document.getElementById("submitModal");
+      const modalAnsweredCount = document.getElementById("modalAnsweredCount");
+      const modalUnansweredCount = document.getElementById("modalUnansweredCount");
+      const modalFlaggedCount = document.getElementById("modalFlaggedCount");
+      const modalUnansweredWarning = document.getElementById("modalUnansweredWarning");
+      const resetModal = document.getElementById("resetModal");
+
+      // Helper: Escape HTML & format inline code `...`
+      function formatTextWithCode(rawText) {
+        const escaped = rawText
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        return escaped.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+      }
+
+      // Helper: Format MM:SS
+      function formatTime(sec) {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
+
+      function startTimer() {
+        stopTimer();
+        timerInterval = setInterval(() => {
+          if (!isSubmitted) {
+            elapsedSeconds++;
+            timerDisplay.textContent = formatTime(elapsedSeconds);
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      // Cập nhật thanh tiến độ & bộ đếm
+      function updateHeaderStats() {
+        const answered = userAnswers.filter((a) => a !== null).length;
+        const unanswered = TOTAL_QUESTIONS - answered;
+        const flagged = flaggedQuestions.filter(Boolean).length;
+        const percent = Math.round((answered / TOTAL_QUESTIONS) * 100);
+
+        statAnsweredCount.textContent = answered;
+        statUnansweredCount.textContent = unanswered;
+        statFlaggedCount.textContent = flagged;
+        progressPercentText.textContent = percent + "%";
+        progressBarFill.style.width = percent + "%";
+      }
+
+      // Màu nhãn độ khó
+      function getDifficultyBadgeClass(difficulty) {
+        if (difficulty === "Dễ") {
+          return "bg-emerald-100 text-emerald-800 border border-emerald-200";
+        }
+        if (difficulty === "Trung bình") {
+          return "bg-sky-100 text-sky-800 border border-sky-200";
+        }
+        return "bg-purple-100 text-purple-800 border border-purple-200";
+      }
+
+      // Màu nhãn chương/tuần
+      function getTopicBadgeClass(topicKey) {
+        if (topicKey === "week2") {
+          return "bg-amber-50 text-amber-800 border border-amber-200";
+        }
+        if (topicKey === "week3") {
+          return "bg-blue-50 text-blue-800 border border-blue-200";
+        }
+        return "bg-indigo-50 text-indigo-800 border border-indigo-200";
+      }
+
+      // Render câu hỏi hiện tại
+      function renderCurrentQuestion() {
+        const q = questionsData[currentIndex];
+        const selectedOpt = userAnswers[currentIndex];
+        const isFlagged = flaggedQuestions[currentIndex];
+
+        qNumberBadge.textContent = `Câu ${q.id} / ${TOTAL_QUESTIONS}`;
+        qTopicBadge.textContent = q.topicLabel;
+        qTopicBadge.className = `inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${getTopicBadgeClass(q.topicKey)}`;
+
+        qDifficultyBadge.textContent = q.difficulty;
+        qDifficultyBadge.className = `inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${getDifficultyBadgeClass(q.difficulty)}`;
+
+        // Trạng thái nút Đánh dấu
+        if (isFlagged) {
+          btnToggleFlag.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300 transition";
+          flagButtonText.textContent = "Đã đánh dấu xem lại";
+        } else {
+          btnToggleFlag.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-600 border border-slate-300 hover:bg-slate-100 transition";
+          flagButtonText.textContent = "Đánh dấu xem lại";
+        }
+
+        // Nội dung câu hỏi
+        qTextContainer.innerHTML = formatTextWithCode(q.question);
+
+        // Render 4 phương án A, B, C, D
+        qOptionsContainer.innerHTML = "";
+        q.options.forEach((optText, idx) => {
+          const letter = OPTION_LETTERS[idx];
+          const isSelected = selectedOpt === idx;
+          const isCorrect = q.correctAnswer === idx;
+
+          let cardClass = "option-card w-full text-left p-4 rounded-xl border-2 transition flex items-start gap-3.5 ";
+          let badgeClass = "w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 transition ";
+          let statusTagHTML = "";
+
+          if (!isSubmitted) {
+            if (isSelected) {
+              cardClass += "border-indigo-600 bg-indigo-50/70 text-slate-900 shadow-xs cursor-pointer";
+              badgeClass += "bg-indigo-600 text-white";
+            } else {
+              cardClass += "border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50/70 text-slate-800 cursor-pointer";
+              badgeClass += "bg-slate-100 text-slate-700 border border-slate-200";
+            }
+          } else {
+            // Đã nộp bài
+            cardClass += "disabled-option cursor-default ";
+            if (isCorrect) {
+              cardClass += "border-emerald-500 bg-emerald-50/80 text-slate-900";
+              badgeClass += "bg-emerald-600 text-white";
+              statusTagHTML = `<span class="ml-auto text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0">${isSelected ? "✓ Bạn chọn đúng" : "✓ Đáp án đúng"}</span>`;
+            } else if (isSelected && !isCorrect) {
+              cardClass += "border-rose-500 bg-rose-50/80 text-slate-900";
+              badgeClass += "bg-rose-600 text-white";
+              statusTagHTML = `<span class="ml-auto text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-300 shrink-0">✕ Bạn đã chọn</span>`;
+            } else {
+              cardClass += "border-slate-200 bg-white opacity-75 text-slate-600";
+              badgeClass += "bg-slate-100 text-slate-500";
+            }
+          }
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = cardClass;
+          btn.setAttribute("aria-checked", isSelected ? "true" : "false");
+          btn.innerHTML = `
+            <span class="${badgeClass}">${letter}</span>
+            <span class="flex-1 text-sm sm:text-base leading-relaxed pt-0.5">${formatTextWithCode(optText)}</span>
+            ${statusTagHTML}
+          `;
+
+          if (!isSubmitted) {
+            btn.addEventListener("click", () => {
+              selectOption(idx);
+            });
+          }
+
+          qOptionsContainer.appendChild(btn);
+        });
+
+        // Nút xóa lựa chọn câu hiện tại
+        if (!isSubmitted && selectedOpt !== null) {
+          clearSelectionWrapper.classList.remove("hidden");
+        } else {
+          clearSelectionWrapper.classList.add("hidden");
+        }
+
+        // Hộp giải thích câu hiện tại sau khi nộp bài
+        if (isSubmitted) {
+          currentQExplanationBox.classList.remove("hidden");
+          const isUserCorrect = selectedOpt === q.correctAnswer;
+          const isUnanswered = selectedOpt === null;
+
+          if (isUserCorrect) {
+            currentQExplanationBox.className = "mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 sm:p-5";
+            currentQResultIcon.className = "w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 font-bold";
+            currentQResultIcon.textContent = "✓";
+            currentQResultTitle.className = "font-bold text-base text-emerald-900 mb-1";
+            currentQResultTitle.textContent = `Chính xác! Đáp án đúng là ${OPTION_LETTERS[q.correctAnswer]}.`;
+          } else if (isUnanswered) {
+            currentQExplanationBox.className = "mt-6 rounded-2xl border border-amber-200 bg-amber-50/60 p-4 sm:p-5";
+            currentQResultIcon.className = "w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 mt-0.5 font-bold";
+            currentQResultIcon.textContent = "!";
+            currentQResultTitle.className = "font-bold text-base text-amber-900 mb-1";
+            currentQResultTitle.textContent = `Bạn chưa trả lời câu này. Đáp án đúng là ${OPTION_LETTERS[q.correctAnswer]}.`;
+          } else {
+            currentQExplanationBox.className = "mt-6 rounded-2xl border border-rose-200 bg-rose-50/60 p-4 sm:p-5";
+            currentQResultIcon.className = "w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0 mt-0.5 font-bold";
+            currentQResultIcon.textContent = "✕";
+            currentQResultTitle.className = "font-bold text-base text-rose-900 mb-1";
+            currentQResultTitle.textContent = `Chưa chính xác (Bạn chọn ${OPTION_LETTERS[selectedOpt]}). Đáp án đúng là ${OPTION_LETTERS[q.correctAnswer]}.`;
+          }
+          currentQExplanationText.innerHTML = `<strong class="text-slate-900">Giải thích:</strong> ${formatTextWithCode(q.explanation)}`;
+        } else {
+          currentQExplanationBox.classList.add("hidden");
+        }
+
+        // Trạng thái dưới footer card
+        if (selectedOpt !== null) {
+          qSelectionStatusText.innerHTML = `Đã chọn đáp án <strong class="text-indigo-600">${OPTION_LETTERS[selectedOpt]}</strong>`;
+        } else {
+          qSelectionStatusText.innerHTML = `<span class="text-slate-400">Chưa chọn đáp án</span>`;
+        }
+
+        // Nút Trước / Tiếp
+        btnPrevQuestion.disabled = currentIndex === 0;
+        btnNextQuestion.disabled = currentIndex === TOTAL_QUESTIONS - 1;
+      }
+
+      // Chọn 1 đáp án
+      function selectOption(optionIdx) {
+        if (isSubmitted) return;
+        userAnswers[currentIndex] = optionIdx;
+        updateHeaderStats();
+        renderCurrentQuestion();
+        renderQuestionPalette();
+      }
+
+      // Xóa đáp án câu hiện tại
+      function clearCurrentAnswer() {
+        if (isSubmitted) return;
+        userAnswers[currentIndex] = null;
+        updateHeaderStats();
+        renderCurrentQuestion();
+        renderQuestionPalette();
+      }
+
+      // Đánh dấu câu hỏi xem lại
+      function toggleFlagCurrentQuestion() {
+        flaggedQuestions[currentIndex] = !flaggedQuestions[currentIndex];
+        updateHeaderStats();
+        renderCurrentQuestion();
+        renderQuestionPalette();
+        if (isSubmitted) {
+          renderFullReviewList();
+        }
+      }
+
+      // Kiểm tra câu hỏi có khớp bộ lọc bảng 50 câu không
+      // Kiểm tra câu hỏi có khớp bộ lọc bảng 50 câu không
+      function matchesPaletteFilter(idx) {
+        const q = questionsData[idx];
+        const ans = userAnswers[idx];
+        const isFlagged = Boolean(flaggedQuestions[idx]);
+
+        switch (paletteFilter) {
+          case "week2":
+            return q.topicKey === "week2";
+          case "week3":
+            return q.topicKey === "week3";
+          case "week4":
+            return q.topicKey === "week4";
+          case "unanswered":
+            return ans === null;
+          case "flagged":
+            return isFlagged;
+          case "all":
+          default:
+            return true;
+        }
+      }
+
+      // Render bảng 50 câu hỏi bên sidebar
+      function renderQuestionPalette() {
+        if (!questionPaletteGrid) return;
+        questionPaletteGrid.innerHTML = "";
+
+        let visibleCount = 0;
+
+        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+          const isMatch = matchesPaletteFilter(i);
+          if (isMatch) visibleCount++;
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.setAttribute("data-q-idx", i);
+          btn.setAttribute("aria-label", `Chuyển tới câu ${i + 1}`);
+
+          const isCurrent = i === currentIndex;
+          const isAnswered = userAnswers[i] !== null;
+          const isFlagged = Boolean(flaggedQuestions[i]);
+          const isCorrect = userAnswers[i] === questionsData[i].correctAnswer;
+
+          // Base classes
+          let btnClasses = "relative w-full aspect-square rounded-xl text-xs font-bold transition flex items-center justify-center select-none shadow-2xs ";
+
+          if (!isMatch) {
+            btnClasses += "opacity-25 grayscale hover:opacity-75 ";
+          }
+
+          if (isSubmitted) {
+            if (userAnswers[i] === null) {
+              btnClasses += "bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-200 ";
+            } else if (isCorrect) {
+              btnClasses += "bg-emerald-600 text-white hover:bg-emerald-700 ";
+            } else {
+              btnClasses += "bg-rose-600 text-white hover:bg-rose-700 ";
+            }
+          } else {
+            if (isAnswered) {
+              btnClasses += "bg-indigo-600 text-white hover:bg-indigo-700 ";
+            } else {
+              btnClasses += "bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 ";
+            }
+          }
+
+          if (isCurrent) {
+            btnClasses += "ring-2 ring-offset-2 ring-indigo-600 scale-105 z-10 font-extrabold ";
+          }
+
+          btn.className = btnClasses.trim();
+          btn.textContent = i + 1;
+
+          // Corner flag indicator
+          if (isFlagged) {
+            const flagDot = document.createElement("span");
+            flagDot.className = "absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-white shadow-xs pointer-events-none";
+            flagDot.title = "Đã đánh dấu xem lại";
+            btn.appendChild(flagDot);
+          }
+
+          btn.addEventListener("click", () => {
+            currentIndex = i;
+            renderCurrentQuestion();
+            renderQuestionPalette();
+
+            // Mobile auto-scroll to question card
+            if (window.innerWidth < 1024) {
+              const card = document.getElementById("qNumberBadge");
+              if (card) {
+                card.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
+            }
+          });
+
+          questionPaletteGrid.appendChild(btn);
+        }
+
+        if (paletteCountSummary) {
+          paletteCountSummary.textContent = `Hiển thị ${visibleCount}/${TOTAL_QUESTIONS} câu hỏi`;
+        }
+      }
+
+      // Thống kê chi tiết theo từng Week/Tài liệu
+      function renderTopicBreakdown() {
+        if (!topicBreakdownContainer) return;
+        topicBreakdownContainer.innerHTML = "";
+
+        const topics = [
+          {
+            key: "week2",
+            name: "Week 2: Khoa học dữ liệu",
+            sub: "資料科學概論",
+            color: "indigo",
+            accentBg: "bg-indigo-50/80",
+            border: "border-indigo-200",
+            barColor: "bg-indigo-600",
+            textColor: "text-indigo-700"
+          },
+          {
+            key: "week3",
+            name: "Week 3: Python nhập môn",
+            sub: "Python 入門",
+            color: "sky",
+            accentBg: "bg-sky-50/80",
+            border: "border-sky-200",
+            barColor: "bg-sky-600",
+            textColor: "text-sky-700"
+          },
+          {
+            key: "week4",
+            name: "Week 4: NumPy mảng & ma trận",
+            sub: "NumPy 入門",
+            color: "emerald",
+            accentBg: "bg-emerald-50/80",
+            border: "border-emerald-200",
+            barColor: "bg-emerald-600",
+            textColor: "text-emerald-700"
+          }
+        ];
+
+        topics.forEach(topic => {
+          const topicQuestions = questionsData.filter(q => q.topicKey === topic.key);
+          const totalInTopic = topicQuestions.length;
+          const correctInTopic = topicQuestions.filter(q => userAnswers[q.id - 1] === q.correctAnswer).length;
+          const accuracy = totalInTopic > 0 ? Math.round((correctInTopic / totalInTopic) * 100) : 0;
+
+          const card = document.createElement("div");
+          card.className = `${topic.accentBg} ${topic.border} border rounded-2xl p-4 flex flex-col justify-between`;
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between text-xs font-semibold ${topic.textColor} mb-1">
+                <span>${topic.name}</span>
+                <span class="text-[11px] opacity-75">${topic.sub}</span>
+              </div>
+              <div class="flex items-baseline justify-between mt-2">
+                <span class="text-2xl font-bold text-slate-900">${correctInTopic} <span class="text-xs text-slate-500 font-normal">/ ${totalInTopic} câu</span></span>
+                <span class="text-sm font-bold ${topic.textColor}">${accuracy}%</span>
+              </div>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-3">
+              <div class="${topic.barColor} h-full rounded-full transition-all duration-500" style="width: ${accuracy}%"></div>
+            </div>
+          `;
+          topicBreakdownContainer.appendChild(card);
+        });
+      }
+
+      // Danh sách xem lại toàn bộ 50 câu sau khi nộp
+      function renderFullReviewList() {
+        if (!fullReviewListContainer) return;
+        fullReviewListContainer.innerHTML = "";
+
+        let matchCount = 0;
+
+        questionsData.forEach((q, idx) => {
+          const userAns = userAnswers[idx];
+          const isCorrect = userAns === q.correctAnswer;
+          const isUnanswered = userAns === null;
+          const isFlagged = Boolean(flaggedQuestions[idx]);
+
+          let matches = false;
+          if (reviewFilter === "all") matches = true;
+          else if (reviewFilter === "correct" && isCorrect) matches = true;
+          else if (reviewFilter === "wrong" && !isCorrect && !isUnanswered) matches = true;
+          else if (reviewFilter === "unanswered" && isUnanswered) matches = true;
+          else if (reviewFilter === "flagged" && isFlagged) matches = true;
+
+          if (!matches) return;
+          matchCount++;
+
+          const item = document.createElement("div");
+          item.className = "p-5 sm:p-6 transition hover:bg-slate-50/50";
+
+          // Status badge
+          let statusBadgeHTML = "";
+          let itemBorderClass = "border-l-4 ";
+          if (isCorrect) {
+            itemBorderClass += "border-l-emerald-500";
+            statusBadgeHTML = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+              Đúng (+0.2đ)
+            </span>`;
+          } else if (isUnanswered) {
+            itemBorderClass += "border-l-amber-400";
+            statusBadgeHTML = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              Chưa trả lời (0đ)
+            </span>`;
+          } else {
+            itemBorderClass += "border-l-rose-500";
+            statusBadgeHTML = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+              Sai (Chọn ${OPTION_LETTERS[userAns]})
+            </span>`;
+          }
+
+          item.className += " " + itemBorderClass;
+
+          // Options rendering
+          const optionsHTML = q.options.map((optText, optIdx) => {
+            const letter = OPTION_LETTERS[optIdx];
+            const isThisCorrect = optIdx === q.correctAnswer;
+            const isThisChosen = optIdx === userAns;
+
+            let optStyle = "p-3 rounded-xl border text-sm flex items-start gap-3 ";
+            let optBadgeStyle = "w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ";
+            let extraLabel = "";
+
+            if (isThisCorrect) {
+              optStyle += "bg-emerald-50 border-emerald-300 text-emerald-950 font-medium ";
+              optBadgeStyle += "bg-emerald-600 text-white ";
+              extraLabel = `<span class="ml-auto text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full shrink-0">Đáp án chuẩn</span>`;
+            } else if (isThisChosen && !isCorrect) {
+              optStyle += "bg-rose-50 border-rose-300 text-rose-950 font-medium ";
+              optBadgeStyle += "bg-rose-600 text-white ";
+              extraLabel = `<span class="ml-auto text-xs font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full shrink-0">Bạn đã chọn sai</span>`;
+            } else {
+              optStyle += "bg-slate-50/70 border-slate-200 text-slate-700 opacity-80 ";
+              optBadgeStyle += "bg-slate-200 text-slate-600 ";
+            }
+
+            return `
+              <div class="${optStyle.trim()}">
+                <span class="${optBadgeStyle.trim()}">${letter}</span>
+                <span class="flex-1">${formatTextWithCode(optText)}</span>
+                ${extraLabel}
+              </div>
+            `;
+          }).join("");
+
+          item.innerHTML = `
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white">
+                  Câu ${q.id}
+                </span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-semibold ${getTopicBadgeClass(q.topicKey)}">
+                  ${q.topicLabel}
+                </span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-semibold ${getDifficultyBadgeClass(q.difficulty)}">
+                  ${q.difficulty}
+                </span>
+                ${isFlagged ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M3 3a1 1 0 011-1h12a1 1 0 01.8 1.6L14.25 8l2.55 4.4A1 1 0 0116 14H4v4a1 1 0 11-2 0V3z"/></svg>Đánh dấu</span>' : ""}
+              </div>
+              <div class="flex items-center gap-2">
+                ${statusBadgeHTML}
+                <button type="button" class="btn-jump-to-q text-xs font-semibold text-indigo-600 hover:text-indigo-800 hover:underline inline-flex items-center gap-1 ml-2" data-jump-idx="${idx}">
+                  Xem câu này ↑
+                </button>
+              </div>
+            </div>
+
+            <div class="text-sm sm:text-base font-semibold text-slate-900 leading-relaxed mb-3">
+              ${formatTextWithCode(q.question)}
+            </div>
+
+            <div class="space-y-2 mb-4">
+              ${optionsHTML}
+            </div>
+
+            <div class="rounded-xl border border-indigo-100 bg-indigo-50/40 p-3.5 sm:p-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
+              <div class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div>
+                  <strong class="font-bold text-slate-900">Chi tiết trích xuất:</strong>
+                  <div class="mt-0.5">${formatTextWithCode(q.explanation)}</div>
+                </div>
+              </div>
+            </div>
+          `;
+
+          fullReviewListContainer.appendChild(item);
+        });
+
+        // Attach jump handlers
+        fullReviewListContainer.querySelectorAll(".btn-jump-to-q").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const targetIdx = parseInt(btn.dataset.jumpIdx, 10);
+            currentIndex = targetIdx;
+            renderCurrentQuestion();
+            renderQuestionPalette();
+            const topCard = document.getElementById("qNumberBadge");
+            if (topCard) {
+              topCard.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+          });
+        });
+
+        if (matchCount === 0) {
+          fullReviewListContainer.innerHTML = `
+            <div class="p-8 text-center text-slate-500 text-sm">
+              Không có câu hỏi nào phù hợp với bộ lọc đã chọn.
+            </div>
+          `;
+        }
+      }
+
+      // Nộp bài và chấm điểm
+      function submitExam() {
+        if (isSubmitted) return;
+        isSubmitted = true;
+        stopTimer();
+
+        let correctCount = 0;
+        let wrongCount = 0;
+        let skippedCount = 0;
+
+        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+          const ans = userAnswers[i];
+          if (ans === null) {
+            skippedCount++;
+          } else if (ans === questionsData[i].correctAnswer) {
+            correctCount++;
+          } else {
+            wrongCount++;
+          }
+        }
+
+        const score10 = ((correctCount / TOTAL_QUESTIONS) * 10).toFixed(1);
+        const accuracy = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+
+        let rankLabel = "Chưa xếp loại";
+        const scoreNum = parseFloat(score10);
+        if (scoreNum >= 9.0) rankLabel = "Xuất sắc 🏆";
+        else if (scoreNum >= 8.0) rankLabel = "Giỏi ✨";
+        else if (scoreNum >= 6.5) rankLabel = "Khá 👍";
+        else if (scoreNum >= 5.0) rankLabel = "Trung bình 📝";
+        else rankLabel = "Cần ôn tập ⚠️";
+
+        // Update DOM Dashboard
+        if (resScore10) resScore10.textContent = score10;
+        if (resAccuracy) resAccuracy.textContent = `${accuracy}%`;
+        if (resRankLabel) resRankLabel.textContent = rankLabel;
+        if (resCorrectCount) resCorrectCount.textContent = correctCount;
+        if (resWrongCount) resWrongCount.textContent = wrongCount;
+        if (resSkippedCount) resSkippedCount.textContent = skippedCount;
+        if (resTimeTaken) resTimeTaken.textContent = `Thời gian: ${formatTime(elapsedSeconds)}`;
+
+        // Header Status Badge
+        if (examStatusBadge) {
+          examStatusBadge.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200";
+          examStatusBadge.textContent = `Đã nộp bài (${score10}/10)`;
+        }
+
+        // Show Result and Review Sections
+        if (resultDashboard) resultDashboard.classList.remove("hidden");
+        if (fullReviewSection) fullReviewSection.classList.remove("hidden");
+
+        // Toggle Legends
+        if (legendPreSubmit) legendPreSubmit.classList.add("hidden");
+        if (legendPostSubmit) legendPostSubmit.classList.remove("hidden");
+
+        // Hide sidebar submit button
+        if (sidebarSubmitWrapper) sidebarSubmitWrapper.classList.add("hidden");
+
+        renderTopicBreakdown();
+        renderCurrentQuestion();
+        renderQuestionPalette();
+        renderFullReviewList();
+        saveExamState();
+
+        if (resultDashboard) {
+          resultDashboard.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+
+      // Đặt lại bài thi
+      function resetExam() {
+        currentIndex = 0;
+        userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+        flaggedQuestions = new Array(TOTAL_QUESTIONS).fill(false);
+        isSubmitted = false;
+        elapsedSeconds = 0;
+        paletteFilter = "all";
+        reviewFilter = "all";
+
+        // Reset filter buttons styles
+        if (paletteFilterContainer) {
+          paletteFilterContainer.querySelectorAll(".palette-filter-btn").forEach(btn => {
+            if (btn.dataset.paletteFilter === "all") {
+              btn.className = "palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-xs transition";
+            } else {
+              btn.className = "palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+            }
+          });
+        }
+
+        if (reviewFilterButtons) {
+          reviewFilterButtons.querySelectorAll(".review-filter-btn").forEach(btn => {
+            if (btn.dataset.reviewFilter === "all") {
+              btn.className = "review-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition";
+            } else {
+              btn.className = "review-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition";
+            }
+          });
+        }
+
+        // Reset header status badge
+        if (examStatusBadge) {
+          examStatusBadge.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200";
+          examStatusBadge.textContent = "Đang làm bài";
+        }
+
+        // Hide Dashboard & Review
+        if (resultDashboard) resultDashboard.classList.add("hidden");
+        if (fullReviewSection) fullReviewSection.classList.add("hidden");
+
+        // Toggle Legends & Sidebar submit
+        if (legendPreSubmit) legendPreSubmit.classList.remove("hidden");
+        if (legendPostSubmit) legendPostSubmit.classList.add("hidden");
+        if (sidebarSubmitWrapper) sidebarSubmitWrapper.classList.remove("hidden");
+
+        // Clear local storage
+        try {
+          localStorage.removeItem("echoscore_quiz_state");
+        } catch (e) {}
+
+        if (timerDisplay) timerDisplay.textContent = formatTime(0);
+        startTimer();
+        updateHeaderStats();
+        renderCurrentQuestion();
+        renderQuestionPalette();
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // Modals
+      function openSubmitModal() {
+        if (isSubmitted) return;
+        const answered = userAnswers.filter(a => a !== null).length;
+        const unanswered = TOTAL_QUESTIONS - answered;
+        const flagged = flaggedQuestions.filter(Boolean).length;
+
+        if (modalAnsweredCount) modalAnsweredCount.textContent = `${answered} / ${TOTAL_QUESTIONS}`;
+        if (modalUnansweredCount) modalUnansweredCount.textContent = `${unanswered}`;
+        if (modalFlaggedCount) modalFlaggedCount.textContent = `${flagged}`;
+
+        if (modalUnansweredWarning) {
+          if (unanswered > 0) {
+            modalUnansweredWarning.classList.remove("hidden");
+          } else {
+            modalUnansweredWarning.classList.add("hidden");
+          }
+        }
+
+        if (submitModal) {
+          submitModal.classList.remove("hidden");
+          submitModal.classList.add("flex");
+        }
+      }
+
+      function closeSubmitModal() {
+        if (submitModal) {
+          submitModal.classList.add("hidden");
+          submitModal.classList.remove("flex");
+        }
+      }
+
+      function openResetModal() {
+        if (resetModal) {
+          resetModal.classList.remove("hidden");
+          resetModal.classList.add("flex");
+        }
+      }
+
+      function closeResetModal() {
+        if (resetModal) {
+          resetModal.classList.add("hidden");
+          resetModal.classList.remove("flex");
+        }
+      }
+
+      // Save & Load state from LocalStorage
+      function saveExamState() {
+        try {
+          const payload = {
+            currentIndex,
+            userAnswers,
+            flaggedQuestions,
+            isSubmitted,
+            elapsedSeconds,
+            timestamp: Date.now()
+          };
+          localStorage.setItem("echoscore_quiz_state", JSON.stringify(payload));
+        } catch (e) {}
+      }
+
+      function loadSavedState() {
+        try {
+          const raw = localStorage.getItem("echoscore_quiz_state");
+          if (!raw) return;
+          const data = JSON.parse(raw);
+          if (Array.isArray(data.userAnswers) && data.userAnswers.length === TOTAL_QUESTIONS) {
+            userAnswers = data.userAnswers;
+            flaggedQuestions = Array.isArray(data.flaggedQuestions) ? data.flaggedQuestions : flaggedQuestions;
+            elapsedSeconds = typeof data.elapsedSeconds === "number" ? data.elapsedSeconds : 0;
+            if (timerDisplay) timerDisplay.textContent = formatTime(elapsedSeconds);
+            if (typeof data.currentIndex === "number" && data.currentIndex >= 0 && data.currentIndex < TOTAL_QUESTIONS) {
+              currentIndex = data.currentIndex;
+            }
+            if (data.isSubmitted) {
+              submitExam();
+            }
+          }
+        } catch (e) {}
+      }
+
+      // EVENT LISTENERS BINDING
+      function initEventListeners() {
+        // Navigation
+        if (btnPrevQuestion) {
+          btnPrevQuestion.addEventListener("click", () => {
+            if (currentIndex > 0) {
+              currentIndex--;
+              renderCurrentQuestion();
+              renderQuestionPalette();
+              saveExamState();
+            }
+          });
+        }
+
+        if (btnNextQuestion) {
+          btnNextQuestion.addEventListener("click", () => {
+            if (currentIndex < TOTAL_QUESTIONS - 1) {
+              currentIndex++;
+              renderCurrentQuestion();
+              renderQuestionPalette();
+              saveExamState();
+            }
+          });
+        }
+
+        // Flag & Clear
+        if (btnToggleFlag) {
+          btnToggleFlag.addEventListener("click", () => {
+            toggleFlagCurrentQuestion();
+            saveExamState();
+          });
+        }
+
+        if (btnClearCurrentAnswer) {
+          btnClearCurrentAnswer.addEventListener("click", () => {
+            clearCurrentAnswer();
+            saveExamState();
+          });
+        }
+
+        // Modals triggers
+        const btnOpenSubmitModal = document.getElementById("btnOpenSubmitModal");
+        if (btnOpenSubmitModal) {
+          btnOpenSubmitModal.addEventListener("click", openSubmitModal);
+        }
+
+        const btnSidebarSubmit = document.getElementById("btnSidebarSubmit");
+        if (btnSidebarSubmit) {
+          btnSidebarSubmit.addEventListener("click", openSubmitModal);
+        }
+
+        const btnCancelSubmit = document.getElementById("btnCancelSubmit");
+        if (btnCancelSubmit) {
+          btnCancelSubmit.addEventListener("click", closeSubmitModal);
+        }
+
+        const btnConfirmSubmit = document.getElementById("btnConfirmSubmit");
+        if (btnConfirmSubmit) {
+          btnConfirmSubmit.addEventListener("click", () => {
+            closeSubmitModal();
+            submitExam();
+          });
+        }
+
+        const btnOpenResetModal = document.getElementById("btnOpenResetModal");
+        if (btnOpenResetModal) {
+          btnOpenResetModal.addEventListener("click", openResetModal);
+        }
+
+        const btnCancelReset = document.getElementById("btnCancelReset");
+        if (btnCancelReset) {
+          btnCancelReset.addEventListener("click", closeResetModal);
+        }
+
+        const btnConfirmReset = document.getElementById("btnConfirmReset");
+        if (btnConfirmReset) {
+          btnConfirmReset.addEventListener("click", () => {
+            closeResetModal();
+            resetExam();
+          });
+        }
+
+        const btnRetryFromResult = document.getElementById("btnRetryFromResult");
+        if (btnRetryFromResult) {
+          btnRetryFromResult.addEventListener("click", openResetModal);
+        }
+
+        const btnJumpToReviewList = document.getElementById("btnJumpToReviewList");
+        if (btnJumpToReviewList) {
+          btnJumpToReviewList.addEventListener("click", () => {
+            if (fullReviewSection) {
+              fullReviewSection.scrollIntoView({ behavior: "smooth" });
+            }
+          });
+        }
+
+        // Palette Filter Buttons
+        if (paletteFilterContainer) {
+          paletteFilterContainer.querySelectorAll(".palette-filter-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              paletteFilterContainer.querySelectorAll(".palette-filter-btn").forEach(b => {
+                b.className = "palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+              });
+              btn.className = "palette-filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-xs transition";
+              paletteFilter = btn.dataset.paletteFilter;
+              renderQuestionPalette();
+            });
+          });
+        }
+
+        // Review Filter Buttons
+        if (reviewFilterButtons) {
+          reviewFilterButtons.querySelectorAll(".review-filter-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              reviewFilterButtons.querySelectorAll(".review-filter-btn").forEach(b => {
+                b.className = "review-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition";
+              });
+              btn.className = "review-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition";
+              reviewFilter = btn.dataset.reviewFilter;
+              renderFullReviewList();
+            });
+          });
+        }
+
+        // Keyboard Shortcuts
+        window.addEventListener("keydown", (e) => {
+          // If modal is active, handle Esc
+          if (e.key === "Escape") {
+            closeSubmitModal();
+            closeResetModal();
+            return;
+          }
+
+          if (submitModal && !submitModal.classList.contains("hidden")) return;
+          if (resetModal && !resetModal.classList.contains("hidden")) return;
+
+          // Arrow Left / Right
+          if (e.key === "ArrowLeft") {
+            if (currentIndex > 0) {
+              currentIndex--;
+              renderCurrentQuestion();
+              renderQuestionPalette();
+              saveExamState();
+            }
+          } else if (e.key === "ArrowRight") {
+            if (currentIndex < TOTAL_QUESTIONS - 1) {
+              currentIndex++;
+              renderCurrentQuestion();
+              renderQuestionPalette();
+              saveExamState();
+            }
+          }
+          // A, B, C, D or 1, 2, 3, 4
+          else if (!isSubmitted) {
+            const k = e.key.toUpperCase();
+            if (k === "A" || k === "1") {
+              selectOption(0);
+              saveExamState();
+            } else if (k === "B" || k === "2") {
+              selectOption(1);
+              saveExamState();
+            } else if (k === "C" || k === "3") {
+              selectOption(2);
+              saveExamState();
+            } else if (k === "D" || k === "4") {
+              selectOption(3);
+              saveExamState();
+            } else if (k === "F") {
+              toggleFlagCurrentQuestion();
+              saveExamState();
+            }
+          }
+        });
+      }
+
+      // INITIALIZATION
+      function init() {
+        initEventListeners();
+        loadSavedState();
+        if (!isSubmitted) {
+          startTimer();
+        }
+        updateHeaderStats();
+        renderCurrentQuestion();
+        renderQuestionPalette();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
